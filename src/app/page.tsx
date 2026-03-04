@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { readdir, readFile, stat } from "fs/promises";
 import path from "path";
+import { EmailSignupForm } from "@/components/email-signup-form";
 
 type PostMeta = {
   slug: string;
@@ -412,29 +413,7 @@ export default async function HomePage() {
               </div>
 
               <div className="lg:col-span-6">
-                <form
-                  action="#"
-                  method="post"
-                  className="flex w-full flex-col gap-3 sm:flex-row sm:items-center"
-                >
-                  <label className="sr-only" htmlFor="email">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    placeholder="you@school.org"
-                    className="w-full min-w-0 rounded-md border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/20 sm:flex-1"
-                  />
-                  <button
-                    type="submit"
-                    className="inline-flex shrink-0 items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition hover:opacity-90"
-                  >
-                    Get Coaching Notes
-                  </button>
-                </form>
+                <EmailSignupForm />
               </div>
             </div>
           </div>
