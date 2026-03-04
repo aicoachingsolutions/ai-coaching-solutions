@@ -1,152 +1,445 @@
 import Link from "next/link";
-import { getAllPostSlugs, getPostBySlug } from "@/lib/posts";
-import { PageWrapper } from "@/components/page-shell";
+import { readdir, readFile, stat } from "fs/promises";
+import path from "path";
 
-function sortByDateDesc(a: string, b: string) {
-  const pa = getPostBySlug(a);
-  const pb = getPostBySlug(b);
-  const da = pa?.date ? new Date(pa.date).getTime() : 0;
-  const db = pb?.date ? new Date(pb.date).getTime() : 0;
-  return db - da;
+type PostMeta = {
+  slug: string;
+  title: string;
+  date?: string;
+  description?: string;
+};
+
+function parseFrontmatter(raw: string): Omit<PostMeta, "slug"> {
+  const fm: Record<string, string> = {};
+
+  if (!raw.startsWith("---")) {
+    const h1 = raw.match(/^#\s+(.+)$/m)?.[1]?.trim();
+    return { title: h1 ?? "Untitled" };
+  }
+
+  const end = raw.indexOf("\n---", 3);
+  if (end === -1) return { title: "Untitled" };
+
+  const block = raw.slice(3, end).trim();
+  for (const line of block.split("\n")) {
+    const idx = line.indexOf(":");
+    if (idx === -1) continue;
+    const key = line.slice(0, idx).trim();
+    const value = line
+      .slice(idx + 1)
+      .trim()
+      .replace(/^"(.*)"$/, "$1");
+    if (key) fm[key] = value;
+  }
+
+  return {
+    title: fm.title || "Untitled",
+    date: fm.date || undefined,
+    description: fm.description || fm.excerpt || undefined,
+  };
 }
 
-export default function HomePage() {
-  const latestPosts = getAllPostSlugs()
-    .sort(sortByDateDesc)
-    .slice(0, 3)
-    .map((slug) => getPostBySlug(slug))
-    .filter(Boolean)
-    .map((p) => p!);
+async function fileExists(p: string) {
+  try {
+    const s = await stat(p);
+    return s.isFile() || s.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+async function getLatestPosts(limit = 3): Promise<PostMeta[]> {
+  const postsDir = path.join(process.cwd(), "content", "post");
+  if (!(await fileExists(postsDir))) return [];
+
+  const entries = await readdir(postsDir, { withFileTypes: true });
+
+  const candidates: { slug: string; filePath: string }[] = [];
+
+  for (const e of entries) {
+    if (e.isFile()) {
+      const ext = path.extname(e.name);
+      if (ext === ".md" || ext === ".mdx") {
+        const slug = path.basename(e.name, ext);
+        candidates.push({ slug, filePath: path.join(postsDir, e.name) });
+      }
+    }
+
+    if (e.isDirectory()) {
+      const slug = e.name;
+      const mdxPath = path.join(postsDir, slug, "index.mdx");
+      const mdPath = path.join(postsDir, slug, "index.md");
+      if (await fileExists(mdxPath)) candidates.push({ slug, filePath: mdxPath });
+      else if (await fileExists(mdPath)) candidates.push({ slug, filePath: mdPath });
+    }
+  }
+
+  const metas: PostMeta[] = [];
+  for (const c of candidates) {
+    const raw = await readFile(c.filePath, "utf8");
+    const meta = parseFrontmatter(raw);
+    metas.push({ slug: c.slug, ...meta });
+  }
+
+  metas.sort((a, b) => {
+    const da = a.date ? new Date(a.date).getTime() : 0;
+    const db = b.date ? new Date(b.date).getTime() : 0;
+    return db - da;
+  });
+
+  return metas.slice(0, limit);
+}
+
+function Container({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
+  );
+}
+
+function Section({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <section className={`py-10 sm:py-16 ${className}`}>{children}</section>;
+}
+
+function PrimaryButton({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex w-full items-center justify-center rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function SecondaryButton({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex w-full items-center justify-center rounded-md border border-white/50 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Card({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm">
+      <h3 className="text-base font-semibold text-black">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-black/70">{children}</p>
+    </div>
+  );
+}
+
+export default async function HomePage() {
+  const latestPosts = await getLatestPosts(3);
+  const showLatest = latestPosts.length > 0;
 
   return (
-    <PageWrapper>
-      <div className="space-y-14 sm:space-y-16">
-      <section className="relative overflow-hidden rounded-2xl shadow-md">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(900px 280px at 0% 0%, rgba(255,255,255,0.18), transparent 48%), radial-gradient(700px 220px at 100% 0%, rgba(191,219,254,0.22), transparent 45%), linear-gradient(130deg, rgba(11,31,58,1) 0%, rgba(16,48,85,0.97) 52%, rgba(10,37,73,0.94) 100%)",
-          }}
-        />
-        <div className="relative p-6 sm:p-8 lg:p-10">
-          <div className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-            Coaching-First Platform
-          </div>
+    <main className="bg-white text-black">
+      {/* HERO */}
+      <Section className="pt-10 sm:pt-20">
+        <Container>
+          <div className="relative overflow-hidden rounded-2xl shadow-md">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(900px 280px at 0% 0%, rgba(255,255,255,0.14), transparent 48%), radial-gradient(700px 220px at 100% 0%, rgba(191,219,254,0.2), transparent 45%), linear-gradient(130deg, rgba(11,31,58,1) 0%, rgba(16,48,85,0.97) 52%, rgba(10,37,73,0.94) 100%)",
+              }}
+            />
+            <div className="relative grid items-center gap-8 p-5 sm:gap-10 sm:p-8 lg:grid-cols-12 lg:p-10">
+            <div className="lg:col-span-7">
+              <p className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-medium text-white/90 sm:text-xs">
+                Baseball/Softball + Golf • Coach-first • No login
+              </p>
 
-          <h1 className="mt-4 max-w-xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-            Built for the Daily Work of Coaching
-          </h1>
+              <h1 className="mt-4 max-w-xl text-[1.9rem] font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+                Free swing breakdowns for baseball, softball, and golf.
+              </h1>
 
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-white/90">
-            Get structured mechanical feedback, clear next steps, and practical
-            tools — without hype, logins, or noise.
-          </p>
+              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/90 sm:text-lg">
+                Describe what you are seeing and get mechanics notes, timing feedback, coaching cues,
+                next focus, and a drill to run in your next session. You make the final call as the
+                coach.
+              </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/free-breakdown"
-              className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm hover:bg-neutral-100"
-            >
-              Try Free Breakdown
-            </Link>
-            <Link
-              href="/post"
-              className="inline-flex items-center justify-center rounded-full border border-white/50 bg-transparent px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
-            >
-              Browse Resources
-            </Link>
-          </div>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <div className="w-full sm:w-auto">
+                  <PrimaryButton href="/free-breakdown">Try the Free Breakdown</PrimaryButton>
+                </div>
+                <div className="w-full sm:w-auto">
+                  <SecondaryButton href="/howitworks">See How It Works</SecondaryButton>
+                </div>
+              </div>
 
-          <p className="mt-4 text-sm text-white/80">
-            Built by a high school coach. Designed for practical use.
-          </p>
-        </div>
-      </section>
+              <p className="mt-4 text-xs text-white/80">
+                Built by a coach. Designed for practical use. <span className="mx-1">•</span> No login
+                required. <span className="mx-1">•</span> No video storage.
+              </p>
+            </div>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-semibold text-neutral-900">Value Before Payment</h2>
-          <p className="mt-2 text-sm leading-relaxed text-neutral-700">
-            You should get something useful before you ever pay. That&apos;s how trust is built.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-semibold text-neutral-900">Coach-Built Framework</h2>
-          <p className="mt-2 text-sm leading-relaxed text-neutral-700">
-            This platform is designed around real coaching problems — clarity, time, and development.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-semibold text-neutral-900">No Fluff. No Hype.</h2>
-          <p className="mt-2 text-sm leading-relaxed text-neutral-700">
-            Clean pages, fast load, and straightforward tools — no noise.
-          </p>
-        </div>
-      </section>
+            {/* Right panel */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl border border-white/20 bg-white/95 p-5 shadow-sm sm:p-6">
+                <h2 className="text-sm font-semibold text-neutral-900">
+                  What coaches get in under a minute
+                </h2>
+                <ul className="mt-4 space-y-3 text-sm text-neutral-700">
+                  <li className="flex gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
+                    Mechanics + timing read in plain coaching terms
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
+                    Cues you can say immediately in cage work, bullpens, range, or team practice
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
+                    One next priority so you are not fixing five things at once
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
+                    One drill to turn feedback into useful reps
+                  </li>
+                </ul>
 
-      <section className="space-y-4">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-lg font-semibold text-neutral-900">Latest Resources</h2>
-          <Link className="text-sm font-medium text-neutral-700 hover:text-neutral-900 hover:underline" href="/post">
-            View all
-          </Link>
-        </div>
-
-        {latestPosts.length > 0 ? (
-          <div className="grid gap-4">
-            {latestPosts.map((post) => (
-              <article
-                key={post.slug}
-                className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
-              >
-                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                  {post.date || "—"}
+                <p className="mt-5 text-xs text-neutral-600">
+                  Best for youth, high school, travel ball, and golf coaches who want clarity fast.
                 </p>
-                <h3 className="mt-2 text-base font-semibold text-neutral-900">
-                  <Link className="hover:underline" href={`/post/${post.slug}`}>
-                    {post.title}
-                  </Link>
-                </h3>
-                {post.description && (
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-700">{post.description}</p>
-                )}
-              </article>
-            ))}
+              </div>
+            </div>
           </div>
-        ) : (
-          <p className="rounded-2xl border border-neutral-200 bg-white p-6 text-sm text-neutral-700 shadow-sm">
-            New resources are added regularly.
-          </p>
-        )}
-      </section>
+          </div>
+        </Container>
+      </Section>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-neutral-900">Get practical coaching notes</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-700">
-          I send simple, useful coaching ideas and tool updates. No spam. Unsubscribe anytime.
-        </p>
-
-        <form className="mt-4 flex flex-col gap-3 sm:flex-row" action="#" method="post">
-          <input
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            className="w-full rounded-md border border-neutral-300 bg-white px-4 py-3 text-sm outline-none focus:border-neutral-900"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
-          >
-            Get Coaching Notes
-          </button>
-        </form>
-
-        <p className="mt-2 text-xs text-neutral-500">
-          Messages are reviewed for future updates and practical resources.
-        </p>
-      </section>
+      {/* TRUST STRIP */}
+      <div className="border-y border-black/10 bg-black/[0.02]">
+        <Container>
+          <div className="grid gap-2 py-5 sm:grid-cols-3 sm:gap-3 sm:py-6">
+            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
+              No login / no friction
+            </div>
+            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
+              Coach-first output
+            </div>
+            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
+              Built for real baseball, softball, and golf practices
+            </div>
+          </div>
+        </Container>
       </div>
-    </PageWrapper>
+
+      {/* HOW IT HELPS (3 cards) */}
+      <Section>
+        <Container>
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Clearer coaching decisions, faster.
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-black/70 sm:text-base">
+              Use this as a practical coaching draft: what to fix first, what to say, and what to drill
+              next.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Card title="Get Unstuck Fast">
+              When a hitter, pitcher, or golfer is off, get a clear first priority instead of chasing
+              every issue.
+            </Card>
+            <Card title="Clear Cues Players Understand">
+              Get simple language you can use right away with players who need actionable direction.
+            </Card>
+            <Card title="One Drill to Reinforce It">
+              Leave with one drill that fits the next session so feedback actually becomes reps and
+              improvement.
+            </Card>
+          </div>
+        </Container>
+      </Section>
+
+      {/* FEATURE PANEL */}
+      <Section className="bg-black/[0.02]">
+        <Container>
+          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
+            <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-7">
+                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Start with the Free Swing & Pitching Breakdown
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-black/70 sm:text-base">
+                  This is your conversion point: describe what is happening in a baseball swing,
+                  softball swing, pitching action, or golf swing and get a structured breakdown you can
+                  coach from.
+                </p>
+
+                <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-black/80">
+                  <li>Mechanics read focused on the movement pattern that matters most</li>
+                  <li>Timing feedback to identify sequence and rhythm issues</li>
+                  <li>Coaching cues in practical language players can execute</li>
+                  <li>One next focus plus one drill for your next practice block</li>
+                </ul>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="rounded-2xl border border-black/10 bg-black/[0.02] p-6">
+                  <p className="text-sm font-semibold text-black">Works best when you include:</p>
+                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-black/75">
+                    <li>Handedness and where misses show up</li>
+                    <li>Contact quality (hard, weak, late, under, thin, heavy)</li>
+                    <li>One goal for the next session</li>
+                  </ul>
+                  <div className="mt-5">
+                    <PrimaryButton href="/free-breakdown">Try the Free Breakdown</PrimaryButton>
+                  </div>
+                  <p className="mt-3 text-xs text-black/55">No login. No storage. Built for practical coaching.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* COACH NOTE */}
+      <Section>
+        <Container>
+            <div className="mx-auto max-w-3xl rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">A quick coach note</h2>
+            <p className="mt-4 text-sm leading-7 text-black/75 sm:text-base">
+              I built this for coaches working through late-night film, weekend tournaments, range
+              sessions, and limited practice time. We do not need more noise. We need clearer next steps
+              and language athletes can use right away.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/howitworks"
+                className="inline-flex items-center justify-center rounded-md border border-black/15 bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-black/5"
+              >
+                See How It Works
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* LATEST RESOURCES (hide if none) */}
+      {showLatest && (
+        <Section className="bg-black/[0.02]">
+          <Container>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-8">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+                    Latest coaching resources
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-700 sm:text-base">
+                    Practical notes for baseball, softball, and golf coaches.
+                  </p>
+                </div>
+                <Link
+                  href="/post"
+                  className="inline-flex self-start text-sm font-semibold text-slate-900 hover:opacity-80 sm:self-auto"
+                >
+                  View all →
+                </Link>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-3">
+                {latestPosts.map((p) => (
+                  <Link
+                    key={p.slug}
+                    href={`/post/${p.slug}`}
+                    className="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:bg-slate-100"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-base font-semibold leading-6 text-slate-900 group-hover:opacity-90">
+                        {p.title}
+                      </h3>
+                      <span className="text-xs text-slate-500">↗</span>
+                    </div>
+                    {p.description && (
+                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-700">
+                        {p.description}
+                      </p>
+                    )}
+                    {p.date && <p className="mt-4 text-xs text-slate-600">{p.date}</p>}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* EMAIL CAPTURE (UI-only) */}
+      <Section>
+        <Container>
+          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
+            <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-6">
+                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Get practical coaching notes
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-black/70 sm:text-base">
+                  Occasional coaching ideas and tool updates. No spam.
+                </p>
+              </div>
+
+              <div className="lg:col-span-6">
+                <form
+                  action="#"
+                  method="post"
+                  className="flex w-full flex-col gap-3 sm:flex-row sm:items-center"
+                >
+                  <label className="sr-only" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    placeholder="you@school.org"
+                    className="w-full min-w-0 rounded-md border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/20 sm:flex-1"
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex shrink-0 items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition hover:opacity-90"
+                  >
+                    Get Coaching Notes
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    </main>
   );
 }

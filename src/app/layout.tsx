@@ -36,7 +36,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="rounded-full px-3 py-2 text-xs font-medium text-white/90 transition hover:bg-white/15 hover:text-white"
+      className="inline-flex w-full items-center justify-center rounded-md px-3 py-2 text-xs font-medium text-white/90 transition hover:bg-white/15 hover:text-white md:w-auto"
     >
       {children}
     </Link>
@@ -64,8 +64,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             borderColor: "var(--navy-2, #103055)",
           }}
         >
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2 sm:px-4 sm:py-2.5">
-            <Link href="/" className="group inline-flex shrink-0 items-center gap-1.5">
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-3 py-3 sm:px-4 md:flex-row md:items-center md:justify-between md:py-2.5">
+            <Link
+              href="/"
+              className="group inline-flex w-full items-center justify-center gap-1.5 md:w-auto md:shrink-0 md:justify-start"
+            >
               <Image
                 src="/ai-coaching-logo-v2.png"
                 alt="AI Coaching Solutions logo"
@@ -84,14 +87,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </Link>
 
-            <nav className="ml-auto flex flex-wrap items-center justify-end gap-1">
+            <nav className="grid w-full grid-cols-2 gap-1.5 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-1">
               <NavLink href="/blog">Resources</NavLink>
               <NavLink href="/tools">Tools</NavLink>
               <NavLink href="/about">About</NavLink>
               <NavLink href="/contact">Contact</NavLink>
               <Link
                 href="/free-breakdown"
-                className="ml-2 rounded-md bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100"
+                className="col-span-2 mt-1 inline-flex items-center justify-center rounded-md bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100 md:ml-2 md:mt-0"
               >
                 Try Free Breakdown
               </Link>
