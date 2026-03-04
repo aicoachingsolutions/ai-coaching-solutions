@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "google8094f2ec92f6f1b8",
+  },
 };
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
