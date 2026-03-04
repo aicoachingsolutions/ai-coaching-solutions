@@ -285,7 +285,7 @@ export default async function HomePage() {
       </Section>
 
       {/* FEATURE PANEL */}
-      <Section className="bg-black/[0.02]">
+      <Section className="sm:bg-black/[0.02]">
         <Container>
           <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
             <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
@@ -350,7 +350,7 @@ export default async function HomePage() {
 
       {/* LATEST RESOURCES (hide if none) */}
       {showLatest && (
-        <Section className="bg-black/[0.02]">
+        <Section className="sm:bg-black/[0.02]">
           <Container>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-8">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
