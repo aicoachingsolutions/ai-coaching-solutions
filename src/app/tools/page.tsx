@@ -1,3 +1,5 @@
+import { EmailSignupForm } from "@/components/email-signup-form";
+
 export const metadata = {
   title: "Tools | AI Coaching Solutions",
   description:
@@ -178,19 +180,14 @@ export default function ToolsPage() {
           occasional updates when something is ready to test.
         </p>
 
-        <form className="mt-4 flex flex-col gap-3 sm:flex-row">
-          <input
-            type="email"
-            placeholder="you@example.com"
-            className="w-full rounded-md border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-neutral-900"
+        <div className="mt-4">
+          <EmailSignupForm
+            source="tools-page"
+            type="waitlist"
+            buttonLabel="Join waitlist"
+            successMessage="You are on the waitlist. Check your inbox for confirmation."
           />
-          <button
-            type="button"
-            className="rounded-md bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
-          >
-            Join waitlist
-          </button>
-        </form>
+        </div>
 
         <p className="mt-2 text-xs text-neutral-600">
           No spam. Just tool updates when they’re ready.

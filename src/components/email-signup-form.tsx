@@ -4,7 +4,19 @@ import { useState } from "react";
 
 type SubmitState = "idle" | "sending" | "success" | "error";
 
-export function EmailSignupForm() {
+type EmailSignupFormProps = {
+  source?: string;
+  type?: "signup" | "waitlist";
+  buttonLabel?: string;
+  successMessage?: string;
+};
+
+export function EmailSignupForm({
+  source = "homepage",
+  type = "signup",
+  buttonLabel = "Get Coaching Notes",
+  successMessage = "Thanks. Check your inbox for a confirmation email.",
+}: EmailSignupFormProps) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
@@ -26,7 +38,7 @@ export function EmailSignupForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify({ email: trimmed, source, type }),
       });
 
       const data = (await res.json()) as { success?: boolean; error?: string };
@@ -38,7 +50,7 @@ export function EmailSignupForm() {
       }
 
       setState("success");
-      setMessage("Thanks. You are on the list.");
+      setMessage(successMessage);
       setEmail("");
     } catch {
       setState("error");
@@ -68,7 +80,7 @@ export function EmailSignupForm() {
           disabled={state === "sending"}
           className="inline-flex shrink-0 items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {state === "sending" ? "Sending..." : "Get Coaching Notes"}
+          {state === "sending" ? "Sending..." : buttonLabel}
         </button>
       </form>
       {message ? (
