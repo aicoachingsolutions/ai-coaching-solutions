@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@reference "tailwindcss";
+
+/* -----------------------------------------
+   AI Coaching Solutions — Coach-first theme
+   Navy + off-white + orange accent
+------------------------------------------ */
+
+:root {
+  --bg: #f7f8fa;          /* off-white */
+  --surface: #ffffff;     /* cards */
+  --text: #0b1220;        /* near-black navy */
+  --muted: #556070;       /* muted text */
+  --border: #e5e9f0;      /* soft border */
+
+  --navy: #0b1f3a;        /* primary brand */
+  --navy-2: #103055;      /* hover/darker */
+  --blue: #1f6feb;        /* optional secondary (sparingly) */
+  --orange: #f97316;      /* CTA accent */
+  --orange-2: #ea580c;    /* hover */
+
+  --ring: rgba(249, 115, 22, 0.35);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+
+@layer components {
+  /* Layout */
+  .container-page {
+    @apply mx-auto w-full max-w-3xl px-4 py-10;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-top: 3.5rem;
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  /* Surfaces */
+  .card {
+    @apply rounded-2xl border bg-white;
+    background: var(--surface);
+  }
+
+  .card-pad {
+    @apply p-5;
+  }
+
+  @media (min-width: 640px) {
+    .card-pad {
+      padding: 1.5rem;
+    }
+  }
+
+  /* Type */
+  .h1 {
+    @apply text-3xl font-semibold tracking-tight;
+  }
+
+  @media (min-width: 640px) {
+    .h1 {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
+  }
+
+  .h2 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  .label {
+    @apply text-sm font-medium;
+    color: var(--text);
+  }
+
+  .muted {
+    @apply text-sm;
+    color: var(--muted);
+  }
+
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-wide;
+    color: var(--muted);
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-xl border px-4 py-3 text-sm outline-none;
+    background: var(--surface);
+  }
+
+  .input:focus {
+    box-shadow: 0 0 0 4px var(--ring);
+    border-color: var(--orange);
+  }
+
+  .textarea {
+    @apply w-full rounded-xl border px-4 py-3 text-sm outline-none;
+    background: var(--surface);
+  }
+
+  .textarea:focus {
+    box-shadow: 0 0 0 4px var(--ring);
+    border-color: var(--orange);
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition;
+  }
+
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--orange-2);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(11, 31, 58, 0.04);
+  }
+
+  .note {
+    @apply rounded-xl border px-4 py-3 text-xs;
+    background: rgba(11, 31, 58, 0.04);
+    color: var(--muted);
+  }
+
+  /* Result cue chips */
+  .cue {
+    @apply rounded-xl border px-4 py-3 text-sm;
+    background: rgba(11, 31, 58, 0.03);
+  }
+}
