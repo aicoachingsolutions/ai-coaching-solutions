@@ -24,13 +24,29 @@
   --ring: rgba(249, 115, 22, 0.35);
 }
 
-html, body {
+html,
+body {
   height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+main {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 @layer base {

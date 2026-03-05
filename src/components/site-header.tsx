@@ -21,16 +21,10 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header
-      className="sticky top-0 z-50 border-b text-white"
-      style={{
-        backgroundColor: "var(--navy, #0b1f3a)",
-        borderColor: "var(--navy-2, #103055)",
-      }}
-    >
-      <div className="mx-auto w-full max-w-6xl px-4 py-2.5 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center justify-between gap-2">
-          <Link href="/" className="group inline-flex min-w-0 items-center gap-1.5">
+    <header className="relative z-50 isolate w-full overflow-x-clip bg-[#0b2340] text-white">
+      <div className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center justify-between gap-2 py-2.5">
+          <Link href="/" className="group inline-flex min-w-0 flex-1 items-center gap-1.5">
             <Image
               src="/ai-coaching-logo-v2.png"
               alt="AI Coaching Solutions logo"
@@ -51,7 +45,7 @@ export function SiteHeader() {
 
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/30 bg-white/5 text-white transition hover:bg-white/10 lg:hidden"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/30 bg-white/5 text-white transition hover:bg-white/10 lg:hidden"
             aria-label="Toggle navigation menu"
             aria-expanded={isOpen}
             onClick={() => setIsOpen((prev) => !prev)}
@@ -77,29 +71,33 @@ export function SiteHeader() {
             </Link>
           </nav>
         </div>
-
-        {isOpen && (
-          <nav className="mt-3 space-y-2 border-t border-white/20 pt-3 lg:hidden">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="block rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/10 hover:opacity-90"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              href="/free-breakdown"
-              onClick={() => setIsOpen(false)}
-              className="mt-1 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 no-underline transition hover:bg-neutral-100"
-            >
-              Try Free Breakdown
-            </Link>
-          </nav>
-        )}
       </div>
+
+      {isOpen && (
+        <div className="border-t border-white/10 lg:hidden overflow-x-clip">
+          <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
+            <nav className="space-y-2">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/10 hover:opacity-90"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                href="/free-breakdown"
+                onClick={() => setIsOpen(false)}
+                className="mt-1 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 no-underline transition hover:bg-neutral-100"
+              >
+                Try Free Breakdown
+              </Link>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

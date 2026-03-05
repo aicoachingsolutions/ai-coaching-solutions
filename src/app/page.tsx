@@ -165,7 +165,7 @@ export default async function HomePage() {
       {/* HERO */}
       <Section className="pt-10 sm:pt-20">
         <Container>
-          <div className="relative overflow-hidden rounded-2xl shadow-md">
+          <div className="relative overflow-x-clip overflow-y-hidden rounded-2xl shadow-md">
             <div
               className="absolute inset-0"
               style={{

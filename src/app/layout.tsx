@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh overflow-x-hidden bg-neutral-100 text-neutral-900 antialiased">
         <SiteHeader />
 
-        <main className="w-full py-8 sm:py-10">{children}</main>
+        <main className="w-full overflow-x-hidden py-8 sm:py-10">{children}</main>
         <Footer />
       </body>
     </html>

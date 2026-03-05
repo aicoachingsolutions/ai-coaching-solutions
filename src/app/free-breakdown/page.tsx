@@ -292,12 +292,12 @@ export default function FreeBreakdownPage() {
   };
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 top-56 h-72 w-72 rounded-full bg-sky-200/30 blur-3xl" />
+    <div className="relative overflow-x-clip overflow-y-hidden">
+      <div className="pointer-events-none absolute left-0 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-56 h-72 w-72 translate-x-1/2 rounded-full bg-sky-200/30 blur-3xl" />
 
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
-        <header className="relative overflow-hidden rounded-2xl bg-white shadow-md">
+        <header className="relative overflow-x-clip overflow-y-hidden rounded-2xl bg-white shadow-md">
           <div
             className="absolute inset-0"
             style={{
@@ -342,7 +342,7 @@ export default function FreeBreakdownPage() {
         </header>
 
         <section className="mt-8 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
-          <div className="card card-pad overflow-hidden shadow-sm">
+          <div className="card card-pad shadow-sm">
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div className="flex items-start justify-between gap-3">
                 <div>
