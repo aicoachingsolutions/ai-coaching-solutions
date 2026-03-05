@@ -24,11 +24,26 @@
   --ring: rgba(249, 115, 22, 0.35);
 }
 
+/* Critical: prevent padding from increasing element width (fixes 16px/32px overflow everywhere) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* -----------------------------------------
+   Hard guarantee: never allow horizontal pan
+   (handles mobile Safari/Chrome blur+transform quirks)
+------------------------------------------ */
+
 html,
 body {
   height: 100%;
+  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden;     /* stronger than clip in mobile quirks */
+  overscroll-behavior-x: none;
+  touch-action: pan-y;    /* prevents horizontal drag gesture */
 }
 
 body {
@@ -37,16 +52,40 @@ body {
 }
 
 main {
+  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;       /* section-level clipping for safety */
 }
 
+/* Media can’t force layout width */
 img,
 video,
 canvas,
 svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Long tokens / AI output can’t force width */
+pre,
+code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+p,
+span,
+li,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @layer base {

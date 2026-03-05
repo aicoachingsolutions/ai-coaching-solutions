@@ -33,8 +33,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-dvh overflow-x-hidden bg-neutral-100 text-neutral-900 antialiased">
+    <html lang="en" className="h-full overflow-x-clip">
+      <body className="min-h-dvh w-full overflow-x-clip bg-neutral-100 text-neutral-900 antialiased">
         <SiteHeader />
 
         <main className="w-full overflow-x-hidden py-8 sm:py-10">{children}</main>

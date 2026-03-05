@@ -1,9 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/blog", label: "Resources" },
@@ -13,95 +9,70 @@ const NAV_ITEMS = [
 ];
 
 export function SiteHeader() {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
   return (
-    <header className="relative z-50 w-full bg-[#0b2340] text-white">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex w-full min-w-0 items-center justify-between gap-3 py-3">
-          <div className="flex min-w-0 items-center gap-2.5 overflow-hidden pr-2">
-            <Link
-              href="/"
-              aria-label="Go to homepage"
-              className="shrink-0 rounded-md no-underline"
-            >
-              <Image
-                src="/ai-coaching-logo-v2.png"
-                alt="AI Coaching Solutions logo"
-                width={44}
-                height={44}
-                className="h-9 w-9 rounded-md border border-white/25 bg-white/10 object-cover"
-                priority
-              />
-            </Link>
-            <div className="flex min-w-0 flex-col justify-center">
-              <p className="truncate text-sm font-semibold leading-tight tracking-tight text-white sm:text-[15px]">
-                AI Coaching Solutions
-              </p>
-              <p className="mt-0.5 text-[11px] leading-none text-white/85">Built by a Coach</p>
-            </div>
+    <header className="w-full bg-[#0b2340] text-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        {/* Logo + Brand */}
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/ai-coaching-logo-v2.png"
+            alt="AI Coaching Solutions"
+            width={44}
+            height={44}
+            className="rounded-md border border-white/25 bg-white/10"
+            priority
+          />
+
+          <div className="flex flex-col leading-tight">
+            <span className="text-base font-semibold text-white">
+              AI Coaching Solutions
+            </span>
+            <span className="text-xs text-white/70">
+              Built by a Coach
+            </span>
           </div>
+        </Link>
 
-          <button
-            type="button"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/30 bg-white/5 text-white transition hover:bg-white/10 lg:hidden"
-            aria-label="Toggle navigation menu"
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <span className="text-lg leading-none">{isOpen ? "×" : "☰"}</span>
-          </button>
-
-          <nav className="hidden items-center gap-1 lg:flex">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="inline-flex h-9 items-center rounded-md px-3 text-sm font-medium text-white no-underline visited:text-white hover:bg-white/10"
-              >
-                {item.label}
-              </Link>
-            ))}
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-2 lg:flex">
+          {NAV_ITEMS.map((item) => (
             <Link
-              href="/free-breakdown"
-              className="ml-1 inline-flex h-9 items-center rounded-md border border-white/20 bg-white px-3 text-sm font-semibold text-slate-900 no-underline visited:text-slate-900 hover:bg-neutral-100"
+              key={item.href}
+              href={item.href}
+              className="rounded-md px-3 py-2 text-sm text-white/90 transition hover:bg-white/10 hover:text-white"
             >
-              Try Free Breakdown
+              {item.label}
             </Link>
-          </nav>
-        </div>
+          ))}
+
+          <Link
+            href="/free-breakdown"
+            className="ml-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340] transition hover:bg-neutral-100"
+          >
+            Try Free Breakdown
+          </Link>
+        </nav>
       </div>
 
-      {isOpen ? (
-        <div className="w-full border-t border-white/15 lg:hidden">
-          <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
-            <nav className="grid gap-2">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm font-medium text-white no-underline visited:text-white hover:bg-white/10"
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Link
-                href="/free-breakdown"
-                onClick={() => setIsOpen(false)}
-                className="mt-1 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 no-underline visited:text-slate-900 hover:bg-neutral-100"
-              >
-                Try Free Breakdown
-              </Link>
-            </nav>
-          </div>
-        </div>
-      ) : null}
+      {/* Mobile Nav */}
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-2 border-t border-white/15 px-4 py-3 lg:hidden">
+        {NAV_ITEMS.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="flex items-center justify-center rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white no-underline visited:text-white hover:text-white"
+          >
+            {item.label}
+          </Link>
+        ))}
+
+        <Link
+          href="/free-breakdown"
+          className="col-span-2 flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340]"
+        >
+          Try Free Breakdown
+        </Link>
+      </div>
     </header>
   );
 }

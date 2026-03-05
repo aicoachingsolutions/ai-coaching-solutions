@@ -93,7 +93,7 @@ async function getLatestPosts(limit = 3): Promise<PostMeta[]> {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
+    <div className="mx-auto w-full max-w-6xl min-w-0 px-4 sm:px-6 lg:px-8">{children}</div>
   );
 }
 
@@ -104,7 +104,7 @@ function Section({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <section className={`py-8 sm:py-14 ${className}`}>{children}</section>;
+  return <section className={`py-8 sm:py-14 overflow-x-clip ${className}`}>{children}</section>;
 }
 
 function PrimaryButton({
@@ -165,7 +165,7 @@ export default async function HomePage() {
       {/* HERO */}
       <Section className="pt-8 sm:pt-16">
         <Container>
-          <div className="relative overflow-x-hidden overflow-y-hidden rounded-2xl shadow-md">
+          <div className="relative overflow-x-clip overflow-y-hidden rounded-2xl shadow-md [isolation:isolate]">
             <div
               className="absolute inset-0"
               style={{

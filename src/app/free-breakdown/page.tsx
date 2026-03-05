@@ -292,11 +292,14 @@ export default function FreeBreakdownPage() {
   };
 
   return (
-    <div className="relative overflow-x-hidden overflow-y-hidden">
-      <div className="pointer-events-none absolute left-0 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-56 h-72 w-72 translate-x-1/2 rounded-full bg-sky-200/30 blur-3xl" />
+    <div className="relative w-full">
+      {/* Contained background layer: isolation + clip prevents blur from affecting scroll region */}
+      <div className="pointer-events-none absolute inset-0 overflow-x-clip [isolation:isolate]">
+        <div className="absolute left-0 top-20 h-72 w-72 -translate-x-24 rounded-full bg-blue-200/30 blur-3xl" />
+        <div className="absolute right-0 top-56 h-72 w-72 translate-x-24 rounded-full bg-sky-200/30 blur-3xl" />
+      </div>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12">
+      <div className="relative mx-auto w-full max-w-6xl min-w-0 px-4 py-8 sm:py-12">
         <header className="relative overflow-x-hidden overflow-y-hidden rounded-2xl bg-white shadow-md">
           <div
             className="absolute inset-0"
@@ -516,7 +519,7 @@ export default function FreeBreakdownPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     Mechanics
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-900 whitespace-pre-line">
+                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
                     {result.mechanics}
                   </p>
                 </article>
@@ -525,7 +528,7 @@ export default function FreeBreakdownPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     Timing
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-900 whitespace-pre-line">
+                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
                     {result.timing}
                   </p>
                 </article>
@@ -539,7 +542,7 @@ export default function FreeBreakdownPage() {
                   {result.cues.map((cue, idx) => (
                     <li
                       key={idx}
-                      className="rounded-lg bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900"
+                      className="break-words rounded-lg bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900"
                     >
                       {cue}
                     </li>
@@ -552,7 +555,7 @@ export default function FreeBreakdownPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     Next Focus
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-900 whitespace-pre-line">
+                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
                     {result.nextFocus}
                   </p>
                 </article>
@@ -561,7 +564,7 @@ export default function FreeBreakdownPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     Recommended Drill
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-900 whitespace-pre-line">
+                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
                     {result.drill}
                   </p>
                 </article>
