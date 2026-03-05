@@ -21,10 +21,13 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header className="relative z-50 w-full bg-[#0b2340] text-white">
+    <header className="relative z-50 w-full overflow-visible bg-[#0b2340] text-white">
       <div className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center justify-between gap-2 py-2.5">
-          <Link href="/" className="group inline-flex min-w-0 flex-1 items-center gap-1.5">
+        <div className="flex w-full min-w-0 items-center justify-between gap-2 py-2.5">
+          <Link
+            href="/"
+            className="group flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden pr-2"
+          >
             <Image
               src="/ai-coaching-logo-v2.png"
               alt="AI Coaching Solutions logo"
@@ -33,7 +36,7 @@ export function SiteHeader() {
               className="h-6 w-6 rounded-md border border-white/30 bg-white/10 object-cover"
               priority
             />
-            <div className="grid min-w-0 grid-rows-2 leading-none">
+            <div className="grid min-w-0 max-w-full grid-rows-2 leading-none">
               <span className="block truncate text-sm font-semibold tracking-tight text-white sm:text-[14px] xl:text-[15px]">
                 AI Coaching Solutions
               </span>
@@ -74,7 +77,7 @@ export function SiteHeader() {
       </div>
 
       {isOpen && (
-        <div className="border-t border-white/10 lg:hidden">
+        <div className="w-full overflow-visible border-t border-white/10 lg:hidden">
           <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
             <nav className="space-y-2">
               {NAV_ITEMS.map((item) => (
@@ -82,7 +85,7 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="block rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/10 hover:opacity-90"
+                  className="block w-full break-words rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/10 hover:opacity-90"
                 >
                   {item.label}
                 </Link>

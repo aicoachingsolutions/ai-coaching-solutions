@@ -13,7 +13,7 @@ type PageWrapperProps = {
 
 export function PageWrapper({ children }: PageWrapperProps) {
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+    <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
       {children}
     </main>
   );

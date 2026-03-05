@@ -36,7 +36,7 @@ export default async function BlogPostPage({
   const contentHtml = processed.toString();
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       <header className="border-b border-neutral-200 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
           Article
