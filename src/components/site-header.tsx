@@ -21,7 +21,7 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header className="relative z-50 isolate w-full overflow-x-clip bg-[#0b2340] text-white">
+    <header className="relative z-50 w-full bg-[#0b2340] text-white">
       <div className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center justify-between gap-2 py-2.5">
           <Link href="/" className="group inline-flex min-w-0 flex-1 items-center gap-1.5">
@@ -74,7 +74,7 @@ export function SiteHeader() {
       </div>
 
       {isOpen && (
-        <div className="border-t border-white/10 lg:hidden overflow-x-clip">
+        <div className="border-t border-white/10 lg:hidden">
           <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
             <nav className="space-y-2">
               {NAV_ITEMS.map((item) => (

@@ -292,12 +292,12 @@ export default function FreeBreakdownPage() {
   };
 
   return (
-    <div className="relative overflow-x-clip overflow-y-hidden">
+    <div className="relative overflow-x-hidden overflow-y-hidden">
       <div className="pointer-events-none absolute left-0 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-56 h-72 w-72 translate-x-1/2 rounded-full bg-sky-200/30 blur-3xl" />
 
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
-        <header className="relative overflow-x-clip overflow-y-hidden rounded-2xl bg-white shadow-md">
+        <header className="relative overflow-x-hidden overflow-y-hidden rounded-2xl bg-white shadow-md">
           <div
             className="absolute inset-0"
             style={{
