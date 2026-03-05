@@ -30,7 +30,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-2.5 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center justify-between gap-2">
-          <Link href="/" className="group inline-flex items-center gap-1.5">
+          <Link href="/" className="group inline-flex min-w-0 items-center gap-1.5">
             <Image
               src="/ai-coaching-logo-v2.png"
               alt="AI Coaching Solutions logo"
@@ -39,11 +39,11 @@ export function SiteHeader() {
               className="h-6 w-6 rounded-md border border-white/30 bg-white/10 object-cover"
               priority
             />
-            <div className="grid grid-rows-2 leading-none">
-              <span className="block text-sm font-semibold tracking-tight text-white sm:text-[14px] xl:text-[15px]">
+            <div className="grid min-w-0 grid-rows-2 leading-none">
+              <span className="block truncate text-sm font-semibold tracking-tight text-white sm:text-[14px] xl:text-[15px]">
                 AI Coaching Solutions
               </span>
-              <span className="mt-0.5 hidden text-[10px] font-medium tracking-[0.01em] text-white/80 sm:block sm:text-[11px] lg:hidden xl:block">
+              <span className="mt-0.5 hidden truncate text-[10px] font-medium tracking-[0.01em] text-white/80 sm:block sm:text-[11px] lg:hidden xl:block">
                 Built by a Coach
               </span>
             </div>
