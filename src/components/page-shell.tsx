@@ -13,7 +13,7 @@ type PageWrapperProps = {
 
 export function PageWrapper({ children }: PageWrapperProps) {
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       {children}
     </main>
   );
@@ -22,25 +22,25 @@ export function PageWrapper({ children }: PageWrapperProps) {
 export function PageShell({ eyebrow, title, subtitle, children }: PageShellProps) {
   return (
     <PageWrapper>
-      <header className="rounded-2xl border border-neutral-300 bg-white p-6 shadow-sm sm:p-8">
+      <header className="rounded-2xl border border-neutral-300 bg-white p-5 shadow-sm sm:p-8">
         {eyebrow ? (
           <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
             {eyebrow}
           </p>
         ) : null}
 
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+        <h1 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
           {title}
         </h1>
 
         {subtitle ? (
-          <p className="mt-3 max-w-3xl text-base leading-relaxed text-neutral-700">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-neutral-700 sm:text-base">
             {subtitle}
           </p>
         ) : null}
       </header>
 
-      <section className="mt-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="mt-5 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:mt-6 sm:p-8">
         {children}
       </section>
     </PageWrapper>
@@ -53,7 +53,7 @@ type ProseProps = {
 
 export function Prose({ children }: ProseProps) {
   return (
-    <div className="space-y-5 text-[15px] leading-relaxed text-neutral-800 sm:text-base">
+    <div className="space-y-5 text-sm leading-relaxed text-neutral-800 sm:text-base">
       {children}
     </div>
   );

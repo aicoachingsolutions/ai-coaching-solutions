@@ -99,13 +99,14 @@ function StatusPill({ status }: { status: ToolCard["status"] }) {
 
 export default function ToolsPage() {
   return (
-    <div className="flex flex-col gap-10">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <div className="flex flex-col gap-8 sm:gap-10">
       {/* Header */}
       <section className="flex flex-col items-center gap-3 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-4xl">
           Tools
         </h1>
-        <p className="max-w-2xl text-sm text-neutral-700 sm:text-base">
+        <p className="max-w-2xl text-sm leading-relaxed text-neutral-700 sm:text-base">
           I’m building AI Coaching Solutions the same way I coach: start simple,
           earn trust, and keep what’s useful. The free breakdown is live. The
           rest is being built with the coaching community.
@@ -209,6 +210,7 @@ export default function ToolsPage() {
           Simple first. Reliable first. Coaches first.
         </p>
       </section>
-    </div>
+      </div>
+    </main>
   );
 }

@@ -104,7 +104,7 @@ function Section({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <section className={`py-10 sm:py-16 ${className}`}>{children}</section>;
+  return <section className={`py-8 sm:py-14 ${className}`}>{children}</section>;
 }
 
 function PrimaryButton({
@@ -163,7 +163,7 @@ export default async function HomePage() {
   return (
     <main className="bg-white text-black">
       {/* HERO */}
-      <Section className="pt-10 sm:pt-20">
+      <Section className="pt-8 sm:pt-16">
         <Container>
           <div className="relative overflow-x-hidden overflow-y-hidden rounded-2xl shadow-md">
             <div

@@ -24,7 +24,7 @@ export default function PostIndexPage() {
     .map((p) => p!);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <header className="border-b border-neutral-200 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
           Resources
