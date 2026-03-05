@@ -93,7 +93,7 @@ async function getLatestPosts(limit = 3): Promise<PostMeta[]> {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
+    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
   );
 }
 
@@ -330,7 +330,7 @@ export default async function HomePage() {
       {/* COACH NOTE */}
       <Section>
         <Container>
-            <div className="mx-auto max-w-3xl rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
+            <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
             <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">A quick coach note</h2>
             <p className="mt-4 text-sm leading-7 text-black/75 sm:text-base">
               I built this for coaches working through late-night film, weekend tournaments, range

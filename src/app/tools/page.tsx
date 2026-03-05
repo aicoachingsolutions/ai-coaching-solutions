@@ -101,7 +101,7 @@ export default function ToolsPage() {
   return (
     <div className="flex flex-col gap-10">
       {/* Header */}
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col items-center gap-3 text-center">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Tools
         </h1>
@@ -134,21 +134,28 @@ export default function ToolsPage() {
 
       {/* Tool groups */}
       <div className="flex flex-col gap-10">
-        {TOOL_GROUPS.map((group) => (
-          <section key={group.heading} className="flex flex-col gap-4">
+        {TOOL_GROUPS.map((group, index) => (
+          <section
+            key={group.heading}
+            className={`flex flex-col gap-4 ${index > 0 ? "border-t border-neutral-200 pt-6" : ""}`}
+          >
             <div className="flex flex-col gap-1">
-              <h2 className="text-lg font-semibold">{group.heading}</h2>
-              <p className="max-w-2xl text-sm text-neutral-700">{group.sub}</p>
+              <h2 className="text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
+                {group.heading}
+              </h2>
+              <p className="max-w-2xl text-sm text-neutral-700 sm:text-base">{group.sub}</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {group.items.map((tool) => (
                 <div
                   key={tool.title}
-                  className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-white p-5"
+                  className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-sm font-semibold">{tool.title}</h3>
+                    <h3 className="text-base font-semibold leading-tight text-neutral-900">
+                      {tool.title}
+                    </h3>
                     <StatusPill status={tool.status} />
                   </div>
                   <p className="text-sm text-neutral-700">{tool.description}</p>

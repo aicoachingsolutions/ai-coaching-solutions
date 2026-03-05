@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { jsPDF } from "jspdf";
 
 type Sport = "baseball" | "softball" | "golf";
 type Motion = "swing" | "pitching";
@@ -38,6 +39,54 @@ function cleanText(s: string) {
   return (s || "").trim();
 }
 
+function formatLabel(value: string) {
+  if (!value) return "Not provided";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function buildBreakdownText(params: {
+  sport: Sport;
+  motion: Motion;
+  ageGroup: string;
+  skillLevel: string;
+  videoLink: string;
+  mainIssue: string;
+  result: BreakdownResult;
+}) {
+  const { sport, motion, ageGroup, skillLevel, videoLink, mainIssue, result } = params;
+  const cueLines = result.cues.map((cue) => `- ${cue}`).join("\n");
+
+  return [
+    "AI Coaching Breakdown",
+    `Generated: ${new Date().toLocaleString()}`,
+    "",
+    "SESSION",
+    `Sport: ${formatLabel(sport)}`,
+    `Motion: ${formatLabel(motion)}`,
+    `Age group: ${cleanText(ageGroup) || "Not provided"}`,
+    `Skill level: ${cleanText(skillLevel) || "Not provided"}`,
+    `Video link: ${cleanText(videoLink) || "Not provided"}`,
+    "",
+    "MAIN ISSUE",
+    cleanText(mainIssue),
+    "",
+    "MECHANICS",
+    result.mechanics,
+    "",
+    "TIMING",
+    result.timing,
+    "",
+    "COACHING CUES",
+    cueLines,
+    "",
+    "NEXT FOCUS",
+    result.nextFocus,
+    "",
+    "RECOMMENDED DRILL",
+    result.drill,
+  ].join("\n");
+}
+
 export default function FreeBreakdownPage() {
   const [sport, setSport] = useState<Sport>("baseball");
   const [motion, setMotion] = useState<Motion>("swing");
@@ -52,6 +101,10 @@ export default function FreeBreakdownPage() {
   const [error, setError] = useState<string | null>(null);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [pdfState, setPdfState] = useState<"idle" | "loading" | "error">("idle");
+  const [email, setEmail] = useState("");
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const canSubmit = useMemo(() => {
     // keep this aligned with your API min length
@@ -75,6 +128,8 @@ export default function FreeBreakdownPage() {
     setResult(null);
     setCopyState("idle");
     setPdfState("idle");
+    setEmailSent(false);
+    setEmailError(null);
     setLoading(true);
 
     try {
@@ -124,68 +179,115 @@ export default function FreeBreakdownPage() {
 
   const handleCopyResults = async () => {
     if (!result) return;
-
-    const cueLines = result.cues.map((cue) => `- ${cue}`).join("\n");
-    const copyText = [
-      "Breakdown",
-      "",
-      "Mechanics",
-      result.mechanics,
-      "",
-      "Timing",
-      result.timing,
-      "",
-      "Coaching Cues",
-      cueLines,
-      "",
-      "Next Focus",
-      result.nextFocus,
-      "",
-      "Recommended Drill",
-      result.drill,
-    ].join("\n");
+    const copyText = buildBreakdownText({
+      sport,
+      motion,
+      ageGroup,
+      skillLevel,
+      videoLink,
+      mainIssue,
+      result,
+    });
 
     try {
       await navigator.clipboard.writeText(copyText);
       setCopyState("copied");
+      window.setTimeout(() => setCopyState("idle"), 2000);
     } catch {
       setCopyState("error");
     }
   };
 
-  const handleExportPdf = async () => {
+  const downloadBreakdownPdf = () => {
     if (!result) return;
     setPdfState("loading");
     try {
-      const res = await fetch("/api/breakdown/pdf", {
+      const doc = new jsPDF({ unit: "pt", format: "letter" });
+      const margin = 48;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const maxWidth = pageWidth - margin * 2;
+      let y = 56;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("AI Coaching Breakdown", margin, y);
+      y += 20;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+      y += 18;
+
+      const lines = doc.splitTextToSize(
+        buildBreakdownText({
+          sport,
+          motion,
+          ageGroup,
+          skillLevel,
+          videoLink,
+          mainIssue,
+          result,
+        }),
+        maxWidth
+      );
+
+      doc.setFontSize(11);
+      lines.forEach((line: string) => {
+        if (y > 760) {
+          doc.addPage();
+          y = 56;
+        }
+        doc.text(line, margin, y);
+        y += 14;
+      });
+
+      doc.save("coaching-breakdown.pdf");
+      setPdfState("idle");
+    } catch {
+      setPdfState("error");
+    }
+  };
+
+  const handleEmailBreakdown = async () => {
+    if (!result) return;
+    setEmailError(null);
+    setEmailSent(false);
+
+    if (!cleanText(email) || !cleanText(email).includes("@")) {
+      setEmailError("Enter a valid email address.");
+      return;
+    }
+
+    setEmailSending(true);
+    try {
+      const res = await fetch("/api/breakdown/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          email: cleanText(email),
+          source: "free-breakdown",
           sport,
           motion,
           ageGroup: cleanText(ageGroup),
           skillLevel: cleanText(skillLevel),
+          videoLink: cleanText(videoLink),
           mainIssue: cleanText(mainIssue),
           result,
         }),
       });
 
-      if (!res.ok) {
-        throw new Error(`PDF export failed (${res.status})`);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json?.ok) {
+        throw new Error(json?.error || "Failed to send email");
       }
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "coaching-breakdown.pdf";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-      setPdfState("idle");
-    } catch {
-      setPdfState("error");
+      setEmailSent(true);
+      setEmailError(null);
+    } catch (err: any) {
+      setEmailError(err?.message || "Failed to send email");
+      setEmailSent(false);
+    } finally {
+      setEmailSending(false);
     }
   };
 
@@ -464,7 +566,31 @@ export default function FreeBreakdownPage() {
                   </p>
                 </article>
               </div>
+
             </div>
+
+            <section className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
+              <h3 className="text-base font-semibold text-neutral-900">
+                Want the full tool inside the app?
+              </h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-800">
+                <li>Upload a clip (paid tools)</li>
+                <li>More drill options + progressions</li>
+                <li>Athlete-friendly version + coach notes</li>
+                <li>Save and revisit breakdown history (coming soon)</li>
+              </ul>
+              <p className="mt-4 text-xs text-neutral-600">
+                Free breakdown stays link-based. Paid tools live inside the AI Coaching Solutions app.
+              </p>
+              <div className="mt-4">
+                <a
+                  href="/tools"
+                  className="inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
+                >
+                  See the Tools App
+                </a>
+              </div>
+            </section>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <button
@@ -472,41 +598,53 @@ export default function FreeBreakdownPage() {
                 onClick={handleCopyResults}
                 className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700"
               >
-                {copyState === "copied" ? "Copied" : "Copy Breakdown"}
+                Copy breakdown
               </button>
               <button
                 type="button"
-                onClick={handleExportPdf}
+                onClick={downloadBreakdownPdf}
                 disabled={pdfState === "loading"}
-                className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700"
+                className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700 disabled:opacity-60"
               >
-                {pdfState === "loading" ? "Exporting PDF..." : "Export PDF"}
+                {pdfState === "loading" ? "Preparing PDF..." : "Download PDF"}
               </button>
             </div>
+            {copyState === "copied" && (
+              <p className="mt-2 text-xs text-emerald-700">Copied ✅</p>
+            )}
             {copyState === "error" && (
               <p className="mt-2 text-xs text-red-700">Copy failed. Please try again.</p>
             )}
             {pdfState === "error" && (
-              <p className="mt-2 text-xs text-red-700">PDF export failed. Please try again.</p>
+              <p className="mt-2 text-xs text-red-700">PDF download failed. Please try again.</p>
             )}
 
             <div className="mt-10 border-t pt-6">
               <p className="text-sm font-medium">
-                Want practical coaching resources like this?
-              </p>
-              <p className="muted mt-1">
-                Occasional notes, tool updates, and practical resources.
+                Optional: Email this breakdown to yourself + get occasional coach notes (no spam).
               </p>
               <form className="mt-4 flex flex-col gap-3 md:flex-row">
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError(null);
+                    setEmailSent(false);
+                  }}
                   placeholder="you@example.com"
                   className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-neutral-300 focus:ring-2 focus:ring-neutral-200"
                 />
-                <button type="button" className="btn btn-secondary">
-                  Join
+                <button
+                  type="button"
+                  onClick={handleEmailBreakdown}
+                  disabled={emailSending}
+                  className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {emailSending ? "Sending..." : emailSent ? "Sent ✅" : "Email me this breakdown"}
                 </button>
               </form>
+              {emailError && <p className="mt-2 text-xs text-red-700">{emailError}</p>}
             </div>
           </section>
         )}
