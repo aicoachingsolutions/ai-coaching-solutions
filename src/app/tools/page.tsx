@@ -89,7 +89,7 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
 
 function StatusPill({ status }: { status: ToolCard["status"] }) {
   const base =
-    "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold";
+    "inline-flex shrink-0 items-center rounded-full border px-2.5 py-1 text-xs font-semibold whitespace-nowrap break-normal";
   const cls =
     status === "Available"
       ? `${base} border-emerald-200 bg-emerald-50 text-emerald-900`
