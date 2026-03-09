@@ -24,7 +24,7 @@ export function PageShell({ eyebrow, title, subtitle, children }: PageShellProps
     <PageWrapper>
       <header className="rounded-2xl border border-neutral-300 bg-white p-5 shadow-sm sm:p-8">
         {eyebrow ? (
-          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
             {eyebrow}
           </p>
         ) : null}
@@ -34,7 +34,7 @@ export function PageShell({ eyebrow, title, subtitle, children }: PageShellProps
         </h1>
 
         {subtitle ? (
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-neutral-700 sm:text-base">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-neutral-800 sm:text-base">
             {subtitle}
           </p>
         ) : null}
@@ -53,7 +53,7 @@ type ProseProps = {
 
 export function Prose({ children }: ProseProps) {
   return (
-    <div className="space-y-5 text-sm leading-relaxed text-neutral-800 sm:text-base">
+    <div className="space-y-5 text-sm leading-relaxed text-neutral-900 sm:text-base">
       {children}
     </div>
   );
@@ -67,7 +67,7 @@ type CalloutProps = {
 export function Callout({ title, children }: CalloutProps) {
   return (
     <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-700">
         {title}
       </h2>
       <div className="mt-3">{children}</div>

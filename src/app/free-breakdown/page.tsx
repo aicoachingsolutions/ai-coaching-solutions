@@ -313,7 +313,7 @@ export default function FreeBreakdownPage() {
               <div className="inline-flex items-center rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
                 Free Coaching Resource
               </div>
-              <div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/80">
+              <div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/90">
                 Estimated time: &lt;60 seconds
               </div>
             </div>
@@ -478,7 +478,7 @@ export default function FreeBreakdownPage() {
               </h3>
               <ul className="mt-4 list-disc space-y-2 pl-5 text-left">
                 {formTips.map((tip) => (
-                  <li key={tip} className="text-sm text-neutral-700">
+                  <li key={tip} className="text-sm text-neutral-800">
                     {tip}
                   </li>
                 ))}
@@ -487,11 +487,11 @@ export default function FreeBreakdownPage() {
 
             <div className="rounded-xl border bg-neutral-50 p-4">
               <p className="kicker">What this is</p>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-700">
+              <p className="mt-2 text-sm leading-relaxed text-neutral-800">
                 A fast starting point for practice planning and athlete
                 communication.
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-700">
+              <p className="mt-3 text-sm leading-relaxed text-neutral-800">
                 Use this alongside in-person coaching and video review workflow.
               </p>
             </div>
@@ -516,7 +516,7 @@ export default function FreeBreakdownPage() {
             <div className="mt-8 space-y-10">
               <div className="grid gap-4 lg:grid-cols-2">
                 <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
                     Mechanics
                   </p>
                   <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
@@ -525,7 +525,7 @@ export default function FreeBreakdownPage() {
                 </article>
 
                 <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
                     Timing
                   </p>
                   <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
@@ -535,7 +535,7 @@ export default function FreeBreakdownPage() {
               </div>
 
               <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
                   Coaching Cues
                 </p>
                 <ul className="mt-3 space-y-1.5">
@@ -552,7 +552,7 @@ export default function FreeBreakdownPage() {
 
               <div className="grid gap-4 lg:grid-cols-2">
                 <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
                     Next Focus
                   </p>
                   <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
@@ -561,7 +561,7 @@ export default function FreeBreakdownPage() {
                 </article>
 
                 <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
                     Recommended Drill
                   </p>
                   <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
@@ -582,7 +582,7 @@ export default function FreeBreakdownPage() {
                 <li>Athlete-friendly version + coach notes</li>
                 <li>Save and revisit breakdown history (coming soon)</li>
               </ul>
-              <p className="mt-4 text-xs text-neutral-600">
+              <p className="mt-4 text-xs text-neutral-700">
                 Free breakdown stays link-based. Paid tools live inside the AI Coaching Solutions app.
               </p>
               <div className="mt-4">

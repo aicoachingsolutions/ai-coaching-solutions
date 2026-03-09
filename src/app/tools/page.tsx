@@ -106,7 +106,7 @@ export default function ToolsPage() {
         <h1 className="text-2xl font-semibold tracking-tight sm:text-4xl">
           Tools
         </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-neutral-700 sm:text-base">
+        <p className="max-w-2xl text-sm leading-relaxed text-neutral-800 sm:text-base">
           I’m building AI Coaching Solutions the same way I coach: start simple,
           earn trust, and keep what’s useful. The free breakdown is live. The
           rest is being built with the coaching community.
@@ -127,7 +127,7 @@ export default function ToolsPage() {
           </a>
         </div>
 
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-neutral-700">
           Coach-first promise: this is meant to support your decisions — not
           replace them.
         </p>
@@ -144,7 +144,7 @@ export default function ToolsPage() {
               <h2 className="text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
                 {group.heading}
               </h2>
-              <p className="max-w-2xl text-sm text-neutral-700 sm:text-base">{group.sub}</p>
+              <p className="max-w-2xl text-sm text-neutral-800 sm:text-base">{group.sub}</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -159,17 +159,17 @@ export default function ToolsPage() {
                     </h3>
                     <StatusPill status={tool.status} />
                   </div>
-                  <p className="text-sm text-neutral-700">{tool.description}</p>
+                  <p className="text-sm text-neutral-800">{tool.description}</p>
 
                   {tool.status === "Available" ? (
                     <a
                       href="/free-breakdown"
-                      className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-700"
+                      className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
                     >
                       Open tool →
                     </a>
                   ) : (
-                    <p className="mt-1 text-xs text-neutral-600">
+                    <p className="mt-1 text-xs text-neutral-700">
                       Want early access? Join the waitlist below.
                     </p>
                   )}
@@ -183,7 +183,7 @@ export default function ToolsPage() {
       {/* Waitlist (stub UI only) */}
       <section className="rounded-lg border border-neutral-200 bg-white p-6">
         <h2 className="text-lg font-semibold">Get early access</h2>
-        <p className="mt-2 max-w-2xl text-sm text-neutral-700">
+        <p className="mt-2 max-w-2xl text-sm text-neutral-800">
           If you want to help shape these tools, join the waitlist. I’ll send
           occasional updates when something is ready to test.
         </p>
@@ -197,7 +197,7 @@ export default function ToolsPage() {
           />
         </div>
 
-        <p className="mt-2 text-xs text-neutral-600">
+        <p className="mt-2 text-xs text-neutral-700">
           No spam. Just tool updates when they’re ready.
         </p>
       </section>
@@ -205,7 +205,7 @@ export default function ToolsPage() {
       {/* Closing note */}
       <section className="rounded-lg border border-neutral-200 bg-neutral-50 p-6">
         <h2 className="text-sm font-semibold">What’s “coming soon” mean?</h2>
-        <p className="mt-2 text-sm text-neutral-700">
+        <p className="mt-2 text-sm text-neutral-800">
           It means I’m building this in public, one useful tool at a time.
           Simple first. Reliable first. Coaches first.
         </p>

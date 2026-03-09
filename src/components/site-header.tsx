@@ -27,7 +27,7 @@ export function SiteHeader() {
             <span className="text-base font-semibold text-white">
               AI Coaching Solutions
             </span>
-            <span className="text-xs text-white/70">
+            <span className="text-xs text-white/85">
               Built by a Coach
             </span>
           </div>

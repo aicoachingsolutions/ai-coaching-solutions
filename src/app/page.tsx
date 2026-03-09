@@ -151,7 +151,7 @@ function Card({
   return (
     <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm">
       <h3 className="text-base font-semibold text-black">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-black/70">{children}</p>
+      <p className="mt-2 text-sm leading-6 text-black/85">{children}</p>
     </div>
   );
 }
@@ -198,7 +198,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <p className="mt-4 text-xs text-white/80">
+              <p className="mt-4 text-xs text-white/90">
                 Built by a coach. Designed for practical use. <span className="mx-1">•</span> No login
                 required. <span className="mx-1">•</span> No video storage.
               </p>
@@ -210,7 +210,7 @@ export default async function HomePage() {
                 <h2 className="text-sm font-semibold text-neutral-900">
                   What coaches get in under a minute
                 </h2>
-                <ul className="mt-4 space-y-3 text-sm text-neutral-700">
+                <ul className="mt-4 space-y-3 text-sm text-neutral-800">
                   <li className="flex gap-3">
                     <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
                     Mechanics + timing read in plain coaching terms
@@ -229,7 +229,7 @@ export default async function HomePage() {
                   </li>
                 </ul>
 
-                <p className="mt-5 text-xs text-neutral-600">
+                <p className="mt-5 text-xs text-neutral-700">
                   Best for youth, high school, travel ball, and golf coaches who want clarity fast.
                 </p>
               </div>
@@ -263,7 +263,7 @@ export default async function HomePage() {
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
               Clearer coaching decisions, faster.
             </h2>
-            <p className="mt-3 text-sm leading-6 text-black/70 sm:text-base">
+            <p className="mt-3 text-sm leading-6 text-black/85 sm:text-base">
               Use this as a practical coaching draft: what to fix first, what to say, and what to drill
               next.
             </p>
@@ -294,7 +294,7 @@ export default async function HomePage() {
                 <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                   Start with the Free Swing & Pitching Breakdown
                 </h2>
-                <p className="mt-4 text-sm leading-6 text-black/70 sm:text-base">
+                <p className="mt-4 text-sm leading-6 text-black/85 sm:text-base">
                   This is your conversion point: describe what is happening in a baseball swing,
                   softball swing, pitching action, or golf swing and get a structured breakdown you can
                   coach from.
@@ -311,7 +311,7 @@ export default async function HomePage() {
               <div className="lg:col-span-5">
                 <div className="rounded-2xl border border-black/10 bg-black/[0.02] p-6">
                   <p className="text-sm font-semibold text-black">Works best when you include:</p>
-                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-black/75">
+                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-black/85">
                     <li>Handedness and where misses show up</li>
                     <li>Contact quality (hard, weak, late, under, thin, heavy)</li>
                     <li>One goal for the next session</li>
@@ -332,7 +332,7 @@ export default async function HomePage() {
         <Container>
             <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
             <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">A quick coach note</h2>
-            <p className="mt-4 text-sm leading-7 text-black/75 sm:text-base">
+            <p className="mt-4 text-sm leading-7 text-black/85 sm:text-base">
               I built this for coaches working through late-night film, weekend tournaments, range
               sessions, and limited practice time. We do not need more noise. We need clearer next steps
               and language athletes can use right away.
@@ -407,7 +407,7 @@ export default async function HomePage() {
                 <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                   Get practical coaching notes
                 </h2>
-                <p className="mt-3 text-sm leading-6 text-black/70 sm:text-base">
+                <p className="mt-3 text-sm leading-6 text-black/85 sm:text-base">
                   Occasional coaching ideas and tool updates. No spam.
                 </p>
               </div>

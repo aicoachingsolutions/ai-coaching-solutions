@@ -16,7 +16,7 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-start">
           <div className="space-y-1">
             <p className="text-sm font-semibold text-white">AI Coaching Solutions</p>
-            <p className="text-sm text-white/80">Built by a coach. Designed for practical use.</p>
+            <p className="text-sm text-white/90">Built by a coach. Designed for practical use.</p>
           </div>
 
           <nav className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:justify-items-end">
@@ -33,7 +33,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-white/15 pt-6">
-          <p className="text-xs text-white/70">
+          <p className="text-xs text-white/80">
             © {new Date().getFullYear()} AI Coaching Solutions. All rights reserved.
           </p>
         </div>
