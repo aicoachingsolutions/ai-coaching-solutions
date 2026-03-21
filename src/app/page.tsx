@@ -2,6 +2,7 @@ import Link from "next/link";
 import { readdir, readFile, stat } from "fs/promises";
 import path from "path";
 import { EmailSignupForm } from "@/components/email-signup-form";
+import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 type PostMeta = {
   slug: string;
@@ -107,6 +108,9 @@ function Section({
   return <section className={`py-8 sm:py-14 overflow-x-clip ${className}`}>{children}</section>;
 }
 
+const freeBreakdownPrimaryClassName =
+  "inline-flex w-full items-center justify-center rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto";
+
 function PrimaryButton({
   href,
   children,
@@ -115,10 +119,7 @@ function PrimaryButton({
   children: React.ReactNode;
 }) {
   return (
-    <Link
-      href={href}
-      className="inline-flex w-full items-center justify-center rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
-    >
+    <Link href={href} className={freeBreakdownPrimaryClassName}>
       {children}
     </Link>
   );
@@ -191,7 +192,12 @@ export default async function HomePage() {
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <div className="w-full sm:w-auto">
-                  <PrimaryButton href="/free-breakdown">Try the Free Breakdown</PrimaryButton>
+                  <FreeBreakdownTrackedLink
+                    location="home_hero"
+                    className={freeBreakdownPrimaryClassName}
+                  >
+                    Try the Free Breakdown
+                  </FreeBreakdownTrackedLink>
                 </div>
                 <div className="w-full sm:w-auto">
                   <SecondaryButton href="/howitworks">See How It Works</SecondaryButton>
@@ -317,7 +323,12 @@ export default async function HomePage() {
                     <li>One goal for the next session</li>
                   </ul>
                   <div className="mt-5">
-                    <PrimaryButton href="/free-breakdown">Try the Free Breakdown</PrimaryButton>
+                    <FreeBreakdownTrackedLink
+                      location="home_mid_page"
+                      className={freeBreakdownPrimaryClassName}
+                    >
+                      Try the Free Breakdown
+                    </FreeBreakdownTrackedLink>
                   </div>
                   <p className="mt-3 text-xs text-black/55">No login. No storage. Built for practical coaching.</p>
                 </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 const NAV_ITEMS = [
   { href: "/blog", label: "Resources" },
@@ -45,12 +46,12 @@ export function SiteHeader() {
             </Link>
           ))}
 
-          <Link
-            href="/free-breakdown"
+          <FreeBreakdownTrackedLink
+            location="header_desktop"
             className="ml-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340] transition hover:bg-neutral-100"
           >
             Try Free Breakdown
-          </Link>
+          </FreeBreakdownTrackedLink>
         </nav>
       </div>
 
@@ -66,12 +67,12 @@ export function SiteHeader() {
           </Link>
         ))}
 
-        <Link
-          href="/free-breakdown"
+        <FreeBreakdownTrackedLink
+          location="header_mobile"
           className="col-span-2 flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340]"
         >
           Try Free Breakdown
-        </Link>
+        </FreeBreakdownTrackedLink>
       </div>
     </header>
   );

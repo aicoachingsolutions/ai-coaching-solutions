@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { z } from "zod";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getOpenAI() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing OPENAI_API_KEY");
+  }
+  return new OpenAI({ apiKey });
+}
 
 const BreakdownRequestSchema = z.object({
   sport: z.enum(["golf", "baseball", "softball"]),
@@ -130,7 +136,7 @@ Create a structured coaching breakdown based on the description above.
 Return valid JSON only.
 `.trim();
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: ANALYZER_INSTRUCTIONS },

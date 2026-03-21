@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
+import { track } from "@vercel/analytics";
 
 type Sport = "baseball" | "softball" | "golf";
 type Motion = "swing" | "pitching";
@@ -105,6 +106,12 @@ export default function FreeBreakdownPage() {
   const [emailSending, setEmailSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const swingIntakeStartedRef = useRef(false);
+
+  useEffect(() => {
+    if (!result) return;
+    track("Swing Breakdown Result Viewed", { tool: "free_swing_breakdown" });
+  }, [result]);
 
   const canSubmit = useMemo(() => {
     // keep this aligned with your API min length
@@ -169,6 +176,7 @@ export default function FreeBreakdownPage() {
         throw new Error("Unexpected response format. Please try again.");
       }
 
+      track("Swing Analysis Submitted", { tool: "free_swing_breakdown" });
       setResult(r);
     } catch (err: any) {
       setError(err?.message || "Something went wrong. Please try again.");
@@ -438,6 +446,11 @@ export default function FreeBreakdownPage() {
                   required
                   value={mainIssue}
                   onChange={(e) => setMainIssue(e.target.value)}
+                  onFocus={() => {
+                    if (swingIntakeStartedRef.current) return;
+                    swingIntakeStartedRef.current = true;
+                    track("Swing Upload Started", { tool: "free_swing_breakdown" });
+                  }}
                   className={textareaClassName}
                   rows={6}
                   placeholder="Example: Right-handed hitter rolling over ground balls to 3B, front shoulder opening early, and late to inside velocity. Goal: more line-drive contact to pull side."
@@ -588,6 +601,9 @@ export default function FreeBreakdownPage() {
               <div className="mt-4">
                 <a
                   href="/tools"
+                  onClick={() =>
+                    track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
+                  }
                   className="inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
                 >
                   See the Tools App

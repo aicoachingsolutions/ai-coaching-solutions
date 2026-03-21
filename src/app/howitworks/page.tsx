@@ -1,4 +1,5 @@
 import { PageShell, Prose, Callout } from "@/components/page-shell";
+import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 export const metadata = {
   title: "How It Works | AI Coaching Solutions",
@@ -49,12 +50,12 @@ export default function HowItWorksPage() {
             </p>
 
             <div className="pt-2">
-              <a
-                href="/free-breakdown"
+              <FreeBreakdownTrackedLink
+                location="howitworks_callout"
                 className="inline-flex items-center justify-center rounded-md bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
               >
                 Try Free Breakdown
-              </a>
+              </FreeBreakdownTrackedLink>
             </div>
           </div>
         </Callout>

@@ -1,4 +1,5 @@
 import { EmailSignupForm } from "@/components/email-signup-form";
+import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 export const metadata = {
   title: "Tools | AI Coaching Solutions",
@@ -113,12 +114,12 @@ export default function ToolsPage() {
         </p>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a
-            href="/free-breakdown"
+          <FreeBreakdownTrackedLink
+            location="tools_hero"
             className="inline-flex w-full items-center justify-center rounded-md bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800 sm:w-auto"
           >
             Try the Free Breakdown
-          </a>
+          </FreeBreakdownTrackedLink>
           <a
             href="/howitworks"
             className="inline-flex w-full items-center justify-center rounded-md border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 sm:w-auto"
@@ -162,12 +163,12 @@ export default function ToolsPage() {
                   <p className="text-sm text-neutral-800">{tool.description}</p>
 
                   {tool.status === "Available" ? (
-                    <a
-                      href="/free-breakdown"
+                    <FreeBreakdownTrackedLink
+                      location="tools_card_open"
                       className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
                     >
                       Open tool →
-                    </a>
+                    </FreeBreakdownTrackedLink>
                   ) : (
                     <p className="mt-1 text-xs text-neutral-700">
                       Want early access? Join the waitlist below.
