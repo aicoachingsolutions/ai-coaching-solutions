@@ -107,10 +107,26 @@ export default function FreeBreakdownPage() {
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const swingIntakeStartedRef = useRef(false);
+  const resultsSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!result) return;
     track("Swing Breakdown Result Viewed", { tool: "free_swing_breakdown" });
+    const scrollToResults = () => {
+      const el = resultsSectionRef.current;
+      if (!el) return;
+      const reduceMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    };
+    // Double rAF: results node mounts this frame; layout is reliable on mobile next frame.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scrollToResults);
+    });
   }, [result]);
 
   const canSubmit = useMemo(() => {
@@ -512,7 +528,11 @@ export default function FreeBreakdownPage() {
         </section>
 
         {result && (
-          <section className="mt-10 card card-pad shadow-sm">
+          <section
+            ref={resultsSectionRef}
+            className="mt-10 scroll-mt-6 card card-pad shadow-sm"
+            aria-label="Your breakdown results"
+          >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-semibold tracking-tight text-neutral-900">
