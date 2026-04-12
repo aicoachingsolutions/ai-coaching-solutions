@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { EmailSignupForm } from "@/components/email-signup-form";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
@@ -11,6 +12,11 @@ type ToolCard = {
   title: string;
   description: string;
   status: "Available" | "Coming soon";
+  /** When set, “Open tool” uses the tracked free-breakdown link. */
+  freeBreakdownTrackLocation?: string;
+  /** When set, “Open” goes to this in-app path (sign-in required). */
+  appHref?: string;
+  appLinkLabel?: string;
 };
 
 const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
@@ -23,6 +29,7 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
         description:
           "Structured feedback with mechanics, timing, coaching cues, next focus, and one drill. No login.",
         status: "Available",
+        freeBreakdownTrackLocation: "tools_card_open",
       },
     ],
   },
@@ -33,8 +40,10 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
       {
         title: "Practice Planner",
         description:
-          "Create a clean session plan based on your time, goals, and constraints (numbers, space, energy level).",
-        status: "Coming soon",
+          "In the coach app: save drills, then build practice plans with timed blocks, order, and notes—tied to your team.",
+        status: "Available",
+        appHref: "/app/practice-planner",
+        appLinkLabel: "Open practice planner →",
       },
       {
         title: "Drill Finder",
@@ -163,12 +172,21 @@ export default function ToolsPage() {
                   <p className="text-sm text-neutral-800">{tool.description}</p>
 
                   {tool.status === "Available" ? (
-                    <FreeBreakdownTrackedLink
-                      location="tools_card_open"
-                      className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
-                    >
-                      Open tool →
-                    </FreeBreakdownTrackedLink>
+                    tool.freeBreakdownTrackLocation ? (
+                      <FreeBreakdownTrackedLink
+                        location={tool.freeBreakdownTrackLocation}
+                        className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
+                      >
+                        Open tool →
+                      </FreeBreakdownTrackedLink>
+                    ) : tool.appHref ? (
+                      <Link
+                        href={tool.appHref}
+                        className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
+                      >
+                        {tool.appLinkLabel ?? "Open →"}
+                      </Link>
+                    ) : null
                   ) : (
                     <p className="mt-1 text-xs text-neutral-700">
                       Want early access? Join the waitlist below.

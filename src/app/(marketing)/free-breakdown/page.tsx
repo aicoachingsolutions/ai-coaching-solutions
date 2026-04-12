@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import { track } from "@vercel/analytics";
@@ -194,8 +195,8 @@ export default function FreeBreakdownPage() {
 
       track("Swing Analysis Submitted", { tool: "free_swing_breakdown" });
       setResult(r);
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -307,8 +308,8 @@ export default function FreeBreakdownPage() {
 
       setEmailSent(true);
       setEmailError(null);
-    } catch (err: any) {
-      setEmailError(err?.message || "Failed to send email");
+    } catch (err: unknown) {
+      setEmailError(err instanceof Error ? err.message : "Failed to send email");
       setEmailSent(false);
     } finally {
       setEmailSending(false);
@@ -607,27 +608,26 @@ export default function FreeBreakdownPage() {
 
             <section className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
               <h3 className="text-base font-semibold text-neutral-900">
-                Want the full tool inside the app?
+                Save this workflow in the coach app
               </h3>
               <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-800">
-                <li>Upload a clip (paid tools)</li>
-                <li>More drill options + progressions</li>
-                <li>Athlete-friendly version + coach notes</li>
-                <li>Save and revisit breakdown history (coming soon)</li>
+                <li>Team profile (sport, season)</li>
+                <li>Drill library you reuse across practices</li>
+                <li>Practice plans with timed drill blocks and notes</li>
               </ul>
               <p className="mt-4 text-xs text-neutral-700">
-                Free breakdown stays link-based. Paid tools live inside the AI Coaching Solutions app.
+                This free page is for quick breakdown drafts. The signed-in coach app is where plans and drills live.
               </p>
               <div className="mt-4">
-                <a
-                  href="/tools"
+                <Link
+                  href="/sign-up"
                   onClick={() =>
                     track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
                   }
                   className="inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
                 >
-                  See the Tools App
-                </a>
+                  Create your coach account
+                </Link>
               </div>
             </section>
 

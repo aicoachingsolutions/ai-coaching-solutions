@@ -3,6 +3,7 @@ import { readdir, readFile, stat } from "fs/promises";
 import path from "path";
 import { EmailSignupForm } from "@/components/email-signup-form";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
+import { ProductPromoSection } from "@/components/product-promo-section";
 
 type PostMeta = {
   slug: string;
@@ -10,6 +11,12 @@ type PostMeta = {
   date?: string;
   description?: string;
 };
+
+const break90SignupUrl =
+  process.env.NEXT_PUBLIC_BREAK90_URL?.trim() || "https://break90.app";
+
+const practicePlannerEntryUrl =
+  process.env.NEXT_PUBLIC_PRACTICE_PLANNER_ENTRY_URL?.trim() || "/app/practice-planner";
 
 function parseFrontmatter(raw: string): Omit<PostMeta, "slug"> {
   const fm: Record<string, string> = {};
@@ -335,6 +342,69 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+        </Container>
+      </Section>
+
+      <Section className="border-t border-slate-200/80 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white">
+        <Container>
+          <ProductPromoSection
+            badge="CORE TOOL"
+            badgeTone="neutral"
+            logoSrc="/images/practice-planner-logo.svg"
+            logoAlt="Practice Planner logo for drills and practice sessions"
+            logoWidth={280}
+            logoHeight={200}
+            logoMaxWidthClassName="max-w-[220px] sm:max-w-[240px]"
+            title="Plan better practices in minutes"
+            description="Turn your drills into structured, efficient practices without overthinking it."
+            offerTitle="30 Days Free - Full Pro Access"
+            offerBody="Early access while we build. Your feedback helps shape the system coaches will actually use."
+            bullets={[
+              "Organize drills into real practice flow",
+              "Build offensive, defensive, or balanced plans",
+              "Save and reuse what works",
+              "Designed for how coaches actually run practice",
+            ]}
+            ctaLabel="Try Practice Planner Free"
+            ctaHref={practicePlannerEntryUrl}
+            ctaAriaLabel="Open Practice Planner in the coach app"
+            ctaExternal={practicePlannerEntryUrl.startsWith("http")}
+            note="No payment. Early access."
+            className="border-slate-300 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,247,255,0.94))] shadow-md shadow-slate-900/8"
+          >
+            <p className="text-sm font-medium text-slate-700">
+              Core product for coaches who want a repeatable practice workflow.
+            </p>
+          </ProductPromoSection>
+        </Container>
+      </Section>
+
+      <Section className="border-t border-slate-200/80 bg-gradient-to-b from-slate-50 via-sky-50/30 to-white">
+        <Container>
+          <ProductPromoSection
+            badge="EARLY ACCESS"
+            badgeTone="orange"
+            logoSrc="/images/break90-logo.svg"
+            logoAlt="Break90 logo for the golf scoring and practice app"
+            logoWidth={320}
+            logoHeight={140}
+            logoMaxWidthClassName="max-w-[240px] sm:max-w-[280px]"
+            title="Built to help you break 90 - for real"
+            description="Track your rounds, find what is costing you strokes, and get clear practice priorities instead of guesses."
+            offerTitle="90 Days Free - Full Pro Access"
+            offerBody="Help shape the app while you use it. Early users get full access during the MVP phase."
+            bullets={[
+              "Track rounds and see what is actually hurting your score",
+              "Identify patterns across your last 5 to 10 rounds",
+              "Get clear practice focus after every round",
+              "Built for real golfers, not generic stats",
+            ]}
+            ctaLabel="Try Break90 Free"
+            ctaHref={break90SignupUrl}
+            ctaAriaLabel="Open Break90 in a new tab"
+            ctaExternal
+            note="No payment. Early access. Feedback welcome."
+          />
         </Container>
       </Section>
 

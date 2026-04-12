@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { Footer } from "@/components/footer";
-import { SiteHeader } from "@/components/site-header";
-import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.aicoachingsolutions.net"),
@@ -36,11 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full overflow-x-clip">
       <body className="min-h-dvh w-full overflow-x-clip bg-neutral-100 text-neutral-900 antialiased">
-        <SiteHeader />
-
-        <main className="w-full overflow-x-hidden py-8 sm:py-10">{children}</main>
-        <Footer />
-        <Analytics />
+        <ClerkProvider>{children}</ClerkProvider>
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CoachAppNavLink } from "@/components/coach-app-nav-link";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 const NAV_ITEMS = [
@@ -46,6 +47,8 @@ export function SiteHeader() {
             </Link>
           ))}
 
+          <CoachAppNavLink />
+
           <FreeBreakdownTrackedLink
             location="header_desktop"
             className="ml-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340] transition hover:bg-neutral-100"
@@ -66,6 +69,10 @@ export function SiteHeader() {
             {item.label}
           </Link>
         ))}
+
+        <div className="col-span-2 flex justify-center">
+          <CoachAppNavLink />
+        </div>
 
         <FreeBreakdownTrackedLink
           location="header_mobile"
