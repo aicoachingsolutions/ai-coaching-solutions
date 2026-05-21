@@ -4,7 +4,8 @@ import { CoachAppNavLink } from "@/components/coach-app-nav-link";
 
 const NAV_ITEMS = [
   { href: "/free-breakdown", label: "Free Analyzer" },
-  { href: "/app/practice-planner", label: "Practice Planner" },
+  { href: "/practice-planner", label: "Practice Planner" },
+  { href: "/break90", label: "Break90" },
   { href: "/tools", label: "All Tools" },
 ];
 

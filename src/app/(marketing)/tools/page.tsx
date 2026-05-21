@@ -40,10 +40,10 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
       {
         title: "Practice Planner",
         description:
-          "In the coach app: save drills, then build practice plans with timed blocks, order, and notes—tied to your team.",
-        status: "Available",
-        appHref: "/app/practice-planner",
-        appLinkLabel: "Open practice planner →",
+          "Build structured practices with drills, focus areas, and reusable plans. MVP coach access is not open yet.",
+        status: "Coming soon",
+        appHref: "/practice-planner",
+        appLinkLabel: "Practice Planner — coming soon →",
       },
       {
         title: "Drill Finder",
@@ -56,6 +56,20 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
         description:
           "Short, usable language for tough moments: effort issues, roles, parents, confidence, and leadership.",
         status: "Coming soon",
+      },
+    ],
+  },
+  {
+    heading: "Golf",
+    sub: "Athlete-focused coaching between rounds.",
+    items: [
+      {
+        title: "Break90 Golf",
+        description:
+          "AI golf coach — scoring patterns, practice priorities, and clear feedback. MVP golfer access is not open yet.",
+        status: "Coming soon",
+        appHref: "/break90",
+        appLinkLabel: "Break90 — coming soon →",
       },
     ],
   },
@@ -187,6 +201,13 @@ export default function ToolsPage() {
                         {tool.appLinkLabel ?? "Open →"}
                       </Link>
                     ) : null
+                  ) : tool.appHref ? (
+                    <Link
+                      href={tool.appHref}
+                      className="mt-1 inline-flex items-center text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-800"
+                    >
+                      {tool.appLinkLabel ?? "Coming soon →"}
+                    </Link>
                   ) : (
                     <p className="mt-1 text-xs text-neutral-700">
                       Want early access? Join the waitlist below.

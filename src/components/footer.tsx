@@ -2,7 +2,8 @@ import Link from "next/link";
 
 const toolLinks = [
   { href: "/free-breakdown", label: "Free Swing Analyzer" },
-  { href: "/app/practice-planner", label: "Practice Planner" },
+  { href: "/practice-planner", label: "Practice Planner" },
+  { href: "/break90", label: "Break90 Golf" },
   { href: "/tools", label: "All Tools" },
 ];
 

@@ -10,3 +10,6 @@ out
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Local duplicate of repo (Cursor workspace); canonical code is at repo root
+ai-coaching-solutions-main/

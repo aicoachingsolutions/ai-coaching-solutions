@@ -1,0 +1,53 @@
+---
+description: Match WordPress marketing site (navy + gold, dark sections) when editing landing/marketing UI
+globs: src/app/(marketing)/**/*,src/components/site-header.tsx,src/components/footer.tsx,src/components/product-promo-section.tsx
+alwaysApply: false
+---
+
+# WordPress marketing brand (source of truth)
+
+**Traffic model:** Customers use **WordPress** (`aicoachingsolutions.com`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.com`) for apps. The Next `(marketing)/page.tsx` is a **temporary app hub**, not a second full marketing site — keep it short; link to WordPress for the full story.
+
+The canonical marketing design lives in the WordPress theme (sibling project on this machine):
+
+`c:\xampp\htdocs\aicoachingsite\wp-content\themes\ai-coaching-solutions\`
+
+Read before large UI changes:
+- `assets/css/main.css` — tokens, `.btn`, `.hero`, `.section`, `.tool-card`, `.mvp-callout`
+- `template-parts/sections/hero.php`, `platform-overview.php`, `practice-planner.php`, `swing-analyzer.php`, `break90.php`
+
+## Design tokens (marketing — dark theme)
+
+| Token | Value |
+|-------|--------|
+| Deep navy background | `#071426` |
+| Navy | `#0b1f3a` |
+| Gold (accent, CTAs, eyebrows) | `#ffd60a` |
+| Gold hover | `#ffe566` |
+| Text on dark | `#f8fafc` |
+| Muted on dark | `#94a3b8` |
+| Border on dark | `rgba(148, 163, 184, 0.18)` |
+| Font | Inter |
+| Radius | 12px cards, 20px large panels |
+| Container | max ~1200px, ~92vw padding |
+
+## Patterns to mirror
+
+- **Hero**: full-width video or dark scrim, left-aligned copy, gold eyebrow, MVP “Early access open” card, primary CTAs below the card (left-aligned, not page-centered).
+- **Sections**: `.section` vertical rhythm, gold uppercase kickers, white H2, muted subtitle.
+- **Tool cards**: dark card bg, logo panel on `rgba(248,250,252,0.08)`, badges (Lead tool / MVP coaches / MVP golfers).
+- **Buttons**: primary = gold bg + navy text; secondary = outline on dark.
+
+## This repo vs WordPress
+
+- **App hub** (`src/app/(marketing)/page.tsx`): compact tool launcher + `NEXT_PUBLIC_MARKETING_SITE_URL` link back to WordPress. Only Free Analyzer is live; Practice Planner and Break90 use `/practice-planner` and `/break90` coming-soon MVP pages (waitlist, not `/app/*` yet).
+- **App routes** (`src/app/app/`, `free-breakdown/`): coach-first **light** shell in `globals.css` (off-white bg, orange CTAs) is OK unless user asks to unify.
+- Do not copy PHP into React for the Vercel home; evolve WordPress theme for marketing changes.
+- Use env URLs: `NEXT_PUBLIC_MARKETING_SITE_URL`, `NEXT_PUBLIC_BREAK90_URL`, practice planner `/app/practice-planner`, free analyzer `/free-breakdown`.
+
+## MVP query params (app links)
+
+- Practice Planner MVP: `?mvp=coach`
+- Break90 MVP: `?mvp=golfer`
+
+See `docs/brand-alignment.md` in this repo for full workflow.
