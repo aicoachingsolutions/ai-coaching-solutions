@@ -5,7 +5,6 @@ const toolLinks = [
   { href: "/free-breakdown", label: "Free Swing Analyzer" },
   { href: "/practice-planner", label: "Practice Planner" },
   { href: "/break90", label: "Break90 Golf" },
-  { href: "/tools", label: "All Tools" },
 ];
 
 const legalLinks = [
