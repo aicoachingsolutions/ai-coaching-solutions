@@ -215,7 +215,7 @@ Return valid JSON only.
 `.trim();
 
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         { role: "system", content: ANALYZER_INSTRUCTIONS },
         { role: "user", content: userInput },
