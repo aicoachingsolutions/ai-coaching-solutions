@@ -6,7 +6,7 @@ alwaysApply: false
 
 # WordPress marketing brand (source of truth)
 
-**Traffic model:** Customers use **WordPress** (`www.aicoachingsolutions.net`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.net`) for apps only.
+**Game plan:** WordPress (`www.aicoachingsolutions.net`) = **main marketing site**. Vercel (`app.aicoachingsolutions.net`) = **apps only**. See `docs/GAME-PLAN.md`.
 
 **Do not build a marketing site on Vercel.** No homepage announcements, hero clones, or full landing-page parity with WordPress. `(marketing)/page.tsx` is a minimal **app hub** (tool links + MVP waitlist pages). Full story, SEO, and “coming soon” banners live on WordPress only.
 

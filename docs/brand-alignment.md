@@ -1,5 +1,7 @@
 # Brand alignment — WordPress marketing ↔ Next.js app
 
+**Game plan:** [GAME-PLAN.md](./GAME-PLAN.md) — WordPress is the **main site**; Vercel is **where apps live**.
+
 Use this doc when opening **this folder** in Cursor so chats match the WordPress landing site.
 
 ## Projects
