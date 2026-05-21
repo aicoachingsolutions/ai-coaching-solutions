@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { EmailSignupForm } from "@/components/email-signup-form";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
+import { MvpProgramDetails } from "@/components/mvp-program-details";
+import type { MvpProgramDefinition } from "@/lib/mvp-programs";
 
 export type MvpComingSoonConfig = {
   product: string;
@@ -12,6 +14,7 @@ export type MvpComingSoonConfig = {
   audience: "coaches" | "golfers";
   logo?: string;
   waitlistSource: string;
+  program: MvpProgramDefinition;
 };
 
 const btnPrimary =
@@ -21,13 +24,6 @@ const btnSecondary =
 
 export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
   const isGolfer = config.audience === "golfers";
-  const mvpBadge = isGolfer ? "MVP golfers — opening soon" : "MVP coaches — opening soon";
-  const mvpTitle = isGolfer
-    ? "Help us improve your AI golf coach"
-    : `Help launch ${config.product}`;
-  const mvpText = isGolfer
-    ? "Break90 is your AI golf coach — built to guide improvement between rounds. We are finishing the first release; MVP golfer access will open here when ready."
-    : `We are building ${config.product} with coaches who run real practices. MVP coach access will open here when the app is ready — join the waitlist to hear first.`;
 
   return (
     <div className="bg-[#071426] text-[#f8fafc]">
@@ -39,7 +35,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                 {config.eyebrow}
               </p>
               <span className="mt-3 inline-block rounded bg-[#ffd60a]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-[#ffd60a]">
-                Coming soon
+                {isGolfer ? "60 days Pro — opening soon" : "MVP coaches — opening soon"}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {config.title}
@@ -85,33 +81,31 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16">
-        <div className="mx-auto w-full max-w-[min(720px,92vw)] px-[4vw]">
-          <aside
-            className="rounded-xl border border-[#ffd60a]/35 bg-[#ffd60a]/[0.08] p-6 sm:p-8"
-            aria-label={`${config.product} MVP program`}
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#ffd60a]">
-              {mvpBadge}
-            </p>
-            <p className="mt-2 text-lg font-bold text-[#f8fafc]">{mvpTitle}</p>
-            <p className="mt-2 text-[15px] leading-relaxed text-[#94a3b8]">{mvpText}</p>
-            <p className="mt-4 text-sm text-[#f8fafc]/75">
-              The app is not open for MVP testing yet. Leave your email and we will notify you
-              when {config.product} is ready to try on this site.
-            </p>
-          </aside>
+      <section className="py-12 sm:py-16" aria-labelledby="mvp-program-heading">
+        <div className="mx-auto w-full max-w-[min(800px,92vw)] px-[4vw]">
+          <h2 id="mvp-program-heading" className="sr-only">
+            {config.product} MVP program details
+          </h2>
+          <MvpProgramDetails program={config.program} />
+        </div>
+      </section>
 
-          <div className="mt-8 rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-6">
-            <h2 className="text-lg font-bold text-[#f8fafc]">Get notified</h2>
+      <section className="border-t border-[rgba(148,163,184,0.18)] pb-16">
+        <div className="mx-auto w-full max-w-[min(640px,92vw)] px-[4vw]">
+          <div className="rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-6">
+            <h2 className="text-lg font-bold text-[#f8fafc]">Join the waitlist</h2>
             <p className="mt-2 text-sm text-[#94a3b8]">
-              Join the waitlist for {config.product}. No spam — only launch updates.
+              {isGolfer
+                ? "Be first in line for founding golfer access — 60 days of Break90 Pro when we open the cohort."
+                : `Be first in line for ${config.product} MVP coach access when testing opens.`}
             </p>
             <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426]">
               <EmailSignupForm
                 source={config.waitlistSource}
                 type="waitlist"
-                buttonLabel={isGolfer ? "Notify me — MVP golfer" : "Notify me — MVP coach"}
+                buttonLabel={
+                  isGolfer ? "Notify me — founding golfer" : "Notify me — founding coach"
+                }
                 successMessage="You are on the list. We will email you when MVP access opens."
               />
             </div>

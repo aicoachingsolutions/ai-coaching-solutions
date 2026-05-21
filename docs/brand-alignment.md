@@ -1,32 +1,50 @@
-# Brand alignment — WordPress marketing ↔ Next.js apps (Vercel)
+# Brand alignment — WordPress marketing ↔ Next.js app
 
-## Who goes where
-
-| Surface | URL (typical) | Role |
-|---------|----------------|------|
-| **WordPress** | `https://aicoachingsolutions.com` (local: `http://localhost/aicoachingsite/`) | **Canonical marketing** — SEO, hero video, full story, MVP callouts. Customers land here and **click through** to apps. |
-| **Next.js on Vercel** | `https://app.aicoachingsolutions.com` | **Temporary app hub** — `/free-breakdown` (live), `/practice-planner` and `/break90` (MVP coming-soon landings until launch). Coach app at `/app/*` stays in development. |
-
-WordPress theme links to Vercel via `ACS_VERCEL_APP_URL` in `wp-config.php` (`acs_app_url()` in the theme).
-
-Vercel home links back via `NEXT_PUBLIC_MARKETING_SITE_URL` (defaults to `https://aicoachingsolutions.com`).
+Use this doc when opening **this folder** in Cursor so chats match the WordPress landing site.
 
 ## Projects
 
 | Role | Path |
 |------|------|
 | **Marketing site (WordPress)** | `c:\xampp\htdocs\aicoachingsite\wp-content\themes\ai-coaching-solutions\` |
-| **Apps + app hub (Next.js)** | `C:\ai-coaching-web\ai-coaching-solutions-main` |
+| **Product + marketing (Next.js)** | `C:\ai-coaching-web\ai-coaching-solutions-main` |
 
-## Workspace (both folders)
+## Open the right folder in Cursor
 
-Open `ai-coaching.code-workspace` (**File → Open Workspace from File…**) or add both folders manually.
+1. **File → Open Folder**
+2. Choose `C:\ai-coaching-web\ai-coaching-solutions-main` (not the WordPress `htdocs` folder).
+3. Start a **new chat** in that workspace.
 
-## Cursor rule
+Chats in the WordPress folder do not see this repo automatically, and vice versa.
 
-`.cursor/rules/wordpress-marketing-brand.mdc` — WordPress owns marketing UX; Vercel uses matching tokens only where needed for the app hub.
+## Optional: both folders in one workspace
 
-## Design tokens (shared navy/gold)
+**File → Add Folder to Workspace** and add:
+
+- `c:\xampp\htdocs\aicoachingsite`
+- `C:\ai-coaching-web\ai-coaching-solutions-main`
+
+Then you can ask: “Copy hero layout from `wp-content/themes/ai-coaching-solutions/template-parts/sections/hero.php` into `src/app/(marketing)/page.tsx`.”
+
+## Cursor rule (already installed)
+
+`.cursor/rules/wordpress-marketing-brand.mdc` applies when you edit marketing pages or site header/footer.
+
+## First message template (paste in new chat)
+
+```
+Match the WordPress marketing theme at:
+c:\xampp\htdocs\aicoachingsite\wp-content\themes\ai-coaching-solutions\
+
+Update src/app/(marketing)/page.tsx (and related components) to use:
+- deep navy #071426 / #0b1f3a backgrounds
+- gold #ffd60a accents and primary CTAs
+- Inter, dark sections, hero + tool grid like platform-overview.php
+
+Keep app routes (src/app/app/) on the light coach UI unless I say otherwise.
+```
+
+## Design tokens (WordPress marketing)
 
 ```css
 --deep-navy: #071426;
@@ -37,24 +55,24 @@ Open `ai-coaching.code-workspace` (**File → Open Workspace from File…**) or 
 --muted-gray: #94a3b8;
 ```
 
-## Key files
+## Key files in this Next repo
 
 | Area | Files |
 |------|--------|
-| Vercel app hub (temporary) | `src/app/(marketing)/page.tsx` |
-| MVP coming soon (pre-launch) | `src/app/(marketing)/practice-planner/page.tsx`, `break90/page.tsx` |
-| Coach app (light UI) | `src/app/app/**`, `src/app/globals.css` |
+| Marketing home | `src/app/(marketing)/page.tsx` |
+| Marketing layout | `src/app/(marketing)/layout.tsx` |
+| Global styles | `src/app/globals.css` (light app theme + orange CTAs) |
+| Header / footer | `src/components/site-header.tsx`, `footer.tsx` |
 | Free analyzer | `src/app/free-breakdown/page.tsx` |
-| WordPress homepage | `front-page.php`, `template-parts/sections/hero.php`, `platform-overview.php` |
-| WP → Vercel URLs | `wp-config.php` → `ACS_VERCEL_APP_URL` |
+| Coach app | `src/app/app/**` |
 
-## Env (Vercel)
+## Break90 MVP copy (Vercel app)
 
-```bash
-NEXT_PUBLIC_MARKETING_SITE_URL=https://aicoachingsolutions.com
-NEXT_PUBLIC_BREAK90_URL=https://break90.app
-# Practice planner defaults to /app/practice-planner
-```
+Founding golfer program (60 days Pro, extension tiers) lives in:
+
+- `src/lib/mvp-programs.ts` — source of truth for wording
+- `src/components/mvp-program-details.tsx` — rendered on `/break90`
+- App hub card: `src/app/(marketing)/page.tsx`
 
 ## Run locally
 
@@ -64,5 +82,4 @@ npm install
 npm run dev
 ```
 
-- App hub: http://localhost:3000  
-- WordPress: http://localhost/aicoachingsite/
+Open http://localhost:3000

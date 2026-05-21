@@ -1,9 +1,10 @@
 import { MvpComingSoonPage } from "@/components/mvp-coming-soon-page";
+import { BREAK90_FOUNDING_GOLFER_PROGRAM } from "@/lib/mvp-programs";
 
 export const metadata = {
-  title: "Break90 Golf — Coming Soon | AI Coaching Solutions",
+  title: "Break90 Golf — Founding Golfer MVP | AI Coaching Solutions",
   description:
-    "Break90 Golf MVP for athletes is opening soon. Join the waitlist for early access to your AI golf coach.",
+    "Break90 Pro free for 60 days for founding golfers. Full Pro access, structured feedback, and optional extensions up to 120 days. Join the waitlist.",
   alternates: { canonical: "/break90" },
 };
 
@@ -24,6 +25,7 @@ export default function Break90ComingSoonPage() {
         audience: "golfers",
         logo: "/images/break90-logo.png",
         waitlistSource: "mvp-break90",
+        program: BREAK90_FOUNDING_GOLFER_PROGRAM,
       }}
     />
   );

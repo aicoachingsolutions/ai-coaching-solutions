@@ -70,8 +70,8 @@ const tools: Tool[] = [
     ctaLabel: "Practice Planner — coming soon",
   },
   {
-    badge: null,
-    badgeExtra: "Coming soon",
+    badge: "60 days Pro — MVP",
+    badgeExtra: "Opening soon",
     featured: false,
     comingSoon: true,
     logo: "/images/break90-logo.png",
@@ -79,14 +79,15 @@ const tools: Tool[] = [
     logoClassName: "max-h-[72px] max-w-[160px]",
     title: "Break90 Golf",
     sport: "Golf",
-    description: "AI golf coach for athletes. MVP golfer access opens here when ready.",
+    description:
+      "Founding golfer program: full Pro for 60 days free — feedback after real rounds. Earn up to 120 days.",
     bullets: [
-      "Round tracking and patterns",
-      "Practice focus after every round",
-      "Built for real golfers",
+      "All Pro features during access",
+      "2 check-ins + round logging we ask for",
+      "See full program on the Break90 page",
     ],
     href: "/break90",
-    ctaLabel: "Break90 — coming soon",
+    ctaLabel: "Break90 MVP program →",
   },
 ];
 
@@ -106,8 +107,9 @@ export default function HomePage() {
             Launch a coaching tool
           </h1>
           <p className="mt-3 max-w-xl text-base text-[#94a3b8] sm:text-lg">
-            Free Swing Analyzer is live. Practice Planner and Break90 Golf are coming soon — MVP
-            pages are ready for when we open access. Full marketing story on WordPress.
+            Free Swing Analyzer is live. Break90 founding golfers get 60 days of Pro free when we
+            open — see the program on the Break90 page. Practice Planner MVP for coaches opens
+            soon. Full marketing story on WordPress.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="#tools" className={btnPrimary}>

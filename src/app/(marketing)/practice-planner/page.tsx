@@ -1,7 +1,8 @@
 import { MvpComingSoonPage } from "@/components/mvp-coming-soon-page";
+import { PRACTICE_PLANNER_COACH_PROGRAM } from "@/lib/mvp-programs";
 
 export const metadata = {
-  title: "Practice Planner — Coming Soon | AI Coaching Solutions",
+  title: "Practice Planner — Founding Coach MVP | AI Coaching Solutions",
   description:
     "Practice Planner MVP for coaches is opening soon. Join the waitlist for early access to structured practice planning.",
   alternates: { canonical: "/practice-planner" },
@@ -24,6 +25,7 @@ export default function PracticePlannerComingSoonPage() {
         audience: "coaches",
         logo: "/images/practice-planner-logo.png",
         waitlistSource: "mvp-practice-planner",
+        program: PRACTICE_PLANNER_COACH_PROGRAM,
       }}
     />
   );

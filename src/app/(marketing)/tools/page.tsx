@@ -66,10 +66,10 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
       {
         title: "Break90 Golf",
         description:
-          "AI golf coach — scoring patterns, practice priorities, and clear feedback. MVP golfer access is not open yet.",
+          "Founding golfer MVP: 60 days of Break90 Pro free (all features), structured feedback after real rounds, up to 120 days with milestones. Access not open yet.",
         status: "Coming soon",
         appHref: "/break90",
-        appLinkLabel: "Break90 — coming soon →",
+        appLinkLabel: "Break90 MVP program →",
       },
     ],
   },
