@@ -3,12 +3,10 @@ import Link from "next/link";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 const marketingSiteUrl =
-  process.env.NEXT_PUBLIC_MARKETING_SITE_URL?.trim() || "https://aicoachingsolutions.com";
+  process.env.NEXT_PUBLIC_MARKETING_SITE_URL?.trim() || "https://www.aicoachingsolutions.net";
 
 const btnPrimary =
   "inline-flex items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-5 py-3.5 text-sm font-semibold text-[#071426] transition hover:-translate-y-px hover:bg-[#ffe566] hover:border-[#ffe566]";
-const btnSecondary =
-  "inline-flex items-center justify-center rounded-xl border border-white/35 bg-transparent px-5 py-3.5 text-sm font-semibold text-[#f8fafc] transition hover:-translate-y-px hover:border-white hover:bg-white/[0.06]";
 const btnComingSoon =
   "inline-flex items-center justify-center rounded-xl border border-[rgba(148,163,184,0.35)] bg-transparent px-5 py-3.5 text-sm font-semibold text-[#94a3b8] transition hover:border-[#ffd60a]/50 hover:text-[#f8fafc]";
 
@@ -109,20 +107,11 @@ export default function HomePage() {
           </h1>
           <p className="mt-3 max-w-xl text-base text-[#94a3b8] sm:text-lg">
             Free Swing Analyzer is live. Founding coach and golfer programs offer 60 days of Pro
-            free when we open — see Practice Planner and Break90 pages for details. Full
-            marketing story on WordPress.
+            free when we open — see Practice Planner and Break90 pages for details.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6">
             <a href="#tools" className={btnPrimary}>
               Choose a tool below
-            </a>
-            <a
-              href={marketingSiteUrl}
-              className={btnSecondary}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Full marketing site →
             </a>
           </div>
         </div>
@@ -236,7 +225,7 @@ export default function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              aicoachingsolutions.com
+              aicoachingsolutions.net
             </a>
           </p>
         </div>

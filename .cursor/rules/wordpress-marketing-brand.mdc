@@ -6,7 +6,7 @@ alwaysApply: false
 
 # WordPress marketing brand (source of truth)
 
-**Traffic model:** Customers use **WordPress** (`aicoachingsolutions.com`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.com`) for apps. The Next `(marketing)/page.tsx` is a **temporary app hub**, not a second full marketing site — keep it short; link to WordPress for the full story.
+**Traffic model:** Customers use **WordPress** (`aicoachingsolutions.net`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.com`) for apps. The Next `(marketing)/page.tsx` is a **temporary app hub**, not a second full marketing site — keep it short; link to WordPress for the full story.
 
 The canonical marketing design lives in the WordPress theme (sibling project on this machine):
 

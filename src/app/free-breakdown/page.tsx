@@ -113,7 +113,7 @@ function buildBreakdownText(params: {
     "",
     "════════════════════════════════════",
     "  AI Coaching Solutions",
-    "  aicoachingsolutions.com",
+    "  aicoachingsolutions.net",
     "════════════════════════════════════",
   ].join("\n");
 }
