@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { z } from "zod";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 function getOpenAI() {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -47,27 +48,84 @@ const BreakdownSchema = z.object({
 
 type Breakdown = z.infer<typeof BreakdownSchema>;
 
-const hits = new Map<string, { count: number; resetAt: number }>();
+const ENDPOINT_NAME = "breakdown";
+const MINUTE_LIMIT = 5;
+const DAILY_LIMIT = 20;
 
-function rateLimit(ip: string, limit = 5, windowMs = 60_000) {
+type RateLimitResult =
+  | { ok: true; minuteCount: number; dayCount: number }
+  | { ok: false; reason: "minute" | "day"; retryAfterSeconds: number };
+
+async function checkRateLimit(ip: string): Promise<RateLimitResult> {
+  // If Supabase isn't configured, fail open with a warning so dev/local still works.
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.warn(
+      "[breakdown] Supabase not configured — rate limiting disabled. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+    );
+    return { ok: true, minuteCount: 0, dayCount: 0 };
+  }
+
+  const supabase = getSupabaseAdmin();
   const now = Date.now();
-  const entry = hits.get(ip);
+  const oneMinuteAgo = new Date(now - 60_000).toISOString();
+  const oneDayAgo = new Date(now - 86_400_000).toISOString();
 
-  if (!entry || entry.resetAt < now) {
-    hits.set(ip, { count: 1, resetAt: now + windowMs });
-    return { allowed: true, remaining: limit - 1, resetAt: now + windowMs };
+  const [{ count: minuteCount }, { count: dayCount }] = await Promise.all([
+    supabase
+      .from("api_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("ip", ip)
+      .eq("endpoint", ENDPOINT_NAME)
+      .gte("created_at", oneMinuteAgo),
+    supabase
+      .from("api_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("ip", ip)
+      .eq("endpoint", ENDPOINT_NAME)
+      .gte("created_at", oneDayAgo),
+  ]);
+
+  const minutes = minuteCount ?? 0;
+  const days = dayCount ?? 0;
+
+  if (minutes >= MINUTE_LIMIT) {
+    return { ok: false, reason: "minute", retryAfterSeconds: 60 };
+  }
+  if (days >= DAILY_LIMIT) {
+    return { ok: false, reason: "day", retryAfterSeconds: 3600 };
   }
 
-  if (entry.count >= limit) {
-    return { allowed: false, remaining: 0, resetAt: entry.resetAt };
-  }
+  return { ok: true, minuteCount: minutes, dayCount: days };
+}
 
-  entry.count += 1;
-  hits.set(ip, entry);
-  return { allowed: true, remaining: limit - entry.count, resetAt: entry.resetAt };
+async function logRequest(
+  ip: string,
+  status: number,
+  userAgent: string | null
+): Promise<void> {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return;
+
+  try {
+    const supabase = getSupabaseAdmin();
+    await supabase.from("api_requests").insert({
+      ip,
+      endpoint: ENDPOINT_NAME,
+      status,
+      user_agent: userAgent?.slice(0, 500) ?? null,
+    });
+  } catch (err) {
+    // Don't fail the request if logging fails
+    console.error("[breakdown] failed to log request:", err);
+  }
 }
 
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+  const userAgent = req.headers.get("user-agent");
+
   try {
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
@@ -76,18 +134,19 @@ export async function POST(req: Request) {
       );
     }
 
-    const ip =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      req.headers.get("x-real-ip") ||
-      "unknown";
-
-    const rl = rateLimit(ip);
-    if (!rl.allowed) {
+    // Rate limit BEFORE doing any work
+    const rl = await checkRateLimit(ip);
+    if (!rl.ok) {
+      await logRequest(ip, 429, userAgent);
+      const message =
+        rl.reason === "minute"
+          ? "Too many requests. Please wait a minute and try again."
+          : "You've reached today's free breakdown limit. Please try again tomorrow.";
       return NextResponse.json(
-        { error: "Too many requests. Please wait a moment and try again." },
+        { error: message },
         {
           status: 429,
-          headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+          headers: { "Retry-After": String(rl.retryAfterSeconds) },
         }
       );
     }
@@ -96,6 +155,7 @@ export async function POST(req: Request) {
     const parsed = BreakdownRequestSchema.safeParse(json);
 
     if (!parsed.success) {
+      await logRequest(ip, 400, userAgent);
       const message =
         parsed.error.issues?.[0]?.message || "Invalid request. Please check your inputs.";
       return NextResponse.json({ error: message }, { status: 400 });
@@ -104,6 +164,7 @@ export async function POST(req: Request) {
     const { sport, motion, handedness, ageGroup, skillLevel, mainIssue } = parsed.data;
 
     if (hasInjection(mainIssue)) {
+      await logRequest(ip, 400, userAgent);
       return NextResponse.json(
         {
           error:
@@ -154,7 +215,7 @@ Return valid JSON only.
 `.trim();
 
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         { role: "system", content: ANALYZER_INSTRUCTIONS },
         { role: "user", content: userInput },
@@ -191,17 +252,26 @@ Return valid JSON only.
     try {
       data = BreakdownSchema.parse(JSON.parse(content));
     } catch {
+      await logRequest(ip, 502, userAgent);
       return NextResponse.json(
         { error: "Model returned invalid JSON. Please try again.", raw: content.slice(0, 2000) },
         { status: 502 }
       );
     }
 
+    await logRequest(ip, 200, userAgent);
+
     return NextResponse.json(
       { result: data },
-      { headers: { "X-RateLimit-Remaining": String(rl.remaining) } }
+      {
+        headers: {
+          "X-RateLimit-Minute-Remaining": String(Math.max(0, MINUTE_LIMIT - rl.minuteCount - 1)),
+          "X-RateLimit-Day-Remaining": String(Math.max(0, DAILY_LIMIT - rl.dayCount - 1)),
+        },
+      }
     );
   } catch (err: any) {
+    await logRequest(ip, 500, userAgent);
     const msg = err?.message || "Unknown error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
