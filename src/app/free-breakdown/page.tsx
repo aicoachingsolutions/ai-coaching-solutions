@@ -692,47 +692,86 @@ export default function FreeBreakdownPage() {
 
           {/* Sidebar */}
           <aside className="flex flex-col gap-4">
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-              <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Best results</p>
-              <p className="mt-3 text-base font-semibold text-neutral-900">
-                Describe it in game-realistic terms
-              </p>
-              <ul className="mt-4 space-y-3">
-                {[
-                  "Handedness and where misses show up most",
-                  "Contact quality or ball flight in game terms",
-                  "One clear outcome you want from practice",
-                ].map((tip) => (
-                  <li key={tip} className="flex items-start gap-2.5 text-base leading-relaxed text-neutral-700">
-                    <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">→</span>
-                    {tip}
-                  </li>
-                ))}
-              </ul>
+            {/* Best results — gold themed tip card */}
+            <div className="overflow-hidden rounded-2xl border-2 border-[#ffd60a] bg-gradient-to-br from-[#fffbe6] to-[#fff4b8] shadow-sm">
+              <div className="p-6">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ffd60a] text-base">
+                    💡
+                  </span>
+                  <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Best Results</p>
+                </div>
+                <p className="mt-3 text-base font-bold text-[#0b1f3a]">
+                  Describe it in game-realistic terms
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    "Handedness and where misses show up most",
+                    "Contact quality or ball flight in game terms",
+                    "One clear outcome you want from practice",
+                  ].map((tip) => (
+                    <li
+                      key={tip}
+                      className="flex items-start gap-2.5 text-base leading-relaxed text-[#0b1f3a]/85"
+                    >
+                      <span className="mt-0.5 flex-shrink-0 font-bold text-[#0b1f3a]">→</span>
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-              <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>What you get</p>
-              <ul className="mt-4 space-y-3">
-                {[
-                  "Mechanics read with root cause",
-                  "Timing and sequence notes",
-                  "Cues to say during live reps",
-                  "One priority and one drill",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-base leading-relaxed text-neutral-700">
-                    <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            {/* What you get — navy themed promo card */}
+            <div className="overflow-hidden rounded-2xl bg-[#0b1f3a] shadow-md">
+              <div className="h-1.5 bg-[#ffd60a]" />
+              <div className="p-6">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ffd60a] text-base">
+                    🏆
+                  </span>
+                  <p className={`${SECTION_LABEL} text-[#ffd60a]`}>What You Get</p>
+                </div>
+                <p className="mt-3 text-base font-bold text-white">
+                  Coach-ready breakdown in under 60 sec
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    "Mechanics read with root cause",
+                    "Timing and sequence notes",
+                    "Cues to say during live reps",
+                    "One priority and one drill",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2.5 text-base leading-relaxed text-white/85"
+                    >
+                      <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">✓</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
-              <p className="text-sm leading-relaxed text-neutral-500">
-                No login. No video required. Results are a coaching draft — always confirm
-                adjustments with the athlete in person.
-              </p>
+            {/* Safety disclaimer */}
+            <div className="overflow-hidden rounded-2xl border-2 border-amber-300 bg-amber-50 p-5">
+              <div className="flex items-start gap-3">
+                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-amber-200 text-base">
+                  ⚠️
+                </span>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-wider text-amber-900">
+                    Safety Notice
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-amber-900/90">
+                    Drill suggestions are coaching drafts, not medical advice. Always warm up
+                    properly, ensure adult supervision for youth athletes, and stop immediately if
+                    any pain or discomfort occurs. AI Coaching Solutions is not responsible for
+                    injury resulting from the use of these suggestions.
+                  </p>
+                </div>
+              </div>
             </div>
           </aside>
         </div>
@@ -845,6 +884,48 @@ export default function FreeBreakdownPage() {
                   <p className="mt-4 text-base leading-relaxed text-white sm:text-lg">{result.drill}</p>
                 </div>
               </article>
+            </div>
+
+            {/* Safety disclaimer — prominent placement after drill */}
+            <div className="overflow-hidden rounded-2xl border-2 border-amber-300 bg-amber-50 shadow-sm">
+              <div className="flex items-start gap-4 p-6 sm:p-7">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-200 text-xl">
+                  ⚠️
+                </span>
+                <div className="flex-1">
+                  <p className="text-base font-bold uppercase tracking-wider text-amber-900">
+                    Before Running This Drill
+                  </p>
+                  <p className="mt-2 text-base leading-relaxed text-amber-900/90">
+                    These suggestions are coaching drafts, not medical or professional training
+                    advice. Always:
+                  </p>
+                  <ul className="mt-3 space-y-1.5 text-base text-amber-900/90">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 flex-shrink-0 font-bold">•</span>
+                      Warm up properly before any drill work
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 flex-shrink-0 font-bold">•</span>
+                      Ensure qualified adult supervision for all youth athletes
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 flex-shrink-0 font-bold">•</span>
+                      Stop immediately if any pain, dizziness, or discomfort occurs
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 flex-shrink-0 font-bold">•</span>
+                      Consult a qualified coach, trainer, or medical professional before
+                      introducing new movements
+                    </li>
+                  </ul>
+                  <p className="mt-3 text-sm leading-relaxed text-amber-900/75">
+                    AI Coaching Solutions and its tools are not liable for any injury, harm, or
+                    adverse outcome resulting from the use of these suggestions. Use at your own
+                    discretion.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Email */}
