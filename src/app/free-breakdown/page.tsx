@@ -131,7 +131,7 @@ function ToggleButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all ${
+      className={`flex-1 rounded-xl border-2 py-3 text-base font-semibold transition-all ${
         active
           ? "border-[#0b1f3a] bg-[#0b1f3a] text-white shadow-sm"
           : "border-neutral-200 bg-white text-neutral-600 hover:border-[#0b1f3a]/40 hover:text-[#0b1f3a]"
@@ -142,7 +142,7 @@ function ToggleButton({
   );
 }
 
-const SECTION_LABEL = "text-[10px] font-bold uppercase tracking-widest";
+const SECTION_LABEL = "text-xs font-bold uppercase tracking-widest";
 
 export default function FreeBreakdownPage() {
   const [sport, setSport] = useState<Sport>("baseball");
@@ -440,23 +440,23 @@ export default function FreeBreakdownPage() {
   return (
     <div className="bg-[#f8f8fc]">
       {/* Page header */}
-      <div className="bg-[#0b1f3a] px-4 py-10 sm:py-14">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd60a]/30 bg-[#ffd60a]/10 px-3 py-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#ffd60a]" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#ffd60a]">
+      <div className="bg-[#0b1f3a] px-4 py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd60a]/30 bg-[#ffd60a]/10 px-4 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#ffd60a]" />
+            <span className="text-sm font-bold uppercase tracking-widest text-[#ffd60a]">
               Free — No Login Required
             </span>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             Free Swing &amp; Pitching Breakdown
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75 sm:text-xl">
             Describe what you&apos;re seeing. Get mechanics notes, coaching cues, a drill, and one
             clear next focus — in under 60 seconds.
           </p>
 
-          <div className="mt-6 grid grid-cols-3 gap-3">
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { label: "Mechanics read", desc: "Root cause + downstream effects on movement" },
               { label: "Coaching cues", desc: "Short, vivid language to use during live reps" },
@@ -464,10 +464,10 @@ export default function FreeBreakdownPage() {
             ].map((c) => (
               <div
                 key={c.label}
-                className="rounded-xl border border-white/10 bg-white/[0.07] p-3 text-left"
+                className="rounded-xl border border-white/10 bg-white/[0.07] p-4 text-left"
               >
-                <p className="text-[11px] font-bold text-[#ffd60a]">{c.label}</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-white/60">{c.desc}</p>
+                <p className="text-sm font-bold text-[#ffd60a]">{c.label}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/70">{c.desc}</p>
               </div>
             ))}
           </div>
@@ -475,8 +475,8 @@ export default function FreeBreakdownPage() {
       </div>
 
       {/* Form + sidebar */}
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_272px]">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Form card */}
           <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
             <form onSubmit={handleSubmit} className="flex flex-col gap-0">
@@ -495,15 +495,15 @@ export default function FreeBreakdownPage() {
               {/* Step 1 */}
               <div className="border-b border-neutral-100 p-6 sm:p-8">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-base font-bold text-[#ffd60a]">
                     1
                   </span>
-                  <h2 className="text-base font-bold text-[#0b1f3a]">What are we analyzing?</h2>
+                  <h2 className="text-xl font-bold text-[#0b1f3a]">What are we analyzing?</h2>
                 </div>
 
                 <div className="space-y-5">
                   <div>
-                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>Sport</label>
+                    <label className={`mb-3 block ${SECTION_LABEL} text-neutral-500`}>Sport</label>
                     <div className="flex gap-2">
                       {SPORTS.map(({ value, label }) => (
                         <ToggleButton
@@ -518,7 +518,7 @@ export default function FreeBreakdownPage() {
                   </div>
 
                   <div>
-                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>Motion</label>
+                    <label className={`mb-3 block ${SECTION_LABEL} text-neutral-500`}>Motion</label>
                     <div className="flex gap-2">
                       <ToggleButton
                         active={motion === "swing"}
@@ -539,7 +539,7 @@ export default function FreeBreakdownPage() {
 
                   {sport !== "golf" && (
                     <div>
-                      <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                      <label className={`mb-3 block ${SECTION_LABEL} text-neutral-500`}>
                         Handedness
                       </label>
                       <div className="flex gap-2">
@@ -564,15 +564,15 @@ export default function FreeBreakdownPage() {
               {/* Step 2 */}
               <div className="border-b border-neutral-100 p-6 sm:p-8">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-base font-bold text-[#ffd60a]">
                     2
                   </span>
-                  <h2 className="text-base font-bold text-[#0b1f3a]">About the athlete</h2>
+                  <h2 className="text-xl font-bold text-[#0b1f3a]">About the athlete</h2>
                 </div>
 
                 <div className="space-y-5">
                   <div>
-                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                    <label className={`mb-3 block ${SECTION_LABEL} text-neutral-500`}>
                       Age group{" "}
                       <span className="normal-case font-normal text-red-400">(required)</span>
                     </label>
@@ -580,7 +580,7 @@ export default function FreeBreakdownPage() {
                       value={ageGroup}
                       onChange={(e) => setAgeGroup(e.target.value)}
                       required
-                      className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10 appearance-auto"
+                      className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3.5 text-base text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10 appearance-auto"
                     >
                       <option value="">Select age group...</option>
                       {AGE_GROUPS.map((g) => (
@@ -592,7 +592,7 @@ export default function FreeBreakdownPage() {
                   </div>
 
                   <div>
-                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                    <label className={`mb-3 block ${SECTION_LABEL} text-neutral-500`}>
                       Skill level{" "}
                       <span className="normal-case font-normal text-neutral-400">(optional)</span>
                     </label>
@@ -602,7 +602,7 @@ export default function FreeBreakdownPage() {
                           type="button"
                           key={level}
                           onClick={() => setSkillLevel(skillLevel === level ? "" : level)}
-                          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+                          className={`rounded-full border-2 px-5 py-2 text-base font-medium transition-all ${
                             skillLevel === level
                               ? "border-[#0b1f3a] bg-[#0b1f3a] text-white shadow-sm"
                               : "border-neutral-200 bg-white text-neutral-600 hover:border-[#0b1f3a]/40 hover:text-[#0b1f3a]"
@@ -619,17 +619,17 @@ export default function FreeBreakdownPage() {
               {/* Step 3 */}
               <div className="p-6 sm:p-8">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-base font-bold text-[#ffd60a]">
                     3
                   </span>
-                  <h2 className="text-base font-bold text-[#0b1f3a]">What are you seeing?</h2>
+                  <h2 className="text-xl font-bold text-[#0b1f3a]">What are you seeing?</h2>
                 </div>
 
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-xs text-neutral-400">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-sm text-neutral-500">
                     More detail = sharper feedback
                   </p>
-                  <span className={`text-xs font-semibold tabular-nums ${charCountColor}`}>
+                  <span className={`text-sm font-semibold tabular-nums ${charCountColor}`}>
                     {mainIssueLength} / 600
                   </span>
                 </div>
@@ -644,11 +644,11 @@ export default function FreeBreakdownPage() {
                     intakeStartedRef.current = true;
                     track("Swing Upload Started", { tool: "free_swing_breakdown" });
                   }}
-                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
+                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3.5 text-base leading-relaxed text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
                   rows={6}
                   placeholder={placeholder}
                 />
-                <p className="mt-2 text-xs text-neutral-400">
+                <p className="mt-3 text-sm text-neutral-500">
                   Include miss pattern, contact quality or ball flight, and what you want to improve.
                 </p>
 
@@ -664,11 +664,11 @@ export default function FreeBreakdownPage() {
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#ffd60a] px-6 py-4 text-base font-bold text-[#0b1f3a] shadow-sm transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#ffd60a] px-6 py-5 text-lg font-bold text-[#0b1f3a] shadow-sm transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {loading ? (
                       <>
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0b1f3a]/20 border-t-[#0b1f3a]" />
+                        <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#0b1f3a]/20 border-t-[#0b1f3a]" />
                         Analyzing your breakdown...
                       </>
                     ) : (
@@ -676,12 +676,12 @@ export default function FreeBreakdownPage() {
                     )}
                   </button>
                   {loading && (
-                    <p className="mt-2 text-center text-xs text-neutral-400">
+                    <p className="mt-3 text-center text-sm text-neutral-500">
                       This usually takes 15–30 seconds
                     </p>
                   )}
                   {!loading && !canSubmit && mainIssueLength > 0 && mainIssueLength < 20 && (
-                    <p className="mt-2 text-center text-xs text-red-400">
+                    <p className="mt-3 text-center text-sm text-red-500">
                       {20 - mainIssueLength} more characters needed
                     </p>
                   )}
@@ -692,18 +692,18 @@ export default function FreeBreakdownPage() {
 
           {/* Sidebar */}
           <aside className="flex flex-col gap-4">
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
               <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Best results</p>
-              <p className="mt-2 text-sm font-semibold text-neutral-900">
+              <p className="mt-3 text-base font-semibold text-neutral-900">
                 Describe it in game-realistic terms
               </p>
-              <ul className="mt-3 space-y-3">
+              <ul className="mt-4 space-y-3">
                 {[
                   "Handedness and where misses show up most",
                   "Contact quality or ball flight in game terms",
                   "One clear outcome you want from practice",
                 ].map((tip) => (
-                  <li key={tip} className="flex items-start gap-2 text-sm text-neutral-600">
+                  <li key={tip} className="flex items-start gap-2.5 text-base leading-relaxed text-neutral-700">
                     <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">→</span>
                     {tip}
                   </li>
@@ -711,16 +711,16 @@ export default function FreeBreakdownPage() {
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
               <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>What you get</p>
-              <ul className="mt-3 space-y-2.5">
+              <ul className="mt-4 space-y-3">
                 {[
                   "Mechanics read with root cause",
                   "Timing and sequence notes",
                   "Cues to say during live reps",
                   "One priority and one drill",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-neutral-600">
+                  <li key={item} className="flex items-start gap-2.5 text-base leading-relaxed text-neutral-700">
                     <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">✓</span>
                     {item}
                   </li>
@@ -728,8 +728,8 @@ export default function FreeBreakdownPage() {
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-4">
-              <p className="text-xs leading-relaxed text-neutral-400">
+            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
+              <p className="text-sm leading-relaxed text-neutral-500">
                 No login. No video required. Results are a coaching draft — always confirm
                 adjustments with the athlete in person.
               </p>
@@ -747,16 +747,16 @@ export default function FreeBreakdownPage() {
             {/* Results header with actions */}
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
               <div className="h-1.5 bg-[#0b1f3a]" />
-              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between sm:p-6">
+              <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-start sm:justify-between sm:p-8">
                 <div>
-                  <h2 className="text-xl font-bold text-[#0b1f3a]">Your Coaching Breakdown</h2>
-                  <p className="mt-1 text-xs text-neutral-400">{contextLabel}</p>
+                  <h2 className="text-2xl font-bold text-[#0b1f3a] sm:text-3xl">Your Coaching Breakdown</h2>
+                  <p className="mt-2 text-sm text-neutral-500">{contextLabel}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={handleCopyResults}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300"
+                    className="inline-flex items-center gap-1.5 rounded-lg border-2 border-neutral-200 bg-white px-5 py-2.5 text-base font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300"
                   >
                     {copyState === "copied" ? "✓ Copied" : "Copy Text"}
                   </button>
@@ -764,14 +764,14 @@ export default function FreeBreakdownPage() {
                     type="button"
                     onClick={downloadBreakdownPdf}
                     disabled={pdfState === "loading"}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-lg border-2 border-neutral-200 bg-white px-5 py-2.5 text-base font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-50"
                   >
                     {pdfState === "loading" ? "Preparing…" : "Download PDF"}
                   </button>
                 </div>
               </div>
               {(copyState === "error" || pdfState === "error") && (
-                <p className="px-5 pb-4 text-xs text-red-600">
+                <p className="px-6 pb-4 text-sm text-red-600">
                   {copyState === "error" ? "Copy failed." : "PDF failed."} Please try again.
                 </p>
               )}
@@ -780,35 +780,37 @@ export default function FreeBreakdownPage() {
             {/* Mechanics + Timing */}
             <div className="grid gap-4 lg:grid-cols-2">
               <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="h-1.5 bg-[#0b1f3a]" />
-                <div className="p-6">
+                <div className="h-2 bg-[#0b1f3a]" />
+                <div className="p-7 sm:p-8">
                   <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Mechanics</p>
-                  <p className="mt-3 text-sm leading-relaxed text-neutral-800">
+                  <p className="mt-4 text-base leading-relaxed text-neutral-800 sm:text-lg">
                     {result.mechanics}
                   </p>
                 </div>
               </article>
 
               <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="h-1.5 bg-[#0b1f3a]" />
-                <div className="p-6">
+                <div className="h-2 bg-[#0b1f3a]" />
+                <div className="p-7 sm:p-8">
                   <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Timing</p>
-                  <p className="mt-3 text-sm leading-relaxed text-neutral-800">{result.timing}</p>
+                  <p className="mt-4 text-base leading-relaxed text-neutral-800 sm:text-lg">
+                    {result.timing}
+                  </p>
                 </div>
               </article>
             </div>
 
             {/* Coaching Cues */}
             <article className="overflow-hidden rounded-2xl border border-[#ffd60a]/40 shadow-sm">
-              <div className="h-1.5 bg-[#ffd60a]" />
-              <div className="bg-[#ffd60a]/[0.05] p-6">
+              <div className="h-2 bg-[#ffd60a]" />
+              <div className="bg-[#ffd60a]/[0.05] p-7 sm:p-8">
                 <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Coaching Cues</p>
-                <p className="mt-0.5 text-[11px] text-neutral-400">Say these during live reps</p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <p className="mt-1 text-sm text-neutral-500">Say these during live reps</p>
+                <div className="mt-5 flex flex-wrap gap-2.5">
                   {result.cues.map((cue, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center rounded-full border border-[#0b1f3a]/15 bg-white px-4 py-2 text-sm font-medium text-[#0b1f3a] shadow-sm"
+                      className="inline-flex items-center rounded-full border-2 border-[#0b1f3a]/15 bg-white px-5 py-2.5 text-base font-medium text-[#0b1f3a] shadow-sm"
                     >
                       {cue}
                     </span>
@@ -821,15 +823,15 @@ export default function FreeBreakdownPage() {
             <div className="grid gap-4 lg:grid-cols-2">
               {/* Next Focus — gold accented, highest priority */}
               <article className="overflow-hidden rounded-2xl border-2 border-[#ffd60a] bg-white shadow-sm">
-                <div className="h-1.5 bg-[#ffd60a]" />
-                <div className="p-6">
+                <div className="h-2 bg-[#ffd60a]" />
+                <div className="p-7 sm:p-8">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-[#ffd60a] px-2.5 py-0.5 text-[10px] font-bold text-[#0b1f3a]">
+                    <span className="rounded-full bg-[#ffd60a] px-3 py-1 text-xs font-bold text-[#0b1f3a]">
                       TOP PRIORITY
                     </span>
                   </div>
-                  <p className={`mt-3 ${SECTION_LABEL} text-[#0b1f3a]`}>Next Focus</p>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-neutral-900">
+                  <p className={`mt-4 ${SECTION_LABEL} text-[#0b1f3a]`}>Next Focus</p>
+                  <p className="mt-3 text-base font-medium leading-relaxed text-neutral-900 sm:text-lg">
                     {result.nextFocus}
                   </p>
                 </div>
@@ -837,23 +839,23 @@ export default function FreeBreakdownPage() {
 
               {/* Recommended Drill — navy, final action */}
               <article className="overflow-hidden rounded-2xl bg-[#0b1f3a] shadow-md">
-                <div className="h-1.5 bg-[#ffd60a]" />
-                <div className="p-6">
+                <div className="h-2 bg-[#ffd60a]" />
+                <div className="p-7 sm:p-8">
                   <p className={`${SECTION_LABEL} text-[#ffd60a]`}>Recommended Drill</p>
-                  <p className="mt-3 text-sm leading-relaxed text-white">{result.drill}</p>
+                  <p className="mt-4 text-base leading-relaxed text-white sm:text-lg">{result.drill}</p>
                 </div>
               </article>
             </div>
 
             {/* Email */}
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
-              <p className="text-sm font-semibold text-neutral-900">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+              <p className="text-lg font-semibold text-neutral-900">
                 Email this breakdown to yourself
               </p>
-              <p className="mt-0.5 text-xs text-neutral-400">
+              <p className="mt-1.5 text-sm text-neutral-500">
                 Optional — get occasional coach notes too. No spam.
               </p>
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
                 <input
                   type="email"
                   value={email}
@@ -863,26 +865,26 @@ export default function FreeBreakdownPage() {
                     setEmailSent(false);
                   }}
                   placeholder="you@example.com"
-                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
+                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3.5 text-base text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
                 />
                 <button
                   type="button"
                   onClick={handleEmailBreakdown}
                   disabled={emailSending || emailSent}
-                  className="inline-flex flex-shrink-0 items-center justify-center rounded-xl bg-[#0b1f3a] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#071426] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex flex-shrink-0 items-center justify-center rounded-xl bg-[#0b1f3a] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[#071426] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {emailSending ? "Sending…" : emailSent ? "Sent ✓" : "Email me this"}
                 </button>
               </div>
-              {emailError && <p className="mt-2 text-xs text-red-600">{emailError}</p>}
+              {emailError && <p className="mt-3 text-sm text-red-600">{emailError}</p>}
             </div>
 
             {/* Upsell */}
-            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-5 sm:p-6">
-              <p className="text-sm font-semibold text-neutral-900">
+            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-6 sm:p-8">
+              <p className="text-lg font-semibold text-neutral-900">
                 Want to save drills and build practice plans?
               </p>
-              <p className="mt-1 text-xs text-neutral-500">
+              <p className="mt-1.5 text-sm text-neutral-500">
                 The coach app is where plans, drill libraries, and team profiles live.
               </p>
               <Link
@@ -890,7 +892,7 @@ export default function FreeBreakdownPage() {
                 onClick={() =>
                   track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
                 }
-                className="mt-4 inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
+                className="mt-5 inline-flex items-center justify-center rounded-lg border-2 border-neutral-300 bg-white px-5 py-3 text-base font-semibold text-neutral-900 transition hover:bg-neutral-100"
               >
                 Create a free coach account
               </Link>
