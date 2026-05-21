@@ -1,14 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AppComingSoonBanner } from "@/components/app-coming-soon-banner";
+import { AppHomeHero } from "@/components/app-home-hero";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
+import { btnComingSoon, btnPrimary, marketingContainer } from "@/lib/marketing-buttons";
 
 const marketingSiteUrl =
   process.env.NEXT_PUBLIC_MARKETING_SITE_URL?.trim() || "https://www.aicoachingsolutions.net";
-
-const btnPrimary =
-  "inline-flex items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-5 py-3.5 text-sm font-semibold text-[#071426] transition hover:-translate-y-px hover:bg-[#ffe566] hover:border-[#ffe566]";
-const btnComingSoon =
-  "inline-flex items-center justify-center rounded-xl border border-[rgba(148,163,184,0.35)] bg-transparent px-5 py-3.5 text-sm font-semibold text-[#94a3b8] transition hover:border-[#ffd60a]/50 hover:text-[#f8fafc]";
 
 type Tool = {
   badge: string | null;
@@ -93,42 +91,20 @@ const tools: Tool[] = [
 export default function HomePage() {
   return (
     <div className="bg-[#071426] text-[#f8fafc]">
-      <section
-        id="top"
-        aria-label="App launch"
-        className="border-b border-[rgba(148,163,184,0.18)] bg-[#0b1f3a] pt-24 pb-12 sm:pb-16"
-      >
-        <div className="mx-auto w-full max-w-[min(1200px,92vw)] px-[4vw]">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#ffd60a]">
-            App hub
-          </p>
-          <h1 className="mt-3 max-w-2xl text-3xl font-extrabold tracking-tight text-[#f8fafc] sm:text-4xl">
-            Launch a coaching tool
-          </h1>
-          <p className="mt-3 max-w-xl text-base text-[#94a3b8] sm:text-lg">
-            Free Swing Analyzer is live now. Founding coach and golfer programs include 60 days
-            of Pro free when access opens — see Practice Planner and Break90 for the full
-            program.
-          </p>
-          <div className="mt-6">
-            <a href="#tools" className={btnPrimary}>
-              Choose a tool below
-            </a>
-          </div>
-        </div>
-      </section>
+      <AppComingSoonBanner marketingSiteUrl={marketingSiteUrl} />
+      <AppHomeHero />
 
       <section
         id="tools"
         aria-labelledby="tools-title"
         className="bg-[#071426] py-14 sm:py-16"
       >
-        <div className="mx-auto w-full max-w-[min(1200px,92vw)] px-[4vw]">
-          <header className="mx-auto max-w-[640px] text-center">
+        <div className={marketingContainer}>
+          <header className="mx-auto max-w-[720px] text-center">
             <h2 id="tools-title" className="text-2xl font-bold text-[#f8fafc] sm:text-3xl">
-              Open a tool
+              Coaching Tools Built for Your Program
             </h2>
-            <p className="mt-2 text-[#94a3b8]">
+            <p className="mt-3 text-[#94a3b8]">
               Free Swing Analyzer is live today. Founding coach and golfer programs (60 days Pro,
               up to 120 days with milestones) open soon — each tool page has the full MVP program.
             </p>
@@ -217,16 +193,16 @@ export default function HomePage() {
       </section>
 
       <div className="border-t border-[rgba(148,163,184,0.18)] bg-[#0b1f3a]">
-        <div className="mx-auto w-full max-w-[min(1200px,92vw)] px-[4vw] py-5">
+        <div className={`${marketingContainer} py-5`}>
           <p className="text-center text-sm text-[#94a3b8]">
-            Marketing, SEO, and program story:{" "}
+            Full marketing site, SEO, and brand story:{" "}
             <a
               href={marketingSiteUrl}
               className="font-semibold text-[#ffd60a] no-underline hover:text-[#ffe566]"
               target="_blank"
               rel="noopener noreferrer"
             >
-              aicoachingsolutions.net
+              www.aicoachingsolutions.net
             </a>
           </p>
         </div>

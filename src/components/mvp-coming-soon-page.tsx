@@ -53,7 +53,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/" className={btnSecondary}>
-                  ← App hub
+                  ← All tools
                 </Link>
                 <FreeBreakdownTrackedLink
                   location={`mvp_${config.waitlistSource}_hero`}
