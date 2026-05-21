@@ -4,7 +4,7 @@ import { PRACTICE_PLANNER_COACH_PROGRAM } from "@/lib/mvp-programs";
 export const metadata = {
   title: "Practice Planner — Founding Coach MVP | AI Coaching Solutions",
   description:
-    "Practice Planner MVP for coaches is opening soon. Join the waitlist for early access to structured practice planning.",
+    "Practice Planner Pro free for 60 days for founding coaches. Full Pro access, structured feedback, and optional extensions up to 120 days. Join the waitlist.",
   alternates: { canonical: "/practice-planner" },
 };
 

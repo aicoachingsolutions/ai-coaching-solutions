@@ -51,8 +51,8 @@ const tools: Tool[] = [
     freeAnalyzer: true,
   },
   {
-    badge: "Lead tool",
-    badgeExtra: "Coming soon",
+    badge: "60 days Pro — MVP",
+    badgeExtra: "Opening soon",
     featured: false,
     comingSoon: true,
     logo: "/images/practice-planner-logo.png",
@@ -60,14 +60,15 @@ const tools: Tool[] = [
     logoClassName: "max-h-[96px]",
     title: "Practice Planner",
     sport: "Baseball · Softball",
-    description: "Build organized practices in minutes. MVP coach access opens here when ready.",
+    description:
+      "Founding coach program: full Pro for 60 days free — feedback on real practice plans. Earn up to 120 days.",
     bullets: [
-      "Drill library built in",
-      "Offensive, defensive, or full practices",
-      "Save and reuse what works",
+      "All Pro features during access",
+      "2 check-ins + real plans we ask for",
+      "See full program on the Practice Planner page",
     ],
     href: "/practice-planner",
-    ctaLabel: "Practice Planner — coming soon",
+    ctaLabel: "Practice Planner MVP program →",
   },
   {
     badge: "60 days Pro — MVP",
@@ -107,9 +108,9 @@ export default function HomePage() {
             Launch a coaching tool
           </h1>
           <p className="mt-3 max-w-xl text-base text-[#94a3b8] sm:text-lg">
-            Free Swing Analyzer is live. Break90 founding golfers get 60 days of Pro free when we
-            open — see the program on the Break90 page. Practice Planner MVP for coaches opens
-            soon. Full marketing story on WordPress.
+            Free Swing Analyzer is live. Founding coach and golfer programs offer 60 days of Pro
+            free when we open — see Practice Planner and Break90 pages for details. Full
+            marketing story on WordPress.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="#tools" className={btnPrimary}>
@@ -138,8 +139,8 @@ export default function HomePage() {
               Open a tool
             </h2>
             <p className="mt-2 text-[#94a3b8]">
-              One tool live today. MVP landing pages for Practice Planner and Break90 are ready
-              for launch.
+              One tool live today. Founding coach and golfer MVP programs are documented and
+              ready for launch.
             </p>
           </header>
 

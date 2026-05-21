@@ -81,31 +81,56 @@ export const BREAK90_FOUNDING_GOLFER_PROGRAM: MvpProgramDefinition = {
 
 export const PRACTICE_PLANNER_COACH_PROGRAM: MvpProgramDefinition = {
   badge: "Founding coach program",
-  headline: "Practice Planner MVP — shape how teams plan real practices",
+  headline:
+    "Practice Planner Pro free for 60 days — help us build planning coaches actually use",
   intro:
-    "We are building the Practice Planner with coaches who run real practices. MVP coach access will open in cohorts — join the waitlist to hear first when testing starts.",
-  proIncludesTitle: "What MVP coaches will test",
+    "You get every Pro feature for 60 days at no charge. We are looking for coaches who run real practices, build plans they would actually use on the field, and tell us what saves time versus what gets in the way.",
+  proIncludesTitle: "What Pro includes during your access",
   proIncludes: [
-    "Drag-and-drop practice structure",
-    "Drill library and reusable plans",
-    "Workflows for offensive, defensive, and full practices",
+    "Unlimited saved practice plans",
+    "Drill library — add, edit, and reuse your drills",
+    "Offensive, defensive, and full-practice structures",
+    "Team setup and plan editing without artificial caps during MVP",
+    "All Pro features with no limits during your access period",
   ],
-  youGetTitle: "What you get when access opens",
+  youGetTitle: "What you get",
   youGet: [
-    "Early access before public launch",
-    "Direct input on features coaches use every day",
-    "Founding coach recognition in the program",
+    "60 days of Practice Planner Pro — full access",
+    "Founding coach status while the program is open",
+    "Direct product feedback channel (in-app + email)",
+    "Reminders 14 and 7 days before Pro access ends",
   ],
-  weAskTitle: "What we will ask",
+  weAskTitle: "What we ask",
   weAsk: [
-    "Build at least one real practice plan in your first two weeks",
-    "Share honest feedback on what saves time vs. what gets in the way",
-    "Optional short survey or call for coaches who want to go deeper",
+    "Create at least 2 real practice plans in your first 30 days (plans you would run, not demos)",
+    "Complete one structured feedback check-in after your first week",
+    "Complete one check-in before day 60",
+    "Flag bugs when something breaks — optional 15-minute call if we invite you",
   ],
+  extensionTiers: [
+    {
+      label: "Base",
+      contribution: "Join and finish onboarding",
+      reward: "60 days Pro",
+    },
+    {
+      label: "+30 days",
+      contribution: "3+ saved practice plans and both check-ins completed",
+      reward: "90 days total",
+    },
+    {
+      label: "+30 more",
+      contribution:
+        "One reproducible bug report with steps, or one feedback call, or one referred coach who completes onboarding",
+      reward: "120 days total (max)",
+    },
+  ],
+  extensionNote:
+    "Extensions are automatic when milestones are met — no subjective scoring of your feedback. Maximum free Pro access is 120 days, then standard pricing applies unless we offer a founding discount.",
   afterProgram:
-    "Pricing and trial length for coaches will be announced before MVP opens. Waitlist members hear first.",
+    "After your access ends, you can upgrade to Pro or continue on Free if a free tier is available. We will never charge you without clear notice.",
   earlyAccessNote:
-    "Coach MVP testing is not open yet. Leave your email and we will notify you when the first cohort opens on this site.",
+    "MVP testing is not open yet on this site. Join the waitlist below — when we open the first coach cohort, you will get instructions to start your 60-day Pro access.",
   notFitFor:
-    "Best for coaches actively running practices — not for athletes looking for golf coaching (see Break90).",
+    "This program is for coaches running baseball or softball practices — not for golfers (see Break90). Not a fit if you need a finished, support-heavy product today; features may change weekly during MVP.",
 };

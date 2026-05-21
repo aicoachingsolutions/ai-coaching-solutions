@@ -40,10 +40,10 @@ const TOOL_GROUPS: { heading: string; sub: string; items: ToolCard[] }[] = [
       {
         title: "Practice Planner",
         description:
-          "Build structured practices with drills, focus areas, and reusable plans. MVP coach access is not open yet.",
+          "Founding coach MVP: 60 days of Practice Planner Pro free (all features), structured feedback on real practice plans, up to 120 days with milestones. Access not open yet.",
         status: "Coming soon",
         appHref: "/practice-planner",
-        appLinkLabel: "Practice Planner — coming soon →",
+        appLinkLabel: "Practice Planner MVP program →",
       },
       {
         title: "Drill Finder",

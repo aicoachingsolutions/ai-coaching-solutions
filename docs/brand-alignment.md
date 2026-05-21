@@ -66,13 +66,13 @@ Keep app routes (src/app/app/) on the light coach UI unless I say otherwise.
 | Free analyzer | `src/app/free-breakdown/page.tsx` |
 | Coach app | `src/app/app/**` |
 
-## Break90 MVP copy (Vercel app)
+## MVP program copy (Vercel app)
 
-Founding golfer program (60 days Pro, extension tiers) lives in:
+Founding user programs (60 days Pro, extension tiers up to 120 days) live in:
 
-- `src/lib/mvp-programs.ts` — source of truth for wording
-- `src/components/mvp-program-details.tsx` — rendered on `/break90`
-- App hub card: `src/app/(marketing)/page.tsx`
+- `src/lib/mvp-programs.ts` — `BREAK90_FOUNDING_GOLFER_PROGRAM`, `PRACTICE_PLANNER_COACH_PROGRAM`
+- `src/components/mvp-program-details.tsx` — rendered on `/break90` and `/practice-planner`
+- App hub cards: `src/app/(marketing)/page.tsx`
 
 ## Run locally
 
