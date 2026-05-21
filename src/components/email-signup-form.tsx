@@ -9,6 +9,8 @@ type EmailSignupFormProps = {
   type?: "signup" | "waitlist";
   buttonLabel?: string;
   successMessage?: string;
+  /** stacked = full-width email above button (MVP pages under product logo) */
+  layout?: "inline" | "stacked";
 };
 
 export function EmailSignupForm({
@@ -16,6 +18,7 @@ export function EmailSignupForm({
   type = "signup",
   buttonLabel = "Get Coaching Notes",
   successMessage = "Thanks. Check your inbox for a confirmation email.",
+  layout = "inline",
 }: EmailSignupFormProps) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
@@ -58,9 +61,18 @@ export function EmailSignupForm({
     }
   }
 
+  const isStacked = layout === "stacked";
+
   return (
     <>
-      <form onSubmit={onSubmit} className="flex w-full flex-col gap-3 sm:flex-row sm:items-center">
+      <form
+        onSubmit={onSubmit}
+        className={
+          isStacked
+            ? "flex w-full flex-col gap-3"
+            : "flex w-full flex-col gap-3 sm:flex-row sm:items-center"
+        }
+      >
         <label className="sr-only" htmlFor="email">
           Email
         </label>
@@ -72,13 +84,21 @@ export function EmailSignupForm({
           placeholder="you@school.org"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full min-w-0 rounded-md border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/20 sm:flex-1"
+          className={
+            isStacked
+              ? "w-full min-w-[min(100%,20rem)] rounded-xl border border-white/20 bg-[#071426] px-4 py-3.5 text-base text-white placeholder:text-white/40 focus:border-[#ffd60a]/50 focus:outline-none focus:ring-2 focus:ring-[#ffd60a]/25"
+              : "w-full min-w-0 rounded-md border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/20 sm:flex-1"
+          }
           required
         />
         <button
           type="submit"
           disabled={state === "sending"}
-          className="inline-flex shrink-0 items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+          className={
+            isStacked
+              ? "inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-70"
+              : "inline-flex shrink-0 items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+          }
         >
           {state === "sending" ? "Sending..." : buttonLabel}
         </button>
@@ -86,7 +106,13 @@ export function EmailSignupForm({
       {message ? (
         <p
           className={`mt-2 text-xs ${
-            state === "success" ? "text-emerald-700" : "text-red-700"
+            state === "success"
+              ? isStacked
+                ? "text-[#ffd60a]"
+                : "text-emerald-700"
+              : isStacked
+                ? "text-red-300"
+                : "text-red-700"
           }`}
         >
           {message}
