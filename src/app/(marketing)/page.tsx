@@ -1,16 +1,5 @@
 import Link from "next/link";
-import { readdir, readFile, stat } from "fs/promises";
-import path from "path";
-import { EmailSignupForm } from "@/components/email-signup-form";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
-import { ProductPromoSection } from "@/components/product-promo-section";
-
-type PostMeta = {
-  slug: string;
-  title: string;
-  date?: string;
-  description?: string;
-};
 
 const break90SignupUrl =
   process.env.NEXT_PUBLIC_BREAK90_URL?.trim() || "https://break90.app";
@@ -18,488 +7,159 @@ const break90SignupUrl =
 const practicePlannerEntryUrl =
   process.env.NEXT_PUBLIC_PRACTICE_PLANNER_ENTRY_URL?.trim() || "/app/practice-planner";
 
-function parseFrontmatter(raw: string): Omit<PostMeta, "slug"> {
-  const fm: Record<string, string> = {};
+const tools = [
+  {
+    badge: "FREE — No Login",
+    badgeStyle: "bg-[#ffd60a] text-[#0b1f3a]",
+    cardStyle: "border-2 border-[#ffd60a]",
+    title: "Free Swing Analyzer",
+    sport: "Baseball · Softball · Golf",
+    description:
+      "Describe what you're seeing and get a full coaching breakdown in under 60 seconds. Mechanics, timing, cues, a drill, and one clear next focus.",
+    bullets: [
+      "Works for swing and pitching",
+      "Results you can copy, download, or email",
+      "No account needed",
+    ],
+    cta: "free-breakdown",
+    ctaLabel: "Try Free Swing Analyzer",
+    ctaStyle:
+      "bg-[#ffd60a] text-[#0b1f3a] hover:bg-[#ffe566] font-bold",
+    external: false,
+  },
+  {
+    badge: "30 Days Free",
+    badgeStyle: "bg-[#0b1f3a] text-white",
+    cardStyle: "border border-neutral-200",
+    title: "Practice Planner",
+    sport: "Baseball · Softball",
+    description:
+      "Build structured, efficient practice sessions in minutes. Organize your drills, build plans, and run practice with a real system behind it.",
+    bullets: [
+      "Drill library built in",
+      "Build offensive, defensive, or full practices",
+      "Save and reuse what works",
+    ],
+    cta: practicePlannerEntryUrl,
+    ctaLabel: "Try Practice Planner Free",
+    ctaStyle: "bg-[#0b1f3a] text-white hover:bg-[#071426] font-semibold",
+    external: practicePlannerEntryUrl.startsWith("http"),
+  },
+  {
+    badge: "90 Days Free",
+    badgeStyle: "bg-[#0b1f3a] text-white",
+    cardStyle: "border border-neutral-200",
+    title: "Break90 Golf",
+    sport: "Golf",
+    description:
+      "Track your rounds, find what's actually costing you strokes, and get clear practice priorities after every round — not generic stats.",
+    bullets: [
+      "Round tracking and pattern analysis",
+      "Clear practice focus after every round",
+      "Built for real golfers",
+    ],
+    cta: break90SignupUrl,
+    ctaLabel: "Try Break90 Free",
+    ctaStyle: "bg-[#0b1f3a] text-white hover:bg-[#071426] font-semibold",
+    external: true,
+  },
+];
 
-  if (!raw.startsWith("---")) {
-    const h1 = raw.match(/^#\s+(.+)$/m)?.[1]?.trim();
-    return { title: h1 ?? "Untitled" };
-  }
-
-  const end = raw.indexOf("\n---", 3);
-  if (end === -1) return { title: "Untitled" };
-
-  const block = raw.slice(3, end).trim();
-  for (const line of block.split("\n")) {
-    const idx = line.indexOf(":");
-    if (idx === -1) continue;
-    const key = line.slice(0, idx).trim();
-    const value = line
-      .slice(idx + 1)
-      .trim()
-      .replace(/^"(.*)"$/, "$1");
-    if (key) fm[key] = value;
-  }
-
-  return {
-    title: fm.title || "Untitled",
-    date: fm.date || undefined,
-    description: fm.description || fm.excerpt || undefined,
-  };
-}
-
-async function fileExists(p: string) {
-  try {
-    const s = await stat(p);
-    return s.isFile() || s.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function getLatestPosts(limit = 3): Promise<PostMeta[]> {
-  const postsDir = path.join(process.cwd(), "content", "post");
-  if (!(await fileExists(postsDir))) return [];
-
-  const entries = await readdir(postsDir, { withFileTypes: true });
-
-  const candidates: { slug: string; filePath: string }[] = [];
-
-  for (const e of entries) {
-    if (e.isFile()) {
-      const ext = path.extname(e.name);
-      if (ext === ".md" || ext === ".mdx") {
-        const slug = path.basename(e.name, ext);
-        candidates.push({ slug, filePath: path.join(postsDir, e.name) });
-      }
-    }
-
-    if (e.isDirectory()) {
-      const slug = e.name;
-      const mdxPath = path.join(postsDir, slug, "index.mdx");
-      const mdPath = path.join(postsDir, slug, "index.md");
-      if (await fileExists(mdxPath)) candidates.push({ slug, filePath: mdxPath });
-      else if (await fileExists(mdPath)) candidates.push({ slug, filePath: mdPath });
-    }
-  }
-
-  const metas: PostMeta[] = [];
-  for (const c of candidates) {
-    const raw = await readFile(c.filePath, "utf8");
-    const meta = parseFrontmatter(raw);
-    metas.push({ slug: c.slug, ...meta });
-  }
-
-  metas.sort((a, b) => {
-    const da = a.date ? new Date(a.date).getTime() : 0;
-    const db = b.date ? new Date(b.date).getTime() : 0;
-    return db - da;
-  });
-
-  return metas.slice(0, limit);
-}
-
-function Container({ children }: { children: React.ReactNode }) {
+export default function HomePage() {
   return (
-    <div className="mx-auto w-full max-w-6xl min-w-0 px-4 sm:px-6 lg:px-8">{children}</div>
-  );
-}
+    <div className="bg-[#f8f8fc]">
+      {/* Hero */}
+      <section className="bg-[#0b1f3a] px-4 py-14 text-center sm:py-20">
+        <p className="text-xs font-bold uppercase tracking-widest text-[#ffd60a]">
+          AI Coaching Solutions
+        </p>
+        <h1 className="mx-auto mt-3 max-w-3xl text-3xl font-bold tracking-tight text-white sm:text-5xl">
+          AI Tools Built for Coaches
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-base text-white/75 sm:text-lg">
+          Practical tools for baseball, softball, and golf coaches. Get structured breakdowns,
+          smarter practice plans, and clear next steps — fast.
+        </p>
+        <div className="mt-3 flex items-center justify-center gap-4 text-sm text-white/55">
+          <span>No fluff</span>
+          <span>·</span>
+          <span>Built by a coach</span>
+          <span>·</span>
+          <span>Free to start</span>
+        </div>
+      </section>
 
-function Section({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <section className={`py-8 sm:py-14 overflow-x-clip ${className}`}>{children}</section>;
-}
-
-const freeBreakdownPrimaryClassName =
-  "inline-flex w-full items-center justify-center rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto";
-
-function PrimaryButton({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link href={href} className={freeBreakdownPrimaryClassName}>
-      {children}
-    </Link>
-  );
-}
-
-function SecondaryButton({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex w-full items-center justify-center rounded-md border border-white/50 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function Card({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm">
-      <h3 className="text-base font-semibold text-black">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-black/85">{children}</p>
-    </div>
-  );
-}
-
-export default async function HomePage() {
-  const latestPosts = await getLatestPosts(3);
-  const showLatest = latestPosts.length > 0;
-
-  return (
-    <main className="bg-white text-black">
-      {/* HERO */}
-      <Section className="pt-8 sm:pt-16">
-        <Container>
-          <div className="relative overflow-x-clip overflow-y-hidden rounded-2xl shadow-md [isolation:isolate]">
+      {/* Tool Cards */}
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool) => (
             <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(900px 280px at 0% 0%, rgba(255,255,255,0.14), transparent 48%), radial-gradient(700px 220px at 100% 0%, rgba(191,219,254,0.2), transparent 45%), linear-gradient(130deg, rgba(11,31,58,1) 0%, rgba(16,48,85,0.97) 52%, rgba(10,37,73,0.94) 100%)",
-              }}
-            />
-            <div className="relative grid items-center gap-8 p-5 sm:gap-10 sm:p-8 lg:grid-cols-12 lg:p-10">
-            <div className="lg:col-span-7">
-              <p className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-medium text-white/90 sm:text-xs">
-                Baseball/Softball + Golf • Coach-first • No login
-              </p>
-
-              <h1 className="mt-4 max-w-xl text-[1.9rem] font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-                Free swing breakdowns for baseball, softball, and golf.
-              </h1>
-
-              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/90 sm:text-lg">
-                Describe what you are seeing and get mechanics notes, timing feedback, coaching cues,
-                next focus, and a drill to run in your next session. You make the final call as the
-                coach.
-              </p>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <div className="w-full sm:w-auto">
-                  <FreeBreakdownTrackedLink
-                    location="home_hero"
-                    className={freeBreakdownPrimaryClassName}
-                  >
-                    Try the Free Breakdown
-                  </FreeBreakdownTrackedLink>
-                </div>
-                <div className="w-full sm:w-auto">
-                  <SecondaryButton href="/howitworks">See How It Works</SecondaryButton>
-                </div>
-              </div>
-
-              <p className="mt-4 text-xs text-white/90">
-                Built by a coach. Designed for practical use. <span className="mx-1">•</span> No login
-                required. <span className="mx-1">•</span> No video storage.
-              </p>
-            </div>
-
-            {/* Right panel */}
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-white/20 bg-white/95 p-5 shadow-sm sm:p-6">
-                <h2 className="text-sm font-semibold text-neutral-900">
-                  What coaches get in under a minute
-                </h2>
-                <ul className="mt-4 space-y-3 text-sm text-neutral-800">
-                  <li className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
-                    Mechanics + timing read in plain coaching terms
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
-                    Cues you can say immediately in cage work, bullpens, range, or team practice
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
-                    One next priority so you are not fixing five things at once
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-700" />
-                    One drill to turn feedback into useful reps
-                  </li>
-                </ul>
-
-                <p className="mt-5 text-xs text-neutral-700">
-                  Best for youth, high school, travel ball, and golf coaches who want clarity fast.
-                </p>
-              </div>
-            </div>
-          </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* TRUST STRIP */}
-      <div className="border-y border-black/10 bg-black/[0.02]">
-        <Container>
-          <div className="grid gap-2 py-5 sm:grid-cols-3 sm:gap-3 sm:py-6">
-            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
-              No login / no friction
-            </div>
-            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
-              Coach-first output
-            </div>
-            <div className="rounded-md border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium leading-snug text-black/80">
-              Built for real baseball, softball, and golf practices
-            </div>
-          </div>
-        </Container>
-      </div>
-
-      {/* HOW IT HELPS (3 cards) */}
-      <Section>
-        <Container>
-          <div className="max-w-2xl">
-            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Clearer coaching decisions, faster.
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-black/85 sm:text-base">
-              Use this as a practical coaching draft: what to fix first, what to say, and what to drill
-              next.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card title="Get Unstuck Fast">
-              When a hitter, pitcher, or golfer is off, get a clear first priority instead of chasing
-              every issue.
-            </Card>
-            <Card title="Clear Cues Players Understand">
-              Get simple language you can use right away with players who need actionable direction.
-            </Card>
-            <Card title="One Drill to Reinforce It">
-              Leave with one drill that fits the next session so feedback actually becomes reps and
-              improvement.
-            </Card>
-          </div>
-        </Container>
-      </Section>
-
-      {/* FEATURE PANEL */}
-      <Section className="sm:bg-black/[0.02]">
-        <Container>
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
-            <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
-              <div className="lg:col-span-7">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Start with the Free Swing & Pitching Breakdown
-                </h2>
-                <p className="mt-4 text-sm leading-6 text-black/85 sm:text-base">
-                  This is your conversion point: describe what is happening in a baseball swing,
-                  softball swing, pitching action, or golf swing and get a structured breakdown you can
-                  coach from.
-                </p>
-
-                <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-black/80">
-                  <li>Mechanics read focused on the movement pattern that matters most</li>
-                  <li>Timing feedback to identify sequence and rhythm issues</li>
-                  <li>Coaching cues in practical language players can execute</li>
-                  <li>One next focus plus one drill for your next practice block</li>
-                </ul>
-              </div>
-
-              <div className="lg:col-span-5">
-                <div className="rounded-2xl border border-black/10 bg-black/[0.02] p-6">
-                  <p className="text-sm font-semibold text-black">Works best when you include:</p>
-                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-black/85">
-                    <li>Handedness and where misses show up</li>
-                    <li>Contact quality (hard, weak, late, under, thin, heavy)</li>
-                    <li>One goal for the next session</li>
-                  </ul>
-                  <div className="mt-5">
-                    <FreeBreakdownTrackedLink
-                      location="home_mid_page"
-                      className={freeBreakdownPrimaryClassName}
-                    >
-                      Try the Free Breakdown
-                    </FreeBreakdownTrackedLink>
-                  </div>
-                  <p className="mt-3 text-xs text-black/55">No login. No storage. Built for practical coaching.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      <Section className="border-t border-slate-200/80 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white">
-        <Container>
-          <ProductPromoSection
-            badge="CORE TOOL"
-            badgeTone="neutral"
-            logoSrc="/images/practice-planner-logo.svg"
-            logoAlt="Practice Planner logo for drills and practice sessions"
-            logoWidth={280}
-            logoHeight={200}
-            logoMaxWidthClassName="max-w-[220px] sm:max-w-[240px]"
-            title="Plan better practices in minutes"
-            description="Turn your drills into structured, efficient practices without overthinking it."
-            offerTitle="30 Days Free - Full Pro Access"
-            offerBody="Early access while we build. Your feedback helps shape the system coaches will actually use."
-            bullets={[
-              "Organize drills into real practice flow",
-              "Build offensive, defensive, or balanced plans",
-              "Save and reuse what works",
-              "Designed for how coaches actually run practice",
-            ]}
-            ctaLabel="Try Practice Planner Free"
-            ctaHref={practicePlannerEntryUrl}
-            ctaAriaLabel="Open Practice Planner in the coach app"
-            ctaExternal={practicePlannerEntryUrl.startsWith("http")}
-            note="No payment. Early access."
-            className="border-slate-300 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,247,255,0.94))] shadow-md shadow-slate-900/8"
-          >
-            <p className="text-sm font-medium text-slate-700">
-              Core product for coaches who want a repeatable practice workflow.
-            </p>
-          </ProductPromoSection>
-        </Container>
-      </Section>
-
-      <Section className="border-t border-slate-200/80 bg-gradient-to-b from-slate-50 via-sky-50/30 to-white">
-        <Container>
-          <ProductPromoSection
-            badge="EARLY ACCESS"
-            badgeTone="orange"
-            logoSrc="/images/break90-logo.svg"
-            logoAlt="Break90 logo for the golf scoring and practice app"
-            logoWidth={320}
-            logoHeight={140}
-            logoMaxWidthClassName="max-w-[240px] sm:max-w-[280px]"
-            title="Built to help you break 90 - for real"
-            description="Track your rounds, find what is costing you strokes, and get clear practice priorities instead of guesses."
-            offerTitle="90 Days Free - Full Pro Access"
-            offerBody="Help shape the app while you use it. Early users get full access during the MVP phase."
-            bullets={[
-              "Track rounds and see what is actually hurting your score",
-              "Identify patterns across your last 5 to 10 rounds",
-              "Get clear practice focus after every round",
-              "Built for real golfers, not generic stats",
-            ]}
-            ctaLabel="Try Break90 Free"
-            ctaHref={break90SignupUrl}
-            ctaAriaLabel="Open Break90 in a new tab"
-            ctaExternal
-            note="No payment. Early access. Feedback welcome."
-          />
-        </Container>
-      </Section>
-
-      {/* COACH NOTE */}
-      <Section>
-        <Container>
-            <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
-            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">A quick coach note</h2>
-            <p className="mt-4 text-sm leading-7 text-black/85 sm:text-base">
-              I built this for coaches working through late-night film, weekend tournaments, range
-              sessions, and limited practice time. We do not need more noise. We need clearer next steps
-              and language athletes can use right away.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/howitworks"
-                className="inline-flex items-center justify-center rounded-md border border-black/15 bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-black/5"
+              key={tool.title}
+              className={`flex flex-col rounded-2xl bg-white p-6 shadow-sm ${tool.cardStyle}`}
+            >
+              <span
+                className={`self-start rounded-full px-3 py-1 text-xs font-bold ${tool.badgeStyle}`}
               >
-                See How It Works
+                {tool.badge}
+              </span>
+
+              <h2 className="mt-4 text-xl font-bold text-[#0b1f3a]">{tool.title}</h2>
+              <p className="mt-0.5 text-xs font-medium text-[#94a3b8]">{tool.sport}</p>
+
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-neutral-600">
+                {tool.description}
+              </p>
+
+              <ul className="mt-4 space-y-1.5">
+                {tool.bullets.map((b) => (
+                  <li key={b} className="flex items-start gap-2 text-sm text-neutral-700">
+                    <span className="mt-0.5 text-[#ffd60a] font-bold">✓</span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+
+              {tool.title === "Free Swing Analyzer" ? (
+                <FreeBreakdownTrackedLink
+                  location="home_card"
+                  className={`mt-6 inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm transition ${tool.ctaStyle}`}
+                >
+                  {tool.ctaLabel}
+                </FreeBreakdownTrackedLink>
+              ) : (
+                <Link
+                  href={tool.cta}
+                  {...(tool.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className={`mt-6 inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm transition ${tool.ctaStyle}`}
+                >
+                  {tool.ctaLabel}
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Bottom trust bar */}
+      <div className="border-t border-neutral-200 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between">
+            <p className="text-sm text-neutral-500">
+              Built by a coach for coaches. Designed for practical, immediate use.
+            </p>
+            <div className="flex gap-4 text-sm">
+              <Link href="/howitworks" className="text-[#0b1f3a] font-medium hover:underline">
+                How It Works
+              </Link>
+              <Link href="/contact" className="text-[#0b1f3a] font-medium hover:underline">
+                Contact
               </Link>
             </div>
           </div>
-        </Container>
-      </Section>
-
-      {/* LATEST RESOURCES (hide if none) */}
-      {showLatest && (
-        <Section className="sm:bg-black/[0.02]">
-          <Container>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-8">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-                    Latest coaching resources
-                  </h2>
-                  <p className="mt-2 text-sm text-slate-700 sm:text-base">
-                    Practical notes for baseball, softball, and golf coaches.
-                  </p>
-                </div>
-                <Link
-                  href="/post"
-                  className="inline-flex self-start text-sm font-semibold text-slate-900 hover:opacity-80 sm:self-auto"
-                >
-                  View all →
-                </Link>
-              </div>
-
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
-                {latestPosts.map((p) => (
-                  <Link
-                    key={p.slug}
-                    href={`/post/${p.slug}`}
-                    className="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:bg-slate-100"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-base font-semibold leading-6 text-slate-900 group-hover:opacity-90">
-                        {p.title}
-                      </h3>
-                      <span className="text-xs text-slate-500">↗</span>
-                    </div>
-                    {p.description && (
-                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-700">
-                        {p.description}
-                      </p>
-                    )}
-                    {p.date && <p className="mt-4 text-xs text-slate-600">{p.date}</p>}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* EMAIL CAPTURE (UI-only) */}
-      <Section>
-        <Container>
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm sm:p-10">
-            <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
-              <div className="lg:col-span-6">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Get practical coaching notes
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-black/85 sm:text-base">
-                  Occasional coaching ideas and tool updates. No spam.
-                </p>
-              </div>
-
-              <div className="lg:col-span-6">
-                <EmailSignupForm />
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-    </main>
+        </div>
+      </div>
+    </div>
   );
 }

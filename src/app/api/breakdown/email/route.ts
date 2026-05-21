@@ -15,7 +15,6 @@ type Payload = {
   motion?: string;
   ageGroup?: string;
   skillLevel?: string;
-  videoLink?: string;
   mainIssue?: string;
   result?: BreakdownResult;
 };
@@ -79,7 +78,6 @@ export async function POST(req: Request) {
       `Motion: ${clean(body.motion) || "Not provided"}`,
       `Age group: ${clean(body.ageGroup) || "Not provided"}`,
       `Skill level: ${clean(body.skillLevel) || "Not provided"}`,
-      `Video link: ${clean(body.videoLink) || "Not provided"}`,
       `Main issue: ${clean(body.mainIssue) || "Not provided"}`,
     ];
 
