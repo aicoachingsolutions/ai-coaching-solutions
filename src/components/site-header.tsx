@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
-import { CoachAppNavLink } from "@/components/coach-app-nav-link";
 
 const NAV_ITEMS = [
   { href: "/free-breakdown", label: "Free Analyzer" },
   { href: "/practice-planner", label: "Practice Planner" },
   { href: "/break90", label: "Break90" },
-  { href: "/tools", label: "All Tools" },
 ];
 
 export function SiteHeader() {
@@ -25,10 +23,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-
-          <div className="ml-2 border-l border-white/20 pl-2">
-            <CoachAppNavLink />
-          </div>
         </nav>
       </div>
 
@@ -43,9 +37,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <div className="flex-none">
-            <CoachAppNavLink />
-          </div>
         </div>
       </div>
     </header>

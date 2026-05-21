@@ -1,9 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
+import { EmailSignupForm } from "@/components/email-signup-form";
 import {
-  btnPrimary,
   btnPrimarySm,
-  btnSecondary,
   btnSecondarySm,
   marketingContainer,
 } from "@/lib/marketing-buttons";
@@ -36,36 +36,48 @@ export function AppHomeHero() {
           coaches and athletes.
         </p>
 
-        <aside
-          className="mt-6 max-w-xl rounded-xl border border-[rgba(255,214,10,0.35)] bg-[rgba(7,20,38,0.55)] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-5"
-          aria-label="Early access programs"
-        >
-          <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#ffd60a]">
-            Early access open
-          </p>
-          <p className="mt-2 text-[15px] leading-relaxed text-[#f8fafc]/92">
-            Founding coach and golfer programs include{" "}
-            <strong className="font-semibold text-[#f8fafc]">60 days of Pro free</strong> when
-            access opens. Free Swing Analyzer is live now — open it below or jump to each program
-            page for full MVP details.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/practice-planner" className={btnPrimarySm}>
-              Founding coach program
-            </Link>
-            <Link href="/break90" className={btnSecondarySm}>
-              Founding golfer program
-            </Link>
-          </div>
-        </aside>
+        <div className="mt-6 max-w-xl">
+          <aside
+            className="rounded-xl border border-[rgba(255,214,10,0.35)] bg-[rgba(7,20,38,0.55)] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-5"
+            aria-label="Early access programs"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#ffd60a]">
+              Early access coming soon
+            </p>
+            <p className="mt-2 text-[15px] leading-relaxed text-[#f8fafc]/92">
+              Founding coach and golfer programs include{" "}
+              <strong className="font-semibold text-[#f8fafc]">60 days of Pro free</strong> when
+              access opens. Free Swing Analyzer is live now in the tools section below — each MVP
+              program page has full details.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link href="/practice-planner" className={btnPrimarySm}>
+                Founding coach program
+              </Link>
+              <Link href="/break90" className={btnSecondarySm}>
+                Founding golfer program
+              </Link>
+            </div>
+          </aside>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <FreeBreakdownTrackedLink location="home_hero" className={btnPrimary}>
-            Try Free Swing Analyzer
-          </FreeBreakdownTrackedLink>
-          <a href="#tools" className={btnSecondary}>
-            Explore tools
-          </a>
+          <div
+            className="mt-4 rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-4 sm:p-5"
+            aria-label="Early access email signup"
+          >
+            <h2 className="text-base font-bold text-[#f8fafc]">Get launch updates</h2>
+            <p className="mt-1.5 text-sm text-[#94a3b8]">
+              Join the list for founding coach and golfer program access — 60 days of Pro free when
+              we open the first cohorts.
+            </p>
+            <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_input]:placeholder:text-[#94a3b8] [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426] [&_button]:hover:bg-[#ffe566]">
+              <EmailSignupForm
+                source="app-home-early-access"
+                type="waitlist"
+                buttonLabel="Notify me — early access"
+                successMessage="You are on the list. We will email you when early access opens."
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>

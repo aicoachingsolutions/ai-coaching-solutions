@@ -1,20 +1,7 @@
-import Link from "next/link";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
-import {
-  btnPrimary,
-  btnSecondary,
-  marketingContainer,
-} from "@/lib/marketing-buttons";
+import { btnPrimary, marketingContainer } from "@/lib/marketing-buttons";
 
-type AppComingSoonBannerProps = {
-  marketingSiteUrl: string;
-};
-
-export function AppComingSoonBanner({ marketingSiteUrl }: AppComingSoonBannerProps) {
-  const marketingHost =
-    marketingSiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "") ||
-    "www.aicoachingsolutions.net";
-
+export function AppComingSoonBanner() {
   return (
     <section
       aria-label="Coming soon announcement"
@@ -32,22 +19,13 @@ export function AppComingSoonBanner({ marketingSiteUrl }: AppComingSoonBannerPro
             <p className="mt-2 max-w-[52ch] text-[15px] leading-relaxed text-[#94a3b8]">
               Practice Planner and Break90 founding programs are opening here —{" "}
               <strong className="font-semibold text-[#f8fafc]/90">60 days of Pro free</strong> for
-              founding coaches and golfers. Free Swing Analyzer is live now. Full brand story on{" "}
-              <strong className="font-semibold text-[#f8fafc]/90">{marketingHost}</strong>.
+              founding coaches and golfers. Free Swing Analyzer is live now.
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-2.5">
             <FreeBreakdownTrackedLink location="coming_soon_banner" className={btnPrimary}>
               Try Free Swing Analyzer
             </FreeBreakdownTrackedLink>
-            <Link
-              href={marketingSiteUrl}
-              className={btnSecondary}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Full marketing site →
-            </Link>
           </div>
         </div>
       </div>

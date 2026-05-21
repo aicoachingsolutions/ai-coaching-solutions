@@ -5,9 +5,6 @@ import { AppHomeHero } from "@/components/app-home-hero";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 import { btnComingSoon, btnPrimary, marketingContainer } from "@/lib/marketing-buttons";
 
-const marketingSiteUrl =
-  process.env.NEXT_PUBLIC_MARKETING_SITE_URL?.trim() || "https://www.aicoachingsolutions.net";
-
 type Tool = {
   badge: string | null;
   badgeExtra: string | null;
@@ -91,7 +88,7 @@ const tools: Tool[] = [
 export default function HomePage() {
   return (
     <div className="bg-[#071426] text-[#f8fafc]">
-      <AppComingSoonBanner marketingSiteUrl={marketingSiteUrl} />
+      <AppComingSoonBanner />
       <AppHomeHero />
 
       <section
@@ -191,22 +188,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <div className="border-t border-[rgba(148,163,184,0.18)] bg-[#0b1f3a]">
-        <div className={`${marketingContainer} py-5`}>
-          <p className="text-center text-sm text-[#94a3b8]">
-            Full marketing site, SEO, and brand story:{" "}
-            <a
-              href={marketingSiteUrl}
-              className="font-semibold text-[#ffd60a] no-underline hover:text-[#ffe566]"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              www.aicoachingsolutions.net
-            </a>
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
