@@ -88,7 +88,11 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                     type="waitlist"
                     layout="stacked"
                     buttonLabel="Notify me"
-                    successMessage="You are on the list. We will email you when MVP access opens."
+                    successMessage={
+                      isGolfer
+                        ? "You are on the Break90 waitlist. Check your inbox for confirmation."
+                        : "You are on the Practice Planner waitlist. Check your inbox for confirmation."
+                    }
                   />
                   <p className="mt-3 text-xs text-[#94a3b8]">
                     60 days of Pro free when we open the cohort.{" "}

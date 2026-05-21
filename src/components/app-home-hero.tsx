@@ -64,17 +64,18 @@ export function AppHomeHero() {
             className="mt-4 rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-4 sm:p-5"
             aria-label="Early access email signup"
           >
-            <h2 className="text-base font-bold text-[#f8fafc]">Get launch updates</h2>
+            <h2 className="text-base font-bold text-[#f8fafc]">Join the waitlist</h2>
             <p className="mt-1.5 text-sm text-[#94a3b8]">
-              Join the list for founding coach and golfer program access — 60 days of Pro free when
-              we open the first cohorts.
+              Get notified when founding coach or golfer access opens — Practice Planner or
+              Break90 Golf, 60 days of Pro free.
             </p>
             <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_input]:placeholder:text-[#94a3b8] [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426] [&_button]:hover:bg-[#ffe566]">
               <EmailSignupForm
                 source="app-home-early-access"
                 type="waitlist"
-                buttonLabel="Notify me — early access"
-                successMessage="You are on the list. We will email you when early access opens."
+                layout="stacked"
+                buttonLabel="Notify me"
+                successMessage="You are on the waitlist. Check your inbox for confirmation."
               />
             </div>
           </div>

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { buildWaitlistConfirmationText } from "@/lib/waitlist-email-copy";
 
 export async function POST(req: Request) {
   try {
@@ -59,54 +60,60 @@ export async function POST(req: Request) {
       },
     });
 
-    const detailsLines = [
-      `Type: ${submissionType}`,
-      `Source: ${source}`,
-      `Email: ${email}`,
-      fullName ? `Name: ${fullName}` : "",
-      message ? `Message: ${message}` : "",
-    ].filter(Boolean);
+    if (submissionType === "contact") {
+      const detailsLines = [
+        `Type: contact`,
+        `Source: ${source}`,
+        `Email: ${email}`,
+        fullName ? `Name: ${fullName}` : "",
+        `Message: ${message}`,
+      ].filter(Boolean);
 
-    const internalSubject =
-      submissionType === "contact" ? "New Contact Form Message" : "New Coaching Notes Signup";
+      await transporter.sendMail({
+        from,
+        to,
+        subject: "New Contact Form Message",
+        text: detailsLines.join("\n"),
+      });
+
+      await transporter.sendMail({
+        from,
+        to: email,
+        subject: "We received your message - AI Coaching Solutions",
+        text: [
+          `Hi ${firstName || "there"},`,
+          "",
+          "Thanks for reaching out. We received your message and will follow up as soon as we can.",
+          "",
+          "Your message:",
+          message,
+          "",
+          "AI Coaching Solutions",
+        ].join("\n"),
+      });
+
+      return Response.json({ success: true });
+    }
+
+    // waitlist + legacy signup
+    const waitlistCopy = buildWaitlistConfirmationText(
+      source,
+      email,
+      firstName || undefined
+    );
 
     await transporter.sendMail({
       from,
       to,
-      subject: internalSubject,
-      text: detailsLines.join("\n"),
+      subject: waitlistCopy.internalSubject,
+      text: waitlistCopy.internalText,
     });
-
-    const confirmationSubject =
-      submissionType === "contact"
-        ? "We received your message - AI Coaching Solutions"
-        : "You are on the list - AI Coaching Solutions";
-    const confirmationText =
-      submissionType === "contact"
-        ? [
-            `Hi ${firstName || "Coach"},`,
-            "",
-            "Thanks for reaching out. We received your message and will follow up as soon as we can.",
-            "",
-            "Your message:",
-            message || "(No message provided)",
-            "",
-            "AI Coaching Solutions",
-          ].join("\n")
-        : [
-            `Hi ${firstName || "Coach"},`,
-            "",
-            "Thanks for joining coaching notes updates.",
-            "You will get occasional practical updates when new tools and resources are ready.",
-            "",
-            "AI Coaching Solutions",
-          ].join("\n");
 
     await transporter.sendMail({
       from,
       to: email,
-      subject: confirmationSubject,
-      text: confirmationText,
+      subject: waitlistCopy.subject,
+      text: waitlistCopy.text,
     });
 
     return Response.json({ success: true });

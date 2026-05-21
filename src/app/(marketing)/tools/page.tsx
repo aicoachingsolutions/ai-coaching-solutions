@@ -232,8 +232,8 @@ export default function ToolsPage() {
           <EmailSignupForm
             source="tools-page"
             type="waitlist"
-            buttonLabel="Join waitlist"
-            successMessage="You are on the waitlist. Check your inbox for confirmation."
+            buttonLabel="Notify me"
+            successMessage="You are on the waitlist for Practice Planner or Break90. Check your inbox."
           />
         </div>
 
