@@ -4,6 +4,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.aicoachingsolutions.net"),
+  icons: {
+    icon: "/images/coach-v-circle-logo.png",
+    apple: "/images/coach-v-circle-logo.png",
+  },
   title: {
     default: "AI Coaching Solutions",
     template: "%s | AI Coaching Solutions",

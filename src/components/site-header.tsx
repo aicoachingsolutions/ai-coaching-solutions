@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { CoachAppNavLink } from "@/components/coach-app-nav-link";
 
 const NAV_ITEMS = [
@@ -12,26 +12,9 @@ const NAV_ITEMS = [
 export function SiteHeader() {
   return (
     <header className="w-full border-b-2 border-[#ffd60a] bg-[#0b1f3a] text-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        {/* Logo + Brand */}
-        <Link href="/" className="flex items-center gap-3">
-          <Image
-            src="/ai-coaching-logo-v2.png"
-            alt="AI Coaching Solutions"
-            width={40}
-            height={40}
-            className="rounded-md"
-            priority
-          />
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold tracking-wide text-white">
-              AI Coaching Solutions
-            </span>
-            <span className="text-[11px] text-[#ffd60a]">Built by a Coach</span>
-          </div>
-        </Link>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <BrandLogo context="header" />
 
-        {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 lg:flex">
           {NAV_ITEMS.map((item) => (
             <Link
@@ -49,7 +32,6 @@ export function SiteHeader() {
         </nav>
       </div>
 
-      {/* Mobile Nav */}
       <div className="border-t border-white/10 lg:hidden">
         <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
           {NAV_ITEMS.map((item) => (
