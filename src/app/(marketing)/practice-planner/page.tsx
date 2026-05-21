@@ -22,7 +22,7 @@ export default function PracticePlannerComingSoonPage() {
           "Share plans with staff and athletes",
         ],
         audience: "coaches",
-        logo: "/images/practice-planner-logo.svg",
+        logo: "/images/practice-planner-logo.png",
         waitlistSource: "mvp-practice-planner",
       }}
     />

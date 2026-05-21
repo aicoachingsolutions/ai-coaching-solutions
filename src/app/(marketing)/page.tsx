@@ -19,6 +19,7 @@ type Tool = {
   comingSoon: boolean;
   logo: string | null;
   logoAlt: string;
+  logoClassName?: string;
   title: string;
   sport: string;
   description: string;
@@ -34,8 +35,9 @@ const tools: Tool[] = [
     badgeExtra: null,
     featured: true,
     comingSoon: false,
-    logo: null,
-    logoAlt: "",
+    logo: "/images/swing-analyzer-logo.png",
+    logoAlt: "Swing Analyzer AI",
+    logoClassName: "max-h-[88px] max-w-[100px]",
     title: "Free Swing Analyzer",
     sport: "Baseball · Softball · Golf",
     description: "Describe what you see and get a coaching breakdown in under 60 seconds.",
@@ -53,8 +55,9 @@ const tools: Tool[] = [
     badgeExtra: "Coming soon",
     featured: false,
     comingSoon: true,
-    logo: "/images/practice-planner-logo.svg",
+    logo: "/images/practice-planner-logo.png",
     logoAlt: "Practice Planner",
+    logoClassName: "max-h-[96px]",
     title: "Practice Planner",
     sport: "Baseball · Softball",
     description: "Build organized practices in minutes. MVP coach access opens here when ready.",
@@ -71,8 +74,9 @@ const tools: Tool[] = [
     badgeExtra: "Coming soon",
     featured: false,
     comingSoon: true,
-    logo: "/images/break90-logo.svg",
+    logo: "/images/break90-logo.png",
     logoAlt: "Break90 Golf",
+    logoClassName: "max-h-[72px] max-w-[160px]",
     title: "Break90 Golf",
     sport: "Golf",
     description: "AI golf coach for athletes. MVP golfer access opens here when ready.",
@@ -173,23 +177,18 @@ export default function HomePage() {
                 </div>
 
                 {tool.logo ? (
-                  <div className="mb-5 flex h-[120px] items-center justify-center rounded-xl bg-[rgba(248,250,252,0.08)] p-4">
-                    <Image
-                      src={tool.logo}
-                      alt={tool.logoAlt}
-                      width={120}
-                      height={72}
-                      className="h-auto max-h-[96px] w-auto max-w-full object-contain"
-                    />
+                  <div className="mb-5 flex h-[120px] items-center justify-center rounded-xl bg-[rgba(248,250,252,0.08)] p-3">
+                    <div className="flex h-full w-full items-center justify-center rounded-lg bg-white px-3 py-2">
+                      <Image
+                        src={tool.logo}
+                        alt={tool.logoAlt}
+                        width={160}
+                        height={96}
+                        className={`h-auto w-auto object-contain ${tool.logoClassName ?? "max-h-[96px] max-w-full"}`}
+                      />
+                    </div>
                   </div>
-                ) : (
-                  <div
-                    className="mb-5 flex h-[120px] items-center justify-center rounded-xl bg-[rgba(248,250,252,0.08)]"
-                    aria-hidden
-                  >
-                    <span className="text-3xl font-bold text-[#ffd60a]/80">✓</span>
-                  </div>
-                )}
+                ) : null}
 
                 <h3 className="text-lg font-bold text-[#f8fafc]">{tool.title}</h3>
                 <p className="mt-0.5 text-xs font-medium text-[#94a3b8]">{tool.sport}</p>

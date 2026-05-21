@@ -69,14 +69,16 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
             </div>
 
             {config.logo ? (
-              <div className="flex h-[200px] w-full max-w-sm items-center justify-center rounded-xl bg-[rgba(248,250,252,0.08)] p-6 lg:h-[240px] lg:flex-shrink-0">
-                <Image
-                  src={config.logo}
-                  alt={config.product}
-                  width={200}
-                  height={120}
-                  className="h-auto max-h-[140px] w-auto max-w-full object-contain"
-                />
+              <div className="flex h-[200px] w-full max-w-sm items-center justify-center rounded-xl bg-[rgba(248,250,252,0.08)] p-4 lg:h-[240px] lg:flex-shrink-0">
+                <div className="flex h-full w-full items-center justify-center rounded-xl bg-white px-4 py-3">
+                  <Image
+                    src={config.logo}
+                    alt={config.product}
+                    width={280}
+                    height={160}
+                    className="h-auto max-h-[140px] w-auto max-w-full object-contain"
+                  />
+                </div>
               </div>
             ) : null}
           </div>

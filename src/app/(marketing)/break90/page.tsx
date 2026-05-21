@@ -22,7 +22,7 @@ export default function Break90ComingSoonPage() {
           "Clear coaching feedback between rounds",
         ],
         audience: "golfers",
-        logo: "/images/break90-logo.svg",
+        logo: "/images/break90-logo.png",
         waitlistSource: "mvp-break90",
       }}
     />
