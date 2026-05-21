@@ -35,7 +35,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                 {config.eyebrow}
               </p>
               <span className="mt-3 inline-block rounded bg-[#ffd60a]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-[#ffd60a]">
-                {isGolfer ? "60 days Pro — opening soon" : "MVP coaches — opening soon"}
+                60 days Pro — opening soon
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {config.title}
@@ -97,7 +97,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
             <p className="mt-2 text-sm text-[#94a3b8]">
               {isGolfer
                 ? "Be first in line for founding golfer access — 60 days of Break90 Pro when we open the cohort."
-                : `Be first in line for ${config.product} MVP coach access when testing opens.`}
+                : "Be first in line for founding coach access — 60 days of Practice Planner Pro when we open the cohort."}
             </p>
             <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426]">
               <EmailSignupForm
