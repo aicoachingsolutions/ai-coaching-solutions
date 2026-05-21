@@ -1,0 +1,6 @@
+Your hero video goes in the "video" folder next to css, images, and js:
+
+  assets\video\hero-coaches.mp4
+
+Open this folder in File Explorer:
+  wp-content\themes\ai-coaching-solutions\assets\video\

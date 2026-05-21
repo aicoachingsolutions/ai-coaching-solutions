@@ -66,6 +66,22 @@ Keep app routes (src/app/app/) on the light coach UI unless I say otherwise.
 | Free analyzer | `src/app/free-breakdown/page.tsx` |
 | Coach app | `src/app/app/**` |
 
+## WordPress homepage announcement (not on Vercel)
+
+The “new app website coming soon” banner is **WordPress only** (`site-announcement` before hero on www.aicoachingsolutions.net).
+
+Do **not** duplicate that banner or a full marketing homepage on the Vercel app.
+
+Theme files: `wordpress-theme/ai-coaching-solutions/` in this repo (sync from XAMPP with `scripts/sync-wordpress-theme.ps1`).
+
+### Domains
+
+| Constant | URL |
+|----------|-----|
+| `ACS_MARKETING_SITE_URL` (WordPress `wp-config.php`) | `https://www.aicoachingsolutions.net` |
+| `ACS_VERCEL_APP_URL` | `https://app.aicoachingsolutions.net` |
+| `NEXT_PUBLIC_MARKETING_SITE_URL` (Vercel `.env`) | Link **out** to WordPress only |
+
 ## MVP program copy (Vercel app)
 
 Founding user programs (60 days Pro, extension tiers up to 120 days) live in:

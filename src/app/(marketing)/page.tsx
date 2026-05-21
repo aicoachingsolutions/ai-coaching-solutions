@@ -106,8 +106,9 @@ export default function HomePage() {
             Launch a coaching tool
           </h1>
           <p className="mt-3 max-w-xl text-base text-[#94a3b8] sm:text-lg">
-            Free Swing Analyzer is live. Founding coach and golfer programs offer 60 days of Pro
-            free when we open — see Practice Planner and Break90 pages for details.
+            Free Swing Analyzer is live now. Founding coach and golfer programs include 60 days
+            of Pro free when access opens — see Practice Planner and Break90 for the full
+            program.
           </p>
           <div className="mt-6">
             <a href="#tools" className={btnPrimary}>
@@ -128,8 +129,8 @@ export default function HomePage() {
               Open a tool
             </h2>
             <p className="mt-2 text-[#94a3b8]">
-              One tool live today. Founding coach and golfer MVP programs are documented and
-              ready for launch.
+              Free Swing Analyzer is live today. Founding coach and golfer programs (60 days Pro,
+              up to 120 days with milestones) open soon — each tool page has the full MVP program.
             </p>
           </header>
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" fill="none">
+  <rect width="640" height="480" rx="16" fill="#0B1F3A"/>
+  <rect x="24" y="24" width="592" height="48" rx="8" fill="#071426"/>
+  <rect x="24" y="96" width="280" height="160" rx="8" fill="#071426" stroke="#2563EB" stroke-opacity="0.3"/>
+  <rect x="336" y="96" width="280" height="72" rx="8" fill="#071426"/>
+  <rect x="336" y="184" width="280" height="72" rx="8" fill="#071426"/>
+  <rect x="24" y="280" width="592" height="176" rx="8" fill="#071426"/>
+  <text x="48" y="188" font-family="system-ui,sans-serif" font-size="14" fill="#94A3B8">Scoring insights</text>
+  <text x="48" y="56" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#FFD60A">Break90 Golf</text>
+  <circle cx="164" cy="176" r="40" stroke="#FFD60A" stroke-width="3" fill="none"/>
+</svg>

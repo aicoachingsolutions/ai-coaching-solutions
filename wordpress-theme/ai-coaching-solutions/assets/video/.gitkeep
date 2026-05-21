@@ -1,0 +1,6 @@
+# Place hero-coaches.mp4 here (H.264, muted, ~10–20s loop, 1920×1080 max).
+# Recommended: sideline/bench coaching footage, compressed under 8MB for web.
+#
+# The hero plays this file behind the headline with a dark overlay so text stays readable.
+# Must be muted for autoplay. Example ffmpeg compress:
+#   ffmpeg -i input.mp4 -an -c:v libx264 -crf 28 -preset slow -vf scale=1920:-2 hero-coaches.mp4

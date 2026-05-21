@@ -6,15 +6,19 @@ alwaysApply: false
 
 # WordPress marketing brand (source of truth)
 
-**Traffic model:** Customers use **WordPress** (`aicoachingsolutions.net`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.com`) for apps. The Next `(marketing)/page.tsx` is a **temporary app hub**, not a second full marketing site — keep it short; link to WordPress for the full story.
+**Traffic model:** Customers use **WordPress** (`www.aicoachingsolutions.net`) for marketing and click through to **Vercel** (`app.aicoachingsolutions.net`) for apps only.
+
+**Do not build a marketing site on Vercel.** No homepage announcements, hero clones, or full landing-page parity with WordPress. `(marketing)/page.tsx` is a minimal **app hub** (tool links + MVP waitlist pages). Full story, SEO, and “coming soon” banners live on WordPress only.
 
 The canonical marketing design lives in the WordPress theme (sibling project on this machine):
 
 `c:\xampp\htdocs\aicoachingsite\wp-content\themes\ai-coaching-solutions\`
 
 Read before large UI changes:
-- `assets/css/main.css` — tokens, `.btn`, `.hero`, `.section`, `.tool-card`, `.mvp-callout`
-- `template-parts/sections/hero.php`, `platform-overview.php`, `practice-planner.php`, `swing-analyzer.php`, `break90.php`
+- `assets/css/main.css` — tokens, `.btn`, `.hero`, `.section`, `.tool-card`, `.mvp-callout`, `.site-announcement`
+- `template-parts/sections/site-announcement.php` (homepage banner before hero), `hero.php`, `platform-overview.php`, `practice-planner.php`, `swing-analyzer.php`, `break90.php`
+
+WordPress app links: `ACS_VERCEL_APP_URL` in `wp-config.php` → Vercel app hub only (not `aicoachingsolutions.net`).
 
 ## Design tokens (marketing — dark theme)
 
