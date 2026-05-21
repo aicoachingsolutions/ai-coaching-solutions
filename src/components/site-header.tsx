@@ -1,85 +1,69 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CoachAppNavLink } from "@/components/coach-app-nav-link";
-import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 
 const NAV_ITEMS = [
-  { href: "/blog", label: "Resources" },
-  { href: "/tools", label: "Tools" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/free-breakdown", label: "Free Analyzer" },
+  { href: "/app/practice-planner", label: "Practice Planner" },
+  { href: "/tools", label: "All Tools" },
 ];
 
 export function SiteHeader() {
   return (
-    <header className="w-full bg-[#0b2340] text-white">
+    <header className="w-full border-b-2 border-[#ffd60a] bg-[#0b1f3a] text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         {/* Logo + Brand */}
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/ai-coaching-logo-v2.png"
             alt="AI Coaching Solutions"
-            width={44}
-            height={44}
-            className="rounded-md border border-white/25 bg-white/10"
+            width={40}
+            height={40}
+            className="rounded-md"
             priority
           />
-
           <div className="flex flex-col leading-tight">
-            <span className="text-base font-semibold text-white">
+            <span className="text-sm font-bold tracking-wide text-white">
               AI Coaching Solutions
             </span>
-            <span className="text-xs text-white/85">
-              Built by a Coach
-            </span>
+            <span className="text-[11px] text-[#ffd60a]">Built by a Coach</span>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-2 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-md px-3 py-2 text-sm text-white/90 transition hover:bg-white/10 hover:text-white"
+              className="rounded-md px-3 py-2 text-sm text-white/85 transition hover:bg-white/10 hover:text-white"
             >
               {item.label}
             </Link>
           ))}
 
-          <CoachAppNavLink />
-
-          <FreeBreakdownTrackedLink
-            location="header_desktop"
-            className="ml-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340] transition hover:bg-neutral-100"
-          >
-            Try Free Breakdown
-          </FreeBreakdownTrackedLink>
+          <div className="ml-2 border-l border-white/20 pl-2">
+            <CoachAppNavLink />
+          </div>
         </nav>
       </div>
 
       {/* Mobile Nav */}
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-2 border-t border-white/15 px-4 py-3 lg:hidden">
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center justify-center rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white no-underline visited:text-white hover:text-white"
-          >
-            {item.label}
-          </Link>
-        ))}
-
-        <div className="col-span-2 flex justify-center">
-          <CoachAppNavLink />
+      <div className="border-t border-white/10 lg:hidden">
+        <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex-none rounded-md border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-white/90 no-underline hover:bg-white/10"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="flex-none">
+            <CoachAppNavLink />
+          </div>
         </div>
-
-        <FreeBreakdownTrackedLink
-          location="header_mobile"
-          className="col-span-2 flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-[#0b2340]"
-        >
-          Try Free Breakdown
-        </FreeBreakdownTrackedLink>
       </div>
     </header>
   );

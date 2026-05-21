@@ -6,7 +6,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   return (
     <>
       <SiteHeader />
-      <main className="w-full overflow-x-hidden py-8 sm:py-10">{children}</main>
+      <main className="w-full overflow-x-hidden">{children}</main>
       <Footer />
       <Analytics />
     </>

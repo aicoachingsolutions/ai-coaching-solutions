@@ -1,39 +1,63 @@
 import Link from "next/link";
 
-export function Footer() {
-  const links = [
-    { href: "/about", label: "About" },
-    { href: "/howitworks", label: "How It Works" },
-    { href: "/contact", label: "Contact" },
-    { href: "/privacy-policy", label: "Privacy" },
-    { href: "/terms-conditions", label: "Terms" },
-    { href: "/refund-policy", label: "Refund Policy" },
-  ];
+const toolLinks = [
+  { href: "/free-breakdown", label: "Free Swing Analyzer" },
+  { href: "/app/practice-planner", label: "Practice Planner" },
+  { href: "/tools", label: "All Tools" },
+];
 
+const legalLinks = [
+  { href: "/privacy-policy", label: "Privacy" },
+  { href: "/terms-conditions", label: "Terms" },
+  { href: "/refund-policy", label: "Refund Policy" },
+];
+
+export function Footer() {
   return (
-    <footer className="mt-16 w-full bg-[#0b2340] text-white">
+    <footer className="border-t-2 border-[#ffd60a] bg-[#0b1f3a] text-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-start">
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-white">AI Coaching Solutions</p>
-            <p className="text-sm text-white/90">Built by a coach. Designed for practical use.</p>
+        <div className="grid gap-8 sm:grid-cols-[1fr_auto_auto] sm:items-start">
+          {/* Brand */}
+          <div className="space-y-2">
+            <p className="text-sm font-bold text-white">AI Coaching Solutions</p>
+            <p className="text-sm text-white/65">Built by a coach. Designed for practical use.</p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:justify-items-end">
-            {links.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="inline-flex min-h-9 items-center rounded-md px-2 py-1 text-sm text-white no-underline visited:text-white hover:bg-white/10"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          {/* Tools */}
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[#ffd60a]">Tools</p>
+            <nav className="flex flex-col gap-2">
+              {toolLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-sm text-white/75 no-underline transition hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[#ffd60a]">Legal</p>
+            <nav className="flex flex-col gap-2">
+              {legalLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-sm text-white/75 no-underline transition hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
 
         <div className="mt-8 border-t border-white/15 pt-6">
-          <p className="text-xs text-white/80">
+          <p className="text-xs text-white/50">
             © {new Date().getFullYear()} AI Coaching Solutions. All rights reserved.
           </p>
         </div>

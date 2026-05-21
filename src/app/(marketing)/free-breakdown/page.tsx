@@ -7,6 +7,7 @@ import { track } from "@vercel/analytics";
 
 type Sport = "baseball" | "softball" | "golf";
 type Motion = "swing" | "pitching";
+type Handedness = "right" | "left";
 
 type BreakdownResult = {
   mechanics: string;
@@ -16,60 +17,83 @@ type BreakdownResult = {
   drill: string;
 };
 
-const outcomeCards = [
-  {
-    title: "Mechanics analysis",
-    text: "Identify likely movement inefficiencies tied to your miss pattern.",
-  },
-  {
-    title: "Timing checkpoints",
-    text: "Get practical sequence notes to improve consistency and contact quality.",
-  },
-  {
-    title: "Actionable drill",
-    text: "Leave with one clear drill and a specific next focus for practice.",
-  },
+const AGE_GROUPS = [
+  "Youth (8U–10U)",
+  "Youth (11U–12U)",
+  "Middle School (13U–14U)",
+  "High School (15–18)",
+  "College",
+  "Adult (Recreational)",
+  "Adult (Competitive)",
 ];
 
-const formTips = [
-  "Mention handedness and where misses show up most often.",
-  "Describe contact quality or ball flight in game terms.",
-  "Share one objective outcome you want from practice.",
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced", "Competitive"] as const;
+
+const SPORTS: { value: Sport; label: string }[] = [
+  { value: "baseball", label: "Baseball" },
+  { value: "softball", label: "Softball" },
+  { value: "golf", label: "Golf" },
 ];
+
+const PLACEHOLDERS: Record<Sport, Partial<Record<Motion, string>>> = {
+  baseball: {
+    swing:
+      "Example: Right-handed hitter, High School. Rolling over on inside fastballs — weak grounders to third. Front shoulder flying open early, late to inside velocity. Want to drive the ball to the pull side with authority.",
+    pitching:
+      "Example: Right-handed pitcher, Middle School. Fastball consistently up in the zone. Rushing from the stretch, front foot landing early. Want to locate down in the zone and add deception.",
+  },
+  softball: {
+    swing:
+      "Example: Right-handed hitter, 12U travel ball. Topping the ball for weak grounders to the right side. Dropping the back shoulder and swinging up. Want consistent hard contact up the middle.",
+    pitching:
+      "Example: Right-handed pitcher, High School JV. Losing command of the rise ball, rotating off to the glove side. Want to stay closed longer and repeat the delivery.",
+  },
+  golf: {
+    swing:
+      "Example: Right-handed golfer, Adult Recreational, 95–100 average. Coming over the top — pulling drives left and hitting weak slices with irons. Want to get the club on plane and hit the ball straighter.",
+  },
+};
 
 function cleanText(s: string) {
   return (s || "").trim();
 }
 
-function formatLabel(value: string) {
-  if (!value) return "Not provided";
+function cap(value: string) {
+  if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function buildBreakdownText(params: {
   sport: Sport;
   motion: Motion;
+  handedness: Handedness;
   ageGroup: string;
   skillLevel: string;
-  videoLink: string;
   mainIssue: string;
   result: BreakdownResult;
 }) {
-  const { sport, motion, ageGroup, skillLevel, videoLink, mainIssue, result } = params;
-  const cueLines = result.cues.map((cue) => `- ${cue}`).join("\n");
+  const { sport, motion, handedness, ageGroup, skillLevel, mainIssue, result } = params;
+  const cueLines = result.cues.map((c) => `  • ${c}`).join("\n");
+  const sessionLines = [
+    `Sport:        ${cap(sport)}`,
+    `Motion:       ${cap(motion)}`,
+    sport !== "golf" ? `Handedness:   ${cap(handedness)}-handed` : null,
+    ageGroup ? `Age group:    ${ageGroup}` : null,
+    skillLevel ? `Skill level:  ${skillLevel}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return [
-    "AI Coaching Breakdown",
-    `Generated: ${new Date().toLocaleString()}`,
+    "════════════════════════════════════",
+    "  AI COACHING BREAKDOWN",
+    `  ${new Date().toLocaleString()}`,
+    "════════════════════════════════════",
     "",
     "SESSION",
-    `Sport: ${formatLabel(sport)}`,
-    `Motion: ${formatLabel(motion)}`,
-    `Age group: ${cleanText(ageGroup) || "Not provided"}`,
-    `Skill level: ${cleanText(skillLevel) || "Not provided"}`,
-    `Video link: ${cleanText(videoLink) || "Not provided"}`,
+    sessionLines,
     "",
-    "MAIN ISSUE",
+    "ISSUE DESCRIBED",
     cleanText(mainIssue),
     "",
     "MECHANICS",
@@ -86,17 +110,48 @@ function buildBreakdownText(params: {
     "",
     "RECOMMENDED DRILL",
     result.drill,
+    "",
+    "════════════════════════════════════",
+    "  AI Coaching Solutions",
+    "  aicoachingsolutions.com",
+    "════════════════════════════════════",
   ].join("\n");
 }
+
+function ToggleButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all ${
+        active
+          ? "border-[#0b1f3a] bg-[#0b1f3a] text-white shadow-sm"
+          : "border-neutral-200 bg-white text-neutral-600 hover:border-[#0b1f3a]/40 hover:text-[#0b1f3a]"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+const SECTION_LABEL = "text-[10px] font-bold uppercase tracking-widest";
 
 export default function FreeBreakdownPage() {
   const [sport, setSport] = useState<Sport>("baseball");
   const [motion, setMotion] = useState<Motion>("swing");
-
-  const [videoLink, setVideoLink] = useState("");
+  const [handedness, setHandedness] = useState<Handedness>("right");
   const [ageGroup, setAgeGroup] = useState("");
   const [skillLevel, setSkillLevel] = useState("");
   const [mainIssue, setMainIssue] = useState("");
+  const [honeypot, setHoneypot] = useState("");
 
   const [result, setResult] = useState<BreakdownResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -107,47 +162,47 @@ export default function FreeBreakdownPage() {
   const [emailSending, setEmailSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
-  const swingIntakeStartedRef = useRef(false);
+
+  const intakeStartedRef = useRef(false);
   const resultsSectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (sport === "golf") setMotion("swing");
+  }, [sport]);
 
   useEffect(() => {
     if (!result) return;
     track("Swing Breakdown Result Viewed", { tool: "free_swing_breakdown" });
-    const scrollToResults = () => {
-      const el = resultsSectionRef.current;
-      if (!el) return;
-      const reduceMotion =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    };
-    // Double rAF: results node mounts this frame; layout is reliable on mobile next frame.
     requestAnimationFrame(() => {
-      requestAnimationFrame(scrollToResults);
+      requestAnimationFrame(() => {
+        const el = resultsSectionRef.current;
+        if (!el) return;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      });
     });
   }, [result]);
 
-  const canSubmit = useMemo(() => {
-    // keep this aligned with your API min length
-    return (
-      cleanText(mainIssue).length >= 20 &&
-      cleanText(ageGroup).length > 0 &&
-      !loading
-    );
-  }, [mainIssue, ageGroup, loading]);
   const mainIssueLength = cleanText(mainIssue).length;
-  const inputClassName =
-    "box-border w-full max-w-full rounded-xl border-2 border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200/50";
-  const selectClassName =
-    "box-border w-full max-w-full rounded-xl border-2 border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200/50 appearance-auto";
-  const textareaClassName =
-    "box-border w-full max-w-full rounded-xl border-2 border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200/50";
+
+  const canSubmit = useMemo(
+    () =>
+      mainIssueLength >= 20 &&
+      mainIssueLength <= 600 &&
+      ageGroup !== "" &&
+      !loading &&
+      honeypot === "",
+    [mainIssueLength, ageGroup, loading, honeypot]
+  );
+
+  const placeholder = PLACEHOLDERS[sport]?.[motion] ?? PLACEHOLDERS[sport]["swing"] ?? "";
+
+  const breakdownParams = { sport, motion, handedness, ageGroup, skillLevel, mainIssue };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canSubmit) return;
+
     setError(null);
     setResult(null);
     setCopyState("idle");
@@ -163,22 +218,23 @@ export default function FreeBreakdownPage() {
         body: JSON.stringify({
           sport,
           motion,
-          videoLink: cleanText(videoLink), // optional context only
+          handedness: sport !== "golf" ? handedness : undefined,
           ageGroup: cleanText(ageGroup),
           skillLevel: cleanText(skillLevel),
           mainIssue: cleanText(mainIssue),
+          _hp: honeypot,
         }),
       });
 
       const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        const msg =
+        throw new Error(
           json?.error ||
-          json?.message ||
-          (json?.details?.formErrors?.[0] as string | undefined) ||
-          `Request failed (${res.status})`;
-        throw new Error(msg);
+            json?.message ||
+            (json?.details?.formErrors?.[0] as string | undefined) ||
+            `Request failed (${res.status})`
+        );
       }
 
       const r = json?.result as BreakdownResult | undefined;
@@ -196,7 +252,9 @@ export default function FreeBreakdownPage() {
       track("Swing Analysis Submitted", { tool: "free_swing_breakdown" });
       setResult(r);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -204,20 +262,10 @@ export default function FreeBreakdownPage() {
 
   const handleCopyResults = async () => {
     if (!result) return;
-    const copyText = buildBreakdownText({
-      sport,
-      motion,
-      ageGroup,
-      skillLevel,
-      videoLink,
-      mainIssue,
-      result,
-    });
-
     try {
-      await navigator.clipboard.writeText(copyText);
+      await navigator.clipboard.writeText(buildBreakdownText({ ...breakdownParams, result }));
       setCopyState("copied");
-      window.setTimeout(() => setCopyState("idle"), 2000);
+      window.setTimeout(() => setCopyState("idle"), 2500);
     } catch {
       setCopyState("error");
     }
@@ -228,43 +276,103 @@ export default function FreeBreakdownPage() {
     setPdfState("loading");
     try {
       const doc = new jsPDF({ unit: "pt", format: "letter" });
-      const margin = 48;
       const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 52;
       const maxWidth = pageWidth - margin * 2;
-      let y = 56;
+      let y = 0;
 
+      // Navy header bar
+      doc.setFillColor(11, 31, 58);
+      doc.rect(0, 0, pageWidth, 44, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.text("AI Coaching Breakdown", margin, y);
-      y += 20;
-
+      doc.setFontSize(12);
+      doc.setTextColor(255, 214, 10);
+      doc.text("AI Coaching Solutions", margin, 28);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Free Swing & Pitching Breakdown", pageWidth - margin, 28, { align: "right" });
+
+      // Gold accent line
+      doc.setFillColor(255, 214, 10);
+      doc.rect(0, 44, pageWidth, 2, "F");
+
+      y = 72;
+
+      // Title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.setTextColor(11, 31, 58);
+      doc.text("Coaching Breakdown", margin, y);
       y += 18;
 
-      const lines = doc.splitTextToSize(
-        buildBreakdownText({
-          sport,
-          motion,
-          ageGroup,
-          skillLevel,
-          videoLink,
-          mainIssue,
-          result,
-        }),
-        maxWidth
-      );
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(120, 120, 120);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+      y += 28;
 
-      doc.setFontSize(11);
-      lines.forEach((line: string) => {
-        if (y > 760) {
+      const SECTION_HEADERS = new Set([
+        "SESSION",
+        "ISSUE DESCRIBED",
+        "MECHANICS",
+        "TIMING",
+        "COACHING CUES",
+        "NEXT FOCUS",
+        "RECOMMENDED DRILL",
+      ]);
+
+      const rawText = buildBreakdownText({ ...breakdownParams, result });
+      const cleanedLines = rawText
+        .split("\n")
+        .filter((l) => !l.startsWith("════") && !l.trim().startsWith("AI Coaching") && !l.trim().startsWith("aicoaching"));
+
+      cleanedLines.forEach((line) => {
+        if (y > 750) {
           doc.addPage();
-          y = 56;
+          y = 52;
         }
-        doc.text(line, margin, y);
-        y += 14;
+
+        const trimmed = line.trim();
+
+        if (SECTION_HEADERS.has(trimmed)) {
+          y += 6;
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8);
+          doc.setTextColor(11, 31, 58);
+          doc.text(trimmed, margin, y);
+          // Underline
+          doc.setDrawColor(255, 214, 10);
+          doc.setLineWidth(1);
+          doc.line(margin, y + 2, margin + 60, y + 2);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          doc.setTextColor(30, 30, 30);
+          y += 14;
+        } else if (trimmed === "") {
+          y += 6;
+        } else {
+          const wrapped = doc.splitTextToSize(line, maxWidth);
+          wrapped.forEach((wl: string) => {
+            if (y > 750) {
+              doc.addPage();
+              y = 52;
+            }
+            doc.text(wl, margin, y);
+            y += 14;
+          });
+        }
       });
+
+      // Footer on last page
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        "This is a coaching draft. Confirm adjustments with the athlete in person.",
+        margin,
+        doc.internal.pageSize.getHeight() - 24
+      );
 
       doc.save("coaching-breakdown.pdf");
       setPdfState("idle");
@@ -278,7 +386,8 @@ export default function FreeBreakdownPage() {
     setEmailError(null);
     setEmailSent(false);
 
-    if (!cleanText(email) || !cleanText(email).includes("@")) {
+    const trimmedEmail = cleanText(email);
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
       setEmailError("Enter a valid email address.");
       return;
     }
@@ -289,380 +398,462 @@ export default function FreeBreakdownPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: cleanText(email),
+          email: trimmedEmail,
           source: "free-breakdown",
           sport,
           motion,
           ageGroup: cleanText(ageGroup),
           skillLevel: cleanText(skillLevel),
-          videoLink: cleanText(videoLink),
           mainIssue: cleanText(mainIssue),
           result,
         }),
       });
-
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json?.ok) {
-        throw new Error(json?.error || "Failed to send email");
-      }
-
+      if (!res.ok || !json?.ok) throw new Error(json?.error || "Failed to send email");
       setEmailSent(true);
-      setEmailError(null);
     } catch (err: unknown) {
       setEmailError(err instanceof Error ? err.message : "Failed to send email");
-      setEmailSent(false);
     } finally {
       setEmailSending(false);
     }
   };
 
+  const contextLabel = [
+    cap(sport),
+    cap(motion),
+    sport !== "golf" ? `${cap(handedness)}-handed` : null,
+    ageGroup || null,
+    skillLevel || null,
+  ]
+    .filter(Boolean)
+    .join("  ·  ");
+
+  const charCountColor =
+    mainIssueLength === 0
+      ? "text-neutral-400"
+      : mainIssueLength < 20
+        ? "text-red-500"
+        : mainIssueLength > 550
+          ? "text-amber-500"
+          : "text-emerald-600";
+
   return (
-    <div className="relative w-full">
-      {/* Contained background layer: isolation + clip prevents blur from affecting scroll region */}
-      <div className="pointer-events-none absolute inset-0 overflow-x-clip [isolation:isolate]">
-        <div className="absolute left-0 top-20 h-72 w-72 -translate-x-24 rounded-full bg-blue-200/30 blur-3xl" />
-        <div className="absolute right-0 top-56 h-72 w-72 translate-x-24 rounded-full bg-sky-200/30 blur-3xl" />
+    <div className="bg-[#f8f8fc]">
+      {/* Page header */}
+      <div className="bg-[#0b1f3a] px-4 py-10 sm:py-14">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd60a]/30 bg-[#ffd60a]/10 px-3 py-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#ffd60a]" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#ffd60a]">
+              Free — No Login Required
+            </span>
+          </div>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Free Swing &amp; Pitching Breakdown
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+            Describe what you&apos;re seeing. Get mechanics notes, coaching cues, a drill, and one
+            clear next focus — in under 60 seconds.
+          </p>
+
+          <div className="mt-6 grid grid-cols-3 gap-3">
+            {[
+              { label: "Mechanics read", desc: "Root cause + downstream effects on movement" },
+              { label: "Coaching cues", desc: "Short, vivid language to use during live reps" },
+              { label: "Ready-to-run drill", desc: "Setup, reps, and one coaching point" },
+            ].map((c) => (
+              <div
+                key={c.label}
+                className="rounded-xl border border-white/10 bg-white/[0.07] p-3 text-left"
+              >
+                <p className="text-[11px] font-bold text-[#ffd60a]">{c.label}</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-white/60">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-6xl min-w-0 px-4 py-8 sm:py-12">
-        <header className="relative overflow-x-hidden overflow-y-hidden rounded-2xl bg-white shadow-md">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(1000px 320px at 0% 0%, rgba(255,255,255,0.20), transparent 48%), radial-gradient(800px 260px at 100% 0%, rgba(191,219,254,0.26), transparent 45%), linear-gradient(130deg, rgba(11,31,58,1) 0%, rgba(16,48,85,0.98) 52%, rgba(10,37,73,0.94) 100%)",
-            }}
-          />
-          <div className="relative p-6 sm:p-8 lg:p-10">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-                Free Coaching Resource
-              </div>
-              <div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/90">
-                Estimated time: &lt;60 seconds
-              </div>
-            </div>
-            <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Free Swing & Pitching Breakdown
-            </h1>
-            <p className="mt-4 max-w-3xl text-sm text-white/90 sm:text-base">Structured, practice-ready feedback built by a coach. Share what you’re seeing and get mechanics notes, coaching cues, next focus, and a drill you can run next practice.</p>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {outcomeCards.map((card) => (
-                <div
-                  key={card.title}
-                  className="rounded-2xl border border-white/25 bg-white/12 p-4 backdrop-blur-[1px]"
-                >
-                  <p className="text-sm font-semibold text-white">{card.title}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-white/90">
-                    {card.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-5 rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-xs text-white/90">
-              Video links are optional context and may not always be viewable.
-              The quality of your written details drives the quality of your
-              breakdown.
-            </div>
-          </div>
-        </header>
-
-        <section className="mt-8 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
-          <div className="card card-pad shadow-sm">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="h2">Tell us what you are seeing</h2>
-                  <p className="muted mt-1">
-                    The more specific your context, the sharper the feedback.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border bg-neutral-50/80 p-4">
-                <p className="kicker">Session setup</p>
-                <div className="mt-3 grid gap-4 md:grid-cols-2">
-                  <div className="flex flex-col gap-2">
-                    <label className="label">Sport</label>
-                    <select
-                      value={sport}
-                      onChange={(e) => setSport(e.target.value as Sport)}
-                      className={selectClassName}
-                    >
-                      <option value="baseball">Baseball</option>
-                      <option value="softball">Softball</option>
-                      <option value="golf">Golf</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="label">Motion</label>
-                    <select
-                      value={motion}
-                      onChange={(e) => setMotion(e.target.value as Motion)}
-                      className={selectClassName}
-                    >
-                      <option value="swing">Swing / Hitting</option>
-                      <option value="pitching">Pitching</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="label">Clip link (optional)</label>
+      {/* Form + sidebar */}
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-[1fr_272px]">
+          {/* Form card */}
+          <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-0">
+              {/* Honeypot */}
+              <div className="hidden" aria-hidden="true">
                 <input
-                  type="url"
-                  value={videoLink}
-                  onChange={(e) => setVideoLink(e.target.value)}
-                  className={inputClassName}
-                  placeholder="Optional - link for reference only"
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
                 />
-                <p className="muted">
-                  We do not store your video. Some links may be inaccessible.
-                </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <label className="label">Age group (required)</label>
-                  <input
-                    type="text"
-                    required
-                    value={ageGroup}
-                    onChange={(e) => setAgeGroup(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Example: 12U, high school, college"
-                  />
+              {/* Step 1 */}
+              <div className="border-b border-neutral-100 p-6 sm:p-8">
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                    1
+                  </span>
+                  <h2 className="text-base font-bold text-[#0b1f3a]">What are we analyzing?</h2>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="label">Skill level (optional)</label>
-                  <input
-                    type="text"
-                    value={skillLevel}
-                    onChange={(e) => setSkillLevel(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Beginner, intermediate, advanced"
-                  />
+                <div className="space-y-5">
+                  <div>
+                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>Sport</label>
+                    <div className="flex gap-2">
+                      {SPORTS.map(({ value, label }) => (
+                        <ToggleButton
+                          key={value}
+                          active={sport === value}
+                          onClick={() => setSport(value)}
+                        >
+                          {label}
+                        </ToggleButton>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>Motion</label>
+                    <div className="flex gap-2">
+                      <ToggleButton
+                        active={motion === "swing"}
+                        onClick={() => setMotion("swing")}
+                      >
+                        Swing / Hitting
+                      </ToggleButton>
+                      {sport !== "golf" && (
+                        <ToggleButton
+                          active={motion === "pitching"}
+                          onClick={() => setMotion("pitching")}
+                        >
+                          Pitching
+                        </ToggleButton>
+                      )}
+                    </div>
+                  </div>
+
+                  {sport !== "golf" && (
+                    <div>
+                      <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                        Handedness
+                      </label>
+                      <div className="flex gap-2">
+                        <ToggleButton
+                          active={handedness === "right"}
+                          onClick={() => setHandedness("right")}
+                        >
+                          Right-Handed
+                        </ToggleButton>
+                        <ToggleButton
+                          active={handedness === "left"}
+                          onClick={() => setHandedness("left")}
+                        >
+                          Left-Handed
+                        </ToggleButton>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-2">
-                  <label className="label">What are you seeing? (required)</label>
-                  <span
-                    className={`text-xs ${mainIssueLength >= 20 ? "text-emerald-700" : "text-neutral-500"}`}
-                  >
-                    {mainIssueLength}/20 minimum
+              {/* Step 2 */}
+              <div className="border-b border-neutral-100 p-6 sm:p-8">
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                    2
+                  </span>
+                  <h2 className="text-base font-bold text-[#0b1f3a]">About the athlete</h2>
+                </div>
+
+                <div className="space-y-5">
+                  <div>
+                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                      Age group{" "}
+                      <span className="normal-case font-normal text-red-400">(required)</span>
+                    </label>
+                    <select
+                      value={ageGroup}
+                      onChange={(e) => setAgeGroup(e.target.value)}
+                      required
+                      className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10 appearance-auto"
+                    >
+                      <option value="">Select age group...</option>
+                      {AGE_GROUPS.map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className={`mb-2 block ${SECTION_LABEL} text-neutral-500`}>
+                      Skill level{" "}
+                      <span className="normal-case font-normal text-neutral-400">(optional)</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {SKILL_LEVELS.map((level) => (
+                        <button
+                          type="button"
+                          key={level}
+                          onClick={() => setSkillLevel(skillLevel === level ? "" : level)}
+                          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+                            skillLevel === level
+                              ? "border-[#0b1f3a] bg-[#0b1f3a] text-white shadow-sm"
+                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#0b1f3a]/40 hover:text-[#0b1f3a]"
+                          }`}
+                        >
+                          {level}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="p-6 sm:p-8">
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#0b1f3a] text-xs font-bold text-[#ffd60a]">
+                    3
+                  </span>
+                  <h2 className="text-base font-bold text-[#0b1f3a]">What are you seeing?</h2>
+                </div>
+
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-xs text-neutral-400">
+                    More detail = sharper feedback
+                  </p>
+                  <span className={`text-xs font-semibold tabular-nums ${charCountColor}`}>
+                    {mainIssueLength} / 600
                   </span>
                 </div>
+
                 <textarea
                   required
                   value={mainIssue}
+                  maxLength={600}
                   onChange={(e) => setMainIssue(e.target.value)}
                   onFocus={() => {
-                    if (swingIntakeStartedRef.current) return;
-                    swingIntakeStartedRef.current = true;
+                    if (intakeStartedRef.current) return;
+                    intakeStartedRef.current = true;
                     track("Swing Upload Started", { tool: "free_swing_breakdown" });
                   }}
-                  className={textareaClassName}
+                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
                   rows={6}
-                  placeholder="Example: Right-handed hitter rolling over ground balls to 3B, front shoulder opening early, and late to inside velocity. Goal: more line-drive contact to pull side."
+                  placeholder={placeholder}
                 />
-                <p className="muted">
-                  Include handedness, miss pattern, and what good looks like.
+                <p className="mt-2 text-xs text-neutral-400">
+                  Include miss pattern, contact quality or ball flight, and what you want to improve.
                 </p>
-              </div>
 
-              {error && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-                  {error}
-                </div>
-              )}
+                {/* Error */}
+                {error && (
+                  <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    {error}
+                  </div>
+                )}
 
-              <div className="mt-1 rounded-2xl border-2 border-orange-200 bg-orange-50/60 p-4 shadow-sm md:p-5">
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <button
-                  type="submit"
-                  disabled={!canSubmit}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-orange-600 px-6 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
-                >
-                  {loading ? "Generating..." : "Generate breakdown"}
-                </button>
-                <p className="text-xs font-medium text-neutral-800">
-                  Coaching-first output, based on your inputs.
-                </p>
+                {/* Submit */}
+                <div className="mt-6">
+                  <button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#ffd60a] px-6 py-4 text-base font-bold text-[#0b1f3a] shadow-sm transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0b1f3a]/20 border-t-[#0b1f3a]" />
+                        Analyzing your breakdown...
+                      </>
+                    ) : (
+                      "Get My Coaching Breakdown →"
+                    )}
+                  </button>
+                  {loading && (
+                    <p className="mt-2 text-center text-xs text-neutral-400">
+                      This usually takes 15–30 seconds
+                    </p>
+                  )}
+                  {!loading && !canSubmit && mainIssueLength > 0 && mainIssueLength < 20 && (
+                    <p className="mt-2 text-center text-xs text-red-400">
+                      {20 - mainIssueLength} more characters needed
+                    </p>
+                  )}
                 </div>
               </div>
             </form>
           </div>
 
-          <aside className="rounded-xl border bg-white p-5 shadow-sm space-y-4">
-            <div className="rounded-xl border bg-neutral-50 p-4">
-              <p className="kicker">Best results</p>
-              <h3 className="mt-2 text-base font-semibold text-neutral-900">
+          {/* Sidebar */}
+          <aside className="flex flex-col gap-4">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+              <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Best results</p>
+              <p className="mt-2 text-sm font-semibold text-neutral-900">
                 Describe it in game-realistic terms
-              </h3>
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-left">
-                {formTips.map((tip) => (
-                  <li key={tip} className="text-sm text-neutral-800">
+              </p>
+              <ul className="mt-3 space-y-3">
+                {[
+                  "Handedness and where misses show up most",
+                  "Contact quality or ball flight in game terms",
+                  "One clear outcome you want from practice",
+                ].map((tip) => (
+                  <li key={tip} className="flex items-start gap-2 text-sm text-neutral-600">
+                    <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">→</span>
                     {tip}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-xl border bg-neutral-50 p-4">
-              <p className="kicker">What this is</p>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-800">
-                A fast starting point for practice planning and athlete
-                communication.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-800">
-                Use this alongside in-person coaching and video review workflow.
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+              <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>What you get</p>
+              <ul className="mt-3 space-y-2.5">
+                {[
+                  "Mechanics read with root cause",
+                  "Timing and sequence notes",
+                  "Cues to say during live reps",
+                  "One priority and one drill",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-neutral-600">
+                    <span className="mt-0.5 flex-shrink-0 font-bold text-[#ffd60a]">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-4">
+              <p className="text-xs leading-relaxed text-neutral-400">
+                No login. No video required. Results are a coaching draft — always confirm
+                adjustments with the athlete in person.
               </p>
             </div>
           </aside>
-        </section>
+        </div>
 
+        {/* Results */}
         {result && (
           <section
             ref={resultsSectionRef}
-            className="mt-10 scroll-mt-6 card card-pad shadow-sm"
+            className="mt-8 scroll-mt-4 space-y-4"
             aria-label="Your breakdown results"
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-neutral-900">
-                  Breakdown
-                </h2>
-                <p className="muted mt-1">
-                  Use this as a coaching draft. Confirm adjustments in person and calibrate to the athlete.
-                </p>
+            {/* Results header with actions */}
+            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+              <div className="h-1.5 bg-[#0b1f3a]" />
+              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between sm:p-6">
+                <div>
+                  <h2 className="text-xl font-bold text-[#0b1f3a]">Your Coaching Breakdown</h2>
+                  <p className="mt-1 text-xs text-neutral-400">{contextLabel}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyResults}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300"
+                  >
+                    {copyState === "copied" ? "✓ Copied" : "Copy Text"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={downloadBreakdownPdf}
+                    disabled={pdfState === "loading"}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-50"
+                  >
+                    {pdfState === "loading" ? "Preparing…" : "Download PDF"}
+                  </button>
+                </div>
               </div>
+              {(copyState === "error" || pdfState === "error") && (
+                <p className="px-5 pb-4 text-xs text-red-600">
+                  {copyState === "error" ? "Copy failed." : "PDF failed."} Please try again.
+                </p>
+              )}
             </div>
 
-            <div className="mt-6 border-t border-neutral-200" />
-
-            <div className="mt-8 space-y-10">
-              <div className="grid gap-4 lg:grid-cols-2">
-                <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                    Mechanics
-                  </p>
-                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
+            {/* Mechanics + Timing */}
+            <div className="grid gap-4 lg:grid-cols-2">
+              <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <div className="h-1.5 bg-[#0b1f3a]" />
+                <div className="p-6">
+                  <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Mechanics</p>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-800">
                     {result.mechanics}
                   </p>
-                </article>
-
-                <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                    Timing
-                  </p>
-                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
-                    {result.timing}
-                  </p>
-                </article>
-              </div>
-
-              <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                  Coaching Cues
-                </p>
-                <ul className="mt-3 space-y-1.5">
-                  {result.cues.map((cue, idx) => (
-                    <li
-                      key={idx}
-                      className="break-words rounded-lg bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900"
-                    >
-                      {cue}
-                    </li>
-                  ))}
-                </ul>
+                </div>
               </article>
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                    Next Focus
-                  </p>
-                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
+              <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <div className="h-1.5 bg-[#0b1f3a]" />
+                <div className="p-6">
+                  <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Timing</p>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-800">{result.timing}</p>
+                </div>
+              </article>
+            </div>
+
+            {/* Coaching Cues */}
+            <article className="overflow-hidden rounded-2xl border border-[#ffd60a]/40 shadow-sm">
+              <div className="h-1.5 bg-[#ffd60a]" />
+              <div className="bg-[#ffd60a]/[0.05] p-6">
+                <p className={`${SECTION_LABEL} text-[#0b1f3a]`}>Coaching Cues</p>
+                <p className="mt-0.5 text-[11px] text-neutral-400">Say these during live reps</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {result.cues.map((cue, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center rounded-full border border-[#0b1f3a]/15 bg-white px-4 py-2 text-sm font-medium text-[#0b1f3a] shadow-sm"
+                    >
+                      {cue}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
+
+            {/* Next Focus + Drill */}
+            <div className="grid gap-4 lg:grid-cols-2">
+              {/* Next Focus — gold accented, highest priority */}
+              <article className="overflow-hidden rounded-2xl border-2 border-[#ffd60a] bg-white shadow-sm">
+                <div className="h-1.5 bg-[#ffd60a]" />
+                <div className="p-6">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-[#ffd60a] px-2.5 py-0.5 text-[10px] font-bold text-[#0b1f3a]">
+                      TOP PRIORITY
+                    </span>
+                  </div>
+                  <p className={`mt-3 ${SECTION_LABEL} text-[#0b1f3a]`}>Next Focus</p>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-neutral-900">
                     {result.nextFocus}
                   </p>
-                </article>
+                </div>
+              </article>
 
-                <article className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                    Recommended Drill
-                  </p>
-                  <p className="mt-2 break-words whitespace-pre-line text-sm leading-relaxed text-neutral-900">
-                    {result.drill}
-                  </p>
-                </article>
-              </div>
-
+              {/* Recommended Drill — navy, final action */}
+              <article className="overflow-hidden rounded-2xl bg-[#0b1f3a] shadow-md">
+                <div className="h-1.5 bg-[#ffd60a]" />
+                <div className="p-6">
+                  <p className={`${SECTION_LABEL} text-[#ffd60a]`}>Recommended Drill</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white">{result.drill}</p>
+                </div>
+              </article>
             </div>
 
-            <section className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
-              <h3 className="text-base font-semibold text-neutral-900">
-                Save this workflow in the coach app
-              </h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-800">
-                <li>Team profile (sport, season)</li>
-                <li>Drill library you reuse across practices</li>
-                <li>Practice plans with timed drill blocks and notes</li>
-              </ul>
-              <p className="mt-4 text-xs text-neutral-700">
-                This free page is for quick breakdown drafts. The signed-in coach app is where plans and drills live.
+            {/* Email */}
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+              <p className="text-sm font-semibold text-neutral-900">
+                Email this breakdown to yourself
               </p>
-              <div className="mt-4">
-                <Link
-                  href="/sign-up"
-                  onClick={() =>
-                    track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
-                  }
-                  className="inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
-                >
-                  Create your coach account
-                </Link>
-              </div>
-            </section>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                onClick={handleCopyResults}
-                className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700"
-              >
-                Copy breakdown
-              </button>
-              <button
-                type="button"
-                onClick={downloadBreakdownPdf}
-                disabled={pdfState === "loading"}
-                className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-700 disabled:opacity-60"
-              >
-                {pdfState === "loading" ? "Preparing PDF..." : "Download PDF"}
-              </button>
-            </div>
-            {copyState === "copied" && (
-              <p className="mt-2 text-xs text-emerald-700">Copied ✅</p>
-            )}
-            {copyState === "error" && (
-              <p className="mt-2 text-xs text-red-700">Copy failed. Please try again.</p>
-            )}
-            {pdfState === "error" && (
-              <p className="mt-2 text-xs text-red-700">PDF download failed. Please try again.</p>
-            )}
-
-            <div className="mt-10 border-t pt-6">
-              <p className="text-sm font-medium">
-                Optional: Email this breakdown to yourself + get occasional coach notes (no spam).
+              <p className="mt-0.5 text-xs text-neutral-400">
+                Optional — get occasional coach notes too. No spam.
               </p>
-              <form className="mt-4 flex flex-col gap-3 md:flex-row">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <input
                   type="email"
                   value={email}
@@ -672,18 +863,37 @@ export default function FreeBreakdownPage() {
                     setEmailSent(false);
                   }}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-neutral-300 focus:ring-2 focus:ring-neutral-200"
+                  className="box-border w-full rounded-xl border-2 border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[#0b1f3a] focus:ring-2 focus:ring-[#0b1f3a]/10"
                 />
                 <button
                   type="button"
                   onClick={handleEmailBreakdown}
-                  disabled={emailSending}
-                  className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={emailSending || emailSent}
+                  className="inline-flex flex-shrink-0 items-center justify-center rounded-xl bg-[#0b1f3a] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#071426] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {emailSending ? "Sending..." : emailSent ? "Sent ✅" : "Email me this breakdown"}
+                  {emailSending ? "Sending…" : emailSent ? "Sent ✓" : "Email me this"}
                 </button>
-              </form>
-              {emailError && <p className="mt-2 text-xs text-red-700">{emailError}</p>}
+              </div>
+              {emailError && <p className="mt-2 text-xs text-red-600">{emailError}</p>}
+            </div>
+
+            {/* Upsell */}
+            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-5 sm:p-6">
+              <p className="text-sm font-semibold text-neutral-900">
+                Want to save drills and build practice plans?
+              </p>
+              <p className="mt-1 text-xs text-neutral-500">
+                The coach app is where plans, drill libraries, and team profiles live.
+              </p>
+              <Link
+                href="/sign-up"
+                onClick={() =>
+                  track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
+                }
+                className="mt-4 inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-100"
+              >
+                Create a free coach account
+              </Link>
             </div>
           </section>
         )}
