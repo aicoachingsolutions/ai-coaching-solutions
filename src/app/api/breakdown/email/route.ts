@@ -110,7 +110,7 @@ export async function POST(req: Request) {
     await transporter.sendMail({
       from,
       to: email,
-      subject: "Your AI Coaching Breakdown",
+      subject: "Your Coaching Breakdown",
       text: breakdownBody,
     });
 

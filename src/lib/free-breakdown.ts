@@ -59,7 +59,7 @@ export function buildBreakdownText(params: {
   const cueLines = result.cues.map((cue) => `- ${cue}`).join("\n");
 
   return [
-    "AI Coaching Breakdown",
+    "Coaching Breakdown",
     `Generated: ${new Date().toLocaleString()}`,
     "",
     "SESSION",

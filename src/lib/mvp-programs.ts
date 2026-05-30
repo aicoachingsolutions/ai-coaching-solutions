@@ -33,7 +33,7 @@ export const BREAK90_FOUNDING_GOLFER_PROGRAM: MvpProgramDefinition = {
   proIncludesTitle: "What Pro includes during your access",
   proIncludes: [
     "Full round tracking and scoring-pattern analysis",
-    "AI-guided practice priorities after each round",
+    "Personalized practice priorities after each round",
     "Clear coaching feedback between rounds — not generic stats",
     "All Pro features with no limits during your access period",
   ],

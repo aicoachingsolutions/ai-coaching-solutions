@@ -42,7 +42,7 @@ const COPY_BY_SOURCE: Record<string, WaitlistEmailContent> = {
     confirmationLines: [
       "Thanks for joining the Break90 Golf founding golfer waitlist.",
       "",
-      "You signed up for early access to Break90 — your AI golf coach between rounds. When we open the first golfer cohort, you will get instructions to start your 60 days of Pro free.",
+      "You signed up for early access to Break90 — your golf coach between rounds. When we open the first golfer cohort, you will get instructions to start your 60 days of Pro free.",
       "",
       "What we will ask founding golfers: log real rounds, complete two short feedback check-ins, and tell us if the coaching is actually helping your game.",
       "",

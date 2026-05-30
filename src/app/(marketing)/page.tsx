@@ -54,7 +54,7 @@ const tools: Tool[] = [
     featured: false,
     comingSoon: false,
     logo: "/images/swing-analyzer-logo.png",
-    logoAlt: "Swing Analyzer AI",
+    logoAlt: "Swing Analyzer",
     logoClassName: "max-h-[88px] max-w-[100px]",
     title: "Free Swing Analyzer",
     sport: "Baseball · Softball · Golf",

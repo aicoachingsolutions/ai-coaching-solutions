@@ -86,7 +86,7 @@ function buildBreakdownText(params: {
 
   return [
     "════════════════════════════════════",
-    "  AI COACHING BREAKDOWN",
+    "  COACHING BREAKDOWN",
     `  ${new Date().toLocaleString()}`,
     "════════════════════════════════════",
     "",
@@ -325,7 +325,7 @@ export default function FreeBreakdownPage() {
       const rawText = buildBreakdownText({ ...breakdownParams, result });
       const cleanedLines = rawText
         .split("\n")
-        .filter((l) => !l.startsWith("════") && !l.trim().startsWith("AI Coaching") && !l.trim().startsWith("aicoaching"));
+        .filter((l) => !l.startsWith("════") && !l.trim().startsWith("Coaching Breakdown") && !l.trim().startsWith("aicoaching"));
 
       cleanedLines.forEach((line) => {
         if (y > 750) {

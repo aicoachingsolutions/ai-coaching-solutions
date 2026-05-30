@@ -32,7 +32,7 @@ export function AppHomeHero() {
           AI Coaching Solutions
         </p>
         <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight text-[#f8fafc] sm:text-4xl lg:text-[2.75rem] lg:leading-[1.08]">
-          One AI Platform. Multiple Coaching Solutions.
+          One Platform. Every Coaching Tool.
         </h1>
         <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-[#f8fafc]/90 sm:text-lg">
           Coaching tools for real programs — practice planning, swing analysis, and more. Built for

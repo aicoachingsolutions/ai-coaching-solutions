@@ -14,12 +14,12 @@ export default function Break90MvpPage() {
       config={{
         product: "Break90 Golf",
         eyebrow: "Athlete golf tool",
-        title: "Break90 Golf: your AI golf coach",
+        title: "Break90 Golf: your golf coach",
         subtitle:
           "Break90 coaches you through improvement — spot scoring leaks, focus practice, and move closer to breaking 90 with guidance built around your game.",
         features: [
           "Pinpoint what is costing you strokes",
-          "AI-guided priorities for your next practice",
+          "Coaching priorities for your next practice",
           "Clear coaching feedback between rounds",
         ],
         audience: "golfers",
