@@ -1,12 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { EmailSignupForm } from "@/components/email-signup-form";
+import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 import {
   btnPrimarySm,
   btnSecondarySm,
   marketingContainer,
 } from "@/lib/marketing-buttons";
+
+/** Live Break90 founding-golfer funnel — ?mvp=golfer lands new users on enrollment. */
+const BREAK90_MVP_URL = "https://break90.app/signin?mvp=golfer";
 
 export function AppHomeHero() {
   return (
@@ -39,35 +42,36 @@ export function AppHomeHero() {
         <div className="mt-6 max-w-xl">
           <aside
             className="rounded-xl border border-[rgba(255,214,10,0.35)] bg-[rgba(7,20,38,0.55)] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-5"
-            aria-label="Early access programs"
+            aria-label="Founding golfer program — open now"
           >
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#ffd60a]">
-              Early access coming soon
+              Founding golfer MVP — open now
             </p>
             <p className="mt-2 text-[15px] leading-relaxed text-[#f8fafc]/92">
-              Founding coach and golfer programs include{" "}
-              <strong className="font-semibold text-[#f8fafc]">60 days of Pro free</strong> when
-              access opens. Free Swing Analyzer is live now in the tools section below — each MVP
-              program page has full details.
+              <strong className="font-semibold text-[#f8fafc]">Break90 Golf</strong> founding program
+              is live:{" "}
+              <strong className="font-semibold text-[#f8fafc]">60 days of Pro free</strong>, no credit
+              card — a coach read and practice plan after every round. Practice Planner for coaches is
+              coming soon.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Link href="/practice-planner" className={btnPrimarySm}>
-                Founding coach program
-              </Link>
-              <Link href="/break90" className={btnSecondarySm}>
-                Founding golfer program
-              </Link>
+              <a href={BREAK90_MVP_URL} className={btnPrimarySm}>
+                Start 60 days of Pro — free
+              </a>
+              <FreeBreakdownTrackedLink location="home_hero" className={btnSecondarySm}>
+                Try Free Swing Analyzer
+              </FreeBreakdownTrackedLink>
             </div>
           </aside>
 
           <div
             className="mt-4 rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-4 sm:p-5"
-            aria-label="Early access email signup"
+            aria-label="Practice Planner waitlist"
           >
-            <h2 className="text-base font-bold text-[#f8fafc]">Join the waitlist</h2>
+            <h2 className="text-base font-bold text-[#f8fafc]">Coaches — join the waitlist</h2>
             <p className="mt-1.5 text-sm text-[#94a3b8]">
-              Get notified when founding coach or golfer access opens — Practice Planner or
-              Break90 Golf, 60 days of Pro free.
+              Get notified when the Practice Planner founding coach program opens — 60 days of Pro
+              free. (Golfers: Break90 is live now — start above.)
             </p>
             <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_input]:placeholder:text-[#94a3b8] [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426] [&_button]:hover:bg-[#ffe566]">
               <EmailSignupForm

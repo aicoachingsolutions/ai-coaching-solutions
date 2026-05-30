@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { AppComingSoonBanner } from "@/components/app-coming-soon-banner";
 import { AppHomeHero } from "@/components/app-home-hero";
 import { FreeBreakdownTrackedLink } from "@/components/free-breakdown-tracked-link";
 import { btnComingSoon, btnPrimary, marketingContainer } from "@/lib/marketing-buttons";
+
+/** Live Break90 founding-golfer funnel — the ?mvp=golfer param lands new users on the enrollment page. */
+const BREAK90_MVP_URL = "https://break90.app/signin?mvp=golfer";
 
 type Tool = {
   badge: string | null;
@@ -20,13 +22,36 @@ type Tool = {
   href: string;
   ctaLabel: string;
   freeAnalyzer?: boolean;
+  /** External live link (e.g. the Break90 app) — renders a primary button, opens the app. */
+  external?: boolean;
 };
 
 const tools: Tool[] = [
   {
+    badge: "60 days Pro — MVP",
+    badgeExtra: "Live now",
+    featured: true,
+    comingSoon: false,
+    external: true,
+    logo: "/images/break90-logo.png",
+    logoAlt: "Break90 Golf",
+    logoClassName: "max-h-[72px] max-w-[160px]",
+    title: "Break90 Golf",
+    sport: "Golf",
+    description:
+      "Founding golfer MVP is live: full Pro for 60 days free — a coach read and practice plan after every real round. Earn up to 120 days.",
+    bullets: [
+      "All Pro features during your access",
+      "Coach read + a drill after every round",
+      "60 days free — no credit card",
+    ],
+    href: BREAK90_MVP_URL,
+    ctaLabel: "Start 60 days of Pro — free",
+  },
+  {
     badge: "FREE — No login",
     badgeExtra: null,
-    featured: true,
+    featured: false,
     comingSoon: false,
     logo: "/images/swing-analyzer-logo.png",
     logoAlt: "Swing Analyzer AI",
@@ -54,41 +79,20 @@ const tools: Tool[] = [
     title: "Practice Planner",
     sport: "Baseball · Softball",
     description:
-      "Founding coach program: full Pro for 60 days free — feedback on real practice plans. Earn up to 120 days.",
+      "Founding coach program (coming soon): full Pro for 60 days free — feedback on real practice plans. Earn up to 120 days.",
     bullets: [
       "All Pro features during access",
       "2 check-ins + real plans we ask for",
-      "See full program on the Practice Planner page",
+      "Join the waitlist to get early access",
     ],
     href: "/practice-planner",
-    ctaLabel: "Practice Planner MVP program →",
-  },
-  {
-    badge: "60 days Pro — MVP",
-    badgeExtra: "Opening soon",
-    featured: false,
-    comingSoon: true,
-    logo: "/images/break90-logo.png",
-    logoAlt: "Break90 Golf",
-    logoClassName: "max-h-[72px] max-w-[160px]",
-    title: "Break90 Golf",
-    sport: "Golf",
-    description:
-      "Founding golfer program: full Pro for 60 days free — feedback after real rounds. Earn up to 120 days.",
-    bullets: [
-      "All Pro features during access",
-      "2 check-ins + round logging we ask for",
-      "See full program on the Break90 page",
-    ],
-    href: "/break90",
-    ctaLabel: "Break90 MVP program →",
+    ctaLabel: "Practice Planner — coming soon",
   },
 ];
 
 export default function HomePage() {
   return (
     <div className="bg-[#071426] text-[#f8fafc]">
-      <AppComingSoonBanner />
       <AppHomeHero />
 
       <section
@@ -102,8 +106,9 @@ export default function HomePage() {
               Coaching Tools Built for Your Program
             </h2>
             <p className="mt-3 text-[#94a3b8]">
-              Free Swing Analyzer is live today. Founding coach and golfer programs (60 days Pro,
-              up to 120 days with milestones) open soon — each tool page has the full MVP program.
+              Break90 Golf founding MVP is live now — 60 days of Pro free, up to 120 days with
+              milestones. Free Swing Analyzer is free to use anytime. Practice Planner for coaches
+              is coming soon.
             </p>
           </header>
 
@@ -178,6 +183,10 @@ export default function HomePage() {
                   >
                     {tool.ctaLabel}
                   </FreeBreakdownTrackedLink>
+                ) : tool.external ? (
+                  <a href={tool.href} className={`${btnPrimary} mt-6 w-full`}>
+                    {tool.ctaLabel}
+                  </a>
                 ) : (
                   <Link href={tool.href} className={`${btnComingSoon} mt-6 w-full`}>
                     {tool.ctaLabel}
