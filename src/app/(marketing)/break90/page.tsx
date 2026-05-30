@@ -4,11 +4,11 @@ import { BREAK90_FOUNDING_GOLFER_PROGRAM } from "@/lib/mvp-programs";
 export const metadata = {
   title: "Break90 Golf — Founding Golfer MVP | AI Coaching Solutions",
   description:
-    "Break90 Pro free for 60 days for founding golfers. Full Pro access, structured feedback, and optional extensions up to 120 days. Join the waitlist.",
+    "Break90 Pro free for 60 days for founding golfers. Full Pro access, structured feedback, and optional extensions up to 120 days. Start now — no credit card.",
   alternates: { canonical: "/break90" },
 };
 
-export default function Break90ComingSoonPage() {
+export default function Break90MvpPage() {
   return (
     <MvpComingSoonPage
       config={{
@@ -26,6 +26,8 @@ export default function Break90ComingSoonPage() {
         logo: "/images/break90-logo.png",
         waitlistSource: "mvp-break90",
         program: BREAK90_FOUNDING_GOLFER_PROGRAM,
+        live: true,
+        liveUrl: "https://break90.app/signin?mvp=golfer",
       }}
     />
   );

@@ -15,6 +15,10 @@ export type MvpComingSoonConfig = {
   logo?: string;
   waitlistSource: string;
   program: MvpProgramDefinition;
+  /** When true, the program is live: shows a "Live now" badge and a start CTA instead of the waitlist. */
+  live?: boolean;
+  /** Live enrollment URL (e.g. the Break90 founding sign-in). Required when live. */
+  liveUrl?: string;
 };
 
 const btnPrimary =
@@ -24,6 +28,7 @@ const btnSecondary =
 
 export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
   const isGolfer = config.audience === "golfers";
+  const isLive = Boolean(config.live && config.liveUrl);
 
   return (
     <div className="bg-[#071426] text-[#f8fafc]">
@@ -34,8 +39,12 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
               <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#ffd60a]">
                 {config.eyebrow}
               </p>
-              <span className="mt-3 inline-block rounded bg-[#ffd60a]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-[#ffd60a]">
-                60 days Pro — opening soon
+              <span
+                className={`mt-3 inline-block rounded px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${
+                  isLive ? "bg-[#ffd60a] text-[#071426]" : "bg-[#ffd60a]/15 text-[#ffd60a]"
+                }`}
+              >
+                {isLive ? "60 days Pro — Live now" : "60 days Pro — opening soon"}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {config.title}
@@ -52,15 +61,28 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                 ))}
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/" className={btnSecondary}>
-                  ← All tools
-                </Link>
-                <FreeBreakdownTrackedLink
-                  location={`mvp_${config.waitlistSource}_hero`}
-                  className={btnPrimary}
-                >
-                  Try Free Swing Analyzer
-                </FreeBreakdownTrackedLink>
+                {isLive ? (
+                  <>
+                    <a href={config.liveUrl} className={btnPrimary}>
+                      Start 60 days of Pro — free
+                    </a>
+                    <Link href="/" className={btnSecondary}>
+                      ← All tools
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/" className={btnSecondary}>
+                      ← All tools
+                    </Link>
+                    <FreeBreakdownTrackedLink
+                      location={`mvp_${config.waitlistSource}_hero`}
+                      className={btnPrimary}
+                    >
+                      Try Free Swing Analyzer
+                    </FreeBreakdownTrackedLink>
+                  </>
+                )}
               </div>
             </div>
 
@@ -77,30 +99,49 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                     />
                   </div>
                 </div>
-                <div className="w-full">
-                  <p className="mb-3 text-sm font-semibold text-[#f8fafc]">
-                    {isGolfer
-                      ? "Join the Break90 founding golfer waitlist"
-                      : "Join the Practice Planner founding coach waitlist"}
-                  </p>
-                  <EmailSignupForm
-                    source={config.waitlistSource}
-                    type="waitlist"
-                    layout="stacked"
-                    buttonLabel="Notify me"
-                    successMessage={
-                      isGolfer
-                        ? "You are on the Break90 waitlist. Check your inbox for confirmation."
-                        : "You are on the Practice Planner waitlist. Check your inbox for confirmation."
-                    }
-                  />
-                  <p className="mt-3 text-xs text-[#94a3b8]">
-                    60 days of Pro free when we open the cohort.{" "}
-                    <Link href="/contact" className="text-[#ffd60a] hover:text-[#ffe566]">
-                      Questions?
-                    </Link>
-                  </p>
-                </div>
+                {isLive ? (
+                  <div className="w-full rounded-xl border border-[#ffd60a]/40 bg-[#ffd60a]/10 p-4">
+                    <p className="text-sm font-semibold text-[#f8fafc]">
+                      Founding golfer access is open
+                    </p>
+                    <p className="mt-1.5 text-xs text-[#94a3b8]">
+                      60 days of Pro free — no credit card. Your access begins immediately after sign-in.
+                    </p>
+                    <a href={config.liveUrl} className={`${btnPrimary} mt-3 w-full`}>
+                      Start 60 days of Pro — free
+                    </a>
+                    <p className="mt-3 text-xs text-[#94a3b8]">
+                      <Link href="/contact" className="text-[#ffd60a] hover:text-[#ffe566]">
+                        Questions?
+                      </Link>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="w-full">
+                    <p className="mb-3 text-sm font-semibold text-[#f8fafc]">
+                      {isGolfer
+                        ? "Join the Break90 founding golfer waitlist"
+                        : "Join the Practice Planner founding coach waitlist"}
+                    </p>
+                    <EmailSignupForm
+                      source={config.waitlistSource}
+                      type="waitlist"
+                      layout="stacked"
+                      buttonLabel="Notify me"
+                      successMessage={
+                        isGolfer
+                          ? "You are on the Break90 waitlist. Check your inbox for confirmation."
+                          : "You are on the Practice Planner waitlist. Check your inbox for confirmation."
+                      }
+                    />
+                    <p className="mt-3 text-xs text-[#94a3b8]">
+                      60 days of Pro free when we open the cohort.{" "}
+                      <Link href="/contact" className="text-[#ffd60a] hover:text-[#ffe566]">
+                        Questions?
+                      </Link>
+                    </p>
+                  </div>
+                )}
               </div>
             ) : null}
           </div>
