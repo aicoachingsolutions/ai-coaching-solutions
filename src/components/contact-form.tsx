@@ -5,7 +5,7 @@ import { useState } from "react";
 type SubmitState = "idle" | "sending" | "success" | "error";
 
 const fieldClass =
-  "w-full rounded-xl border border-white/20 bg-[#071426] px-4 py-3.5 text-base text-[#f8fafc] placeholder:text-[#94a3b8]/80 outline-none transition focus:border-[#ffd60a]/50 focus:ring-2 focus:ring-[#ffd60a]/20";
+  "w-full rounded-xl border border-white/20 bg-[#071426] px-4 py-3.5 text-base text-[#f8fafc] placeholder:text-[#e2e8f0]/80 outline-none transition focus:border-[#ffd60a]/50 focus:ring-2 focus:ring-[#ffd60a]/20";
 const labelClass = "text-sm font-medium text-[#f8fafc]";
 
 export function ContactForm() {
@@ -58,7 +58,7 @@ export function ContactForm() {
       onSubmit={onSubmit}
     >
       <h2 className="text-xl font-bold text-[#f8fafc]">Send a message</h2>
-      <p className="mt-2 text-sm text-[#94a3b8]">
+      <p className="mt-2 text-sm text-[#e2e8f0]">
         We typically reply within a few business days.
       </p>
 
@@ -126,7 +126,7 @@ export function ContactForm() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-[#94a3b8]">Messages are read personally.</p>
+        <p className="text-xs text-[#e2e8f0]">Messages are read personally.</p>
         <button
           type="submit"
           disabled={state === "sending"}

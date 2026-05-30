@@ -105,7 +105,7 @@ export default function HomePage() {
             <h2 id="tools-title" className="text-2xl font-bold text-[#f8fafc] sm:text-3xl">
               Coaching Tools Built for Your Program
             </h2>
-            <p className="mt-3 text-[#94a3b8]">
+            <p className="mt-3 text-[#e2e8f0]">
               Break90 Golf founding MVP is live now — 60 days of Pro free, up to 120 days with
               milestones. Free Swing Analyzer is free to use anytime. Practice Planner for coaches
               is coming soon.
@@ -138,7 +138,7 @@ export default function HomePage() {
                     <span
                       className={`rounded px-2 py-1 text-[11px] font-bold uppercase tracking-wide ${
                         tool.comingSoon
-                          ? "bg-white/10 text-[#94a3b8]"
+                          ? "bg-white/10 text-[#e2e8f0]"
                           : "bg-[#ffd60a]/15 text-[#ffd60a]"
                       }`}
                     >
@@ -162,8 +162,8 @@ export default function HomePage() {
                 ) : null}
 
                 <h3 className="text-lg font-bold text-[#f8fafc]">{tool.title}</h3>
-                <p className="mt-0.5 text-xs font-medium text-[#94a3b8]">{tool.sport}</p>
-                <p className="mt-2 flex-1 text-[15px] leading-relaxed text-[#94a3b8]">
+                <p className="mt-0.5 text-xs font-medium text-[#e2e8f0]">{tool.sport}</p>
+                <p className="mt-2 flex-1 text-[15px] leading-relaxed text-[#e2e8f0]">
                   {tool.description}
                 </p>
 
