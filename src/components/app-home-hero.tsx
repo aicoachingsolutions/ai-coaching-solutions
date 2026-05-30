@@ -69,11 +69,11 @@ export function AppHomeHero() {
             aria-label="Practice Planner waitlist"
           >
             <h2 className="text-base font-bold text-[#f8fafc]">Coaches — join the waitlist</h2>
-            <p className="mt-1.5 text-sm text-[#94a3b8]">
+            <p className="mt-1.5 text-sm text-[#e2e8f0]">
               Get notified when the Practice Planner founding coach program opens — 60 days of Pro
               free. (Golfers: Break90 is live now — start above.)
             </p>
-            <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_input]:placeholder:text-[#94a3b8] [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426] [&_button]:hover:bg-[#ffe566]">
+            <div className="mt-4 [&_input]:border-white/20 [&_input]:bg-[#071426] [&_input]:text-white [&_input]:placeholder:text-[#e2e8f0] [&_button]:border-[#ffd60a] [&_button]:bg-[#ffd60a] [&_button]:text-[#071426] [&_button]:hover:bg-[#ffe566]">
               <EmailSignupForm
                 source="app-home-early-access"
                 type="waitlist"

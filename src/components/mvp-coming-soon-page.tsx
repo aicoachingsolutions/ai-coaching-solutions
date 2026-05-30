@@ -49,7 +49,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {config.title}
               </h1>
-              <p className="mt-4 text-base leading-relaxed text-[#94a3b8] sm:text-lg">
+              <p className="mt-4 text-base leading-relaxed text-[#e2e8f0] sm:text-lg">
                 {config.subtitle}
               </p>
               <ul className="mt-6 space-y-2">
@@ -104,13 +104,13 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                     <p className="text-sm font-semibold text-[#f8fafc]">
                       Founding golfer access is open
                     </p>
-                    <p className="mt-1.5 text-xs text-[#94a3b8]">
+                    <p className="mt-1.5 text-xs text-[#e2e8f0]">
                       60 days of Pro free — no credit card. Your access begins immediately after sign-in.
                     </p>
                     <a href={config.liveUrl} className={`${btnPrimary} mt-3 w-full`}>
                       Start 60 days of Pro — free
                     </a>
-                    <p className="mt-3 text-xs text-[#94a3b8]">
+                    <p className="mt-3 text-xs text-[#e2e8f0]">
                       <Link href="/contact" className="text-[#ffd60a] hover:text-[#ffe566]">
                         Questions?
                       </Link>
@@ -134,7 +134,7 @@ export function MvpComingSoonPage({ config }: { config: MvpComingSoonConfig }) {
                           : "You are on the Practice Planner waitlist. Check your inbox for confirmation."
                       }
                     />
-                    <p className="mt-3 text-xs text-[#94a3b8]">
+                    <p className="mt-3 text-xs text-[#e2e8f0]">
                       60 days of Pro free when we open the cohort.{" "}
                       <Link href="/contact" className="text-[#ffd60a] hover:text-[#ffe566]">
                         Questions?

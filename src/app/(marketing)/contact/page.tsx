@@ -22,7 +22,7 @@ export default function ContactPage() {
           <h1 className="mt-3 max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
             Get in touch
           </h1>
-          <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-[#94a3b8] sm:text-lg">
+          <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-[#e2e8f0] sm:text-lg">
             Questions about Practice Planner, Break90, the Free Swing Analyzer, or founding
             programs — send a message or email us directly.
           </p>
@@ -35,7 +35,7 @@ export default function ContactPage() {
             <aside className="lg:col-span-2">
               <div className="rounded-xl border border-[rgba(148,163,184,0.18)] bg-[rgba(11,31,58,0.65)] p-6 sm:p-7">
                 <h2 className="text-lg font-bold text-[#f8fafc]">Email us</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#94a3b8]">
+                <p className="mt-2 text-sm leading-relaxed text-[#e2e8f0]">
                   Prefer email? We read every message.
                 </p>
                 <a
@@ -72,25 +72,25 @@ export default function ContactPage() {
                   <nav className="mt-3 flex flex-col gap-2 text-sm">
                     <Link
                       href="/"
-                      className="text-[#94a3b8] no-underline hover:text-[#f8fafc]"
+                      className="text-[#e2e8f0] no-underline hover:text-[#f8fafc]"
                     >
                       All tools
                     </Link>
                     <Link
                       href="/free-breakdown"
-                      className="text-[#94a3b8] no-underline hover:text-[#f8fafc]"
+                      className="text-[#e2e8f0] no-underline hover:text-[#f8fafc]"
                     >
                       Free Swing Analyzer
                     </Link>
                     <Link
                       href="/practice-planner"
-                      className="text-[#94a3b8] no-underline hover:text-[#f8fafc]"
+                      className="text-[#e2e8f0] no-underline hover:text-[#f8fafc]"
                     >
                       Practice Planner MVP
                     </Link>
                     <Link
                       href="/break90"
-                      className="text-[#94a3b8] no-underline hover:text-[#f8fafc]"
+                      className="text-[#e2e8f0] no-underline hover:text-[#f8fafc]"
                     >
                       Break90 Golf MVP
                     </Link>

@@ -16,7 +16,7 @@ export function AppComingSoonBanner() {
             <p className="text-lg font-bold leading-snug text-[#f8fafc] sm:text-xl">
               New website experience launching soon
             </p>
-            <p className="mt-2 max-w-[52ch] text-[15px] leading-relaxed text-[#94a3b8]">
+            <p className="mt-2 max-w-[52ch] text-[15px] leading-relaxed text-[#e2e8f0]">
               Practice Planner and Break90 founding programs are opening here —{" "}
               <strong className="font-semibold text-[#f8fafc]/90">60 days of Pro free</strong> for
               founding coaches and golfers. Free Swing Analyzer is live now.
