@@ -1,0 +1,205 @@
+# AI Coaching Solutions — Platform Roadmap & Product Strategy
+
+> Planning document. Captures the long-term product vision, the free vs. paid
+> split, the build sequence, and the architectural decisions that need to be made
+> early. Nothing here is built yet unless noted. Last updated: 2026-05.
+
+---
+
+## 1. The Big Picture
+
+AI Coaching Solutions is becoming a **platform**, not a single tool. There are two
+distinct product families with different buyers:
+
+### Family A — Coach / Team tools (baseball & softball)
+Sold as **one "Coach Pro" subscription**. The buyer is a coach buying for their
+program. These tools share data through a central coach profile.
+
+- **Practice Planner** (+ Drill Library) — *MVP in progress*
+- **Team Builder**
+- **Team Analyzer** — stats, trends, AI recommendations
+- **Swing Analysis** — free text version (funnel) → paid multi-photo version
+- **Communication / Culture app** — "finishes the system"
+
+### Family B — Individual-athlete tools (standalone)
+Each sold **separately** with its own subscription and its own data. The buyer is
+an individual athlete buying for themselves.
+
+- **Break90** (golf) — separate product, separate data, separate subscription
+- **Future:** another individual-sport coaching tool if demand appears
+
+**Rule of thumb:** team tools bundle together; individual-athlete tools stand alone.
+
+---
+
+## 2. The Spine: Central Coach Profile + Shared Data Layer
+
+The single most important architectural concept. Every Coach Pro app reads from and
+writes to **one central data store tied to the coach's profile.**
+
+```
+        ┌─────────────────────────────────────────┐
+        │   CENTRAL COACH PROFILE + DATA LAYER     │
+        │   (teams, athletes, stats, drills)       │
+        └─────────────────────────────────────────┘
+              ▲        ▲        ▲        ▲        ▲
+        Practice   Team      Team     Swing   Comm/
+        Planner   Builder  Analyzer  Analysis Culture
+        +Drill Lib
+
+        ───────────── ONE "Coach Pro" subscription ─────────────
+
+   Break90 (golf) ── separate product, separate data, separate sub
+   Future individual-sport tool ── same: standalone
+```
+
+Team Analyzer only works because stats live in one place that every app feeds.
+This shared layer is the foundation everything else stands on.
+
+### ⚠️ Critical timing decision (ACTION)
+**Practice Planner's MVP build should START the central stats layer now.** Even if
+only Practice Planner uses it at first, its team/athlete/stat records must live in a
+**shared shape that other apps can later read** — not in a private, Practice-Planner-only
+structure.
+
+If we skip this, Team Analyzer (the first app to read cross-app data) forces a painful
+migration later. A small amount of schema design during the Practice Planner MVP avoids
+a large retrofit afterward.
+
+**What to define now:** where a coach's `team`, `athlete`, and `stat` records live, in a
+shape queryable by future apps, under the coach's profile in the central store
+(Supabase).
+
+---
+
+## 3. Free vs. Coach Pro
+
+Free is a taste of each tool **in isolation**. Pro is the moment the tools start
+talking to each other.
+
+| Capability | Free | Coach Pro |
+|---|------|-----------|
+| Scope | Individual product basics | Full connected suite |
+| Teams | None / single basic | **Multiple teams per coach** |
+| Data sharing | None | **Shared central profile** |
+| Team analysis | **Basic info only** | Trends, AI stats, recommendations |
+| Practice Planner integration | ❌ | ✅ builds real practices |
+| Individual athlete recommendations | ❌ | ✅ |
+| Swing analysis | Text describe (funnel) | **Multi-photo + capture instructions** |
+| Saved history | ❌ | ✅ |
+
+The free tools are the top-of-funnel. The free Swing Analyzer especially exists to
+prove the AI is good, capture emails, and pull coaches toward Coach Pro.
+
+---
+
+## 4. Build Sequence (Dependency Chain)
+
+Order matters — each step depends on the one before it.
+
+1. **Practice Planner MVP** — *in progress.* Gates everything.
+   **Must also start the central stats layer** (see §2).
+2. **Team Analyzer** — reads uploaded stats from the central store; calculates trends
+   and AI-driven recommendations.
+3. **Pro Swing Analysis** — multi-photo upload with capture instructions
+   (do **not** start until Practice Planner MVP is finished).
+4. **Communication / Culture app** — completes the Coach Pro system.
+
+**Rides alongside Practice Planner:** the Drill Library with rewards + moderation (§6).
+
+---
+
+## 5. Swing Analysis — Free (now) → Pro (future)
+
+### Free (live today)
+- Coach **describes** the swing/pitch in words → expert text breakdown.
+- Powered by the sport-framework engine (kinetic sequence + fault→cause + drills).
+- Rate-limited (5/min, 20/day per IP), logs to Supabase `api_requests`.
+- Copy / PDF / email. No account, no history. This is the **funnel.**
+
+### Pro (future — after Practice Planner MVP)
+- **Upload multiple photos with instructions** (not video — see note below).
+- Same expert breakdown, now grounded in what the AI actually sees.
+- Saved to the athlete's profile with history.
+- Upgrade pitch: *"You've been typing what you see — now just show it."*
+
+### Why photos, not video
+Modern AI analyzes video only by sampling it into frames — "video analysis" is really
+"analyzing many photos" plus extra cost and complexity. **Photo-first is the correct
+practical call:** ~80% of the value at a fraction of the cost and engineering.
+
+### The real challenge: guiding a usable capture
+The hard part is **not** the AI — it's getting a usable photo. A swing photo at the
+wrong moment or angle is useless. Plan to:
+- Tell users **which moments** to capture (e.g., setup, contact/release, finish).
+- Guide **camera angle** (face-on vs. down-the-line show different faults).
+- Allow **multiple key frames** (likely 1–3) rather than a single image.
+
+Budget more design effort on capture guidance than on the analysis itself.
+
+### Shared engine (architecture note)
+The sport-framework engine already powering the free analyzer is the same brain that
+would power paid photo analysis *and* any future individual-sport tool. **Build it as a
+shared, portable module** rather than baked into one page — write the coaching
+intelligence once, wrap it in different products.
+
+---
+
+## 6. Drill Library — Rewards + Moderation
+
+Part of Practice Planner. Coaches add drills and are **rewarded for original,
+well-described drills.** Because rewards create incentive to game the system, the
+moderation layer matters.
+
+### Submission rules (gate before review)
+- Required fields filled: name, setup, equipment, reps, coaching point, sport/skill level.
+- Minimum description quality (reject "hit balls off tee").
+- **Originality check** — dedupe against the existing library.
+
+### Approval workflow (AI-assisted, human-decided)
+- AI **pre-screens** each submission: completeness, quality, similarity to existing drills.
+- AI drafts the **"why approved / why rejected"** explanation.
+- A **human (you or a trusted reviewer) makes the final call** — AI recommends, human decides.
+- Coach is **notified**: approved ✅ (reward granted) or rejected ❌ with the specific reason.
+
+### Decisions to make
+1. **What is the reward?** Free Pro time? Credits? Public recognition / leaderboard?
+   This shapes the anti-abuse design.
+2. **Manual vs. AI-assisted moderation?** Review by hand at low volume; add AI
+   pre-screening as it grows. Build the hooks early.
+3. **Originality bar.** Exact-duplicate blocking is easy; "too similar" is a judgment
+   call AI can flag for human review.
+
+---
+
+## 7. Subscription & Packaging
+
+- **Coach Pro** = one subscription unlocking the full team suite (Practice Planner,
+  Team Builder, Team Analyzer, Swing Analysis, Communication/Culture).
+- **Break90** and future individual-sport tools = **separate** subscriptions, separate data.
+- Selling "the platform" for one monthly price is a far easier sell than several
+  small per-tool fees. The free tools feed the funnel.
+
+---
+
+## 8. Open Decisions (parked until build time)
+
+| Decision | Affects | When to decide |
+|---|---|---|
+| Central data schema shape | Everything in Coach Pro | **During Practice Planner MVP** |
+| Drill reward currency (Pro time / credits / recognition) | Drill Library, anti-abuse | Before Drill Library reward launch |
+| Multi-photo count + which angles | Pro Swing Analysis UX | Before Pro Swing Analysis build |
+| Refactor framework engine into shared module | Swing Analysis, future tools | Before building tool #2 that uses it |
+| Manual vs. AI-assisted drill moderation | Drill Library ops | When submission volume grows |
+
+---
+
+## 9. Guiding Principles
+
+- **One engine, many front doors.** Write coaching intelligence once; reuse across products.
+- **Central data is the spine.** Design the shared layer early; retrofitting is expensive.
+- **Free proves, Pro connects.** Free tools showcase the AI in isolation; Pro is where
+  they integrate.
+- **Photo over video.** Practical, cheaper, good enough.
+- **AI recommends, humans decide** — especially for drill moderation and rewards.
+- **Team tools bundle; individual tools stand alone.**
