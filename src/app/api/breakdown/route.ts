@@ -252,8 +252,7 @@ Return valid JSON only.
 `.trim();
 
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4o",
-      temperature: 0.5,
+      model: "gpt-5.4-mini-2026-03-17",
       messages: [
         { role: "system", content: ANALYZER_INSTRUCTIONS },
         { role: "user", content: userInput },
