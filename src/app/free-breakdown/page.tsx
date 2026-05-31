@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import { track } from "@vercel/analytics";
@@ -795,7 +794,7 @@ export default function FreeBreakdownPage() {
                   <button
                     type="button"
                     onClick={handleCopyResults}
-                    className="inline-flex items-center gap-1.5 rounded-lg border-2 border-neutral-200 bg-white px-5 py-2.5 text-base font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300"
+                    className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#0b1f3a]/20 bg-white px-5 py-2.5 text-base font-semibold text-[#0b1f3a] transition hover:border-[#0b1f3a] hover:bg-[#0b1f3a]/[0.04]"
                   >
                     {copyState === "copied" ? "✓ Copied" : "Copy Text"}
                   </button>
@@ -803,7 +802,7 @@ export default function FreeBreakdownPage() {
                     type="button"
                     onClick={downloadBreakdownPdf}
                     disabled={pdfState === "loading"}
-                    className="inline-flex items-center gap-1.5 rounded-lg border-2 border-neutral-200 bg-white px-5 py-2.5 text-base font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#0b1f3a]/20 bg-white px-5 py-2.5 text-base font-semibold text-[#0b1f3a] transition hover:border-[#0b1f3a] hover:bg-[#0b1f3a]/[0.04] disabled:opacity-50"
                   >
                     {pdfState === "loading" ? "Preparing…" : "Download PDF"}
                   </button>
@@ -958,25 +957,6 @@ export default function FreeBreakdownPage() {
                 </button>
               </div>
               {emailError && <p className="mt-3 text-sm text-red-600">{emailError}</p>}
-            </div>
-
-            {/* Upsell */}
-            <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-6 sm:p-8">
-              <p className="text-lg font-semibold text-neutral-900">
-                Want to save drills and build practice plans?
-              </p>
-              <p className="mt-1.5 text-sm text-neutral-500">
-                The coach app is where plans, drill libraries, and team profiles live.
-              </p>
-              <Link
-                href="/sign-up"
-                onClick={() =>
-                  track("Upgrade Clicked", { source: "free_swing_breakdown_results" })
-                }
-                className="mt-5 inline-flex items-center justify-center rounded-lg border-2 border-neutral-300 bg-white px-5 py-3 text-base font-semibold text-neutral-900 transition hover:bg-neutral-100"
-              >
-                Create a free coach account
-              </Link>
             </div>
           </section>
         )}
