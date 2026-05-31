@@ -1,3 +1,23 @@
+/**
+ * Central data layer for the Coach Pro suite (Practice Planner, Team Builder,
+ * Team Analyzer, Swing Analysis, Communication/Culture).
+ *
+ * ⚠️ ROADMAP ACTION — see docs/platform-roadmap.md (§2 "The Spine", §4 "Build Sequence"):
+ *   The Practice Planner MVP should START the central stats layer HERE, so the
+ *   future Team Analyzer can read cross-app data without a painful migration.
+ *     • Add athlete + stat records hung off the coach profile (appUsers).
+ *     • Design them in a SHARED shape other apps can query — not a
+ *       Practice-Planner-only structure.
+ *
+ * ⚠️ MULTI-TEAM CONSTRAINT — `teams.userId` is currently `.unique()`, i.e. ONE
+ *   team per coach (fine for free/MVP). Coach Pro requires MULTIPLE teams per
+ *   coach; this constraint must be removed before Team Builder / Pro ships.
+ *
+ * Note: app data lives in Neon (DATABASE_URL via Drizzle). Supabase is used only
+ * for breakdown rate-limiting (api_requests). Any `team_stat_*` tables seen in
+ * the shared Supabase project are NOT wired to this app — decide the single
+ * central store before building Team Analyzer.
+ */
 import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
