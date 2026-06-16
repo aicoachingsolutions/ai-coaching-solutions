@@ -203,3 +203,76 @@ moderation layer matters.
 - **Photo over video.** Practical, cheaper, good enough.
 - **AI recommends, humans decide** — especially for drill moderation and rewards.
 - **Team tools bundle; individual tools stand alone.**
+
+---
+
+## 10. Analyzer-First Go-To-Market, Gating & Monetization
+
+**Strategic shift:** the **Swing Analyzer is the lead acquisition product**, not Practice
+Planner. It's live, genuinely good, instantly shareable, and needs no onboarding —
+while Practice Planner still has work to do. Lead with the analyzer to pull users in,
+then expand them into the rest of the Coach Pro suite.
+
+### Monetization model: usage-capped freemium (+ video for Pro)
+Free to a point, then pay for more uses. This caps AI cost and creates a clean,
+honest upgrade moment ("you've used your free breakdowns").
+
+| Tier | Who | Limit | Identity |
+|------|-----|-------|----------|
+| Anonymous free | Anyone, no login | a few/day (IP) | none — *exists today (IP rate-limit)* |
+| Free account | Signed in | a few more/month | user_id |
+| **Pro** | Paid | high/unlimited + **video layer** + central-DB personalization | user_id + subscription |
+
+- **"Pay for more uses" requires accounts** — you can't meter a person without login.
+  So the paid analyzer needs auth, while the anonymous free tier stays open as the hook.
+- The current IP rate-limiting **is** the anonymous tier; accounts + entitlements come
+  from the shared backbone.
+- **Do not gate the front door.** Keep the first taste instant and login-free; meter
+  *additional* uses. Shareability is the acquisition engine.
+
+### One shared pay/gating system across all modules
+The analyzer's paid tier uses the **same** auth + billing + entitlements as Practice
+Planner and every future module. One **Coach Pro** account unlocks everything. Never
+build per-product billing.
+
+### The moat: analyzer ↔ central database
+This is the most important idea. An analyzer that answers one-off questions is a
+commodity. An analyzer that **remembers a coach's (or individual's) athletes, stats,
+and notes**, personalizes its advice from them, and **feeds its findings back** into
+that same store for Practice Planner / Team Analyzer to use — that is defensible and
+unique. It only works if the analyzer sits on the **same data backbone** as everything
+else. Both directions:
+- Central stats/notes → inform the analyzer's suggestions (personalized, not generic).
+- Analyzer output → written back as notes/records the AI reuses later, and can tell a
+  user where to go next / what to feed the analyzer.
+
+### The required architecture: ONE Supabase backbone (acs-prod)
+Unified billing + central data + AI personalization all require **one** Supabase
+project carrying: **auth** (one login), **subscriptions/entitlements** (one billing),
+and the **central coach + individual data** (stats, notes, saved analyses). That
+backbone is **`acs-prod`** (already has `subscriptions`, `profiles`, `team_stat_*`).
+
+### ⚠️ The blocker / open decision
+The analyzer currently lives in **this** repo (Next.js → Neon, **no billing**), while
+`acs-prod` + its billing/subscriptions were built by a **different codebase**. To make
+the analyzer gated, paid, and centrally-integrated, it must join that backbone — not
+get a second billing system bolted onto this Neon repo.
+
+**PIVOTAL UNKNOWN:** *What is the `acs-prod` application?* (separate Next.js repo? a
+no-code/AI builder like Lovable/Bolt? something else?) The answer decides whether the
+gated analyzer is **rebuilt inside the acs-prod app** or **this repo is wired to
+acs-prod's Supabase** (its auth, its `subscriptions` for entitlements, its central
+tables). Cannot scope the build cleanly until this is known.
+
+### Build order for the analyzer
+1. Consolidate the analyzer onto the **acs-prod Supabase backbone** (auth + subscriptions + central data).
+2. Build the **usage ladder + entitlements** (anonymous → free account → Pro).
+3. Build the **video layer** (Pro-only) — *after* gating works. Even "video" is best
+   handled as extracted key frames; it's the most expensive/complex piece, so it
+   follows, it doesn't lead.
+4. Wire the **analyzer ↔ central stats/notes** loop — the moat.
+
+### Cautions
+- Video is expensive (storage + processing + capture UX). Pro-only, and later.
+- Don't duplicate billing — reuse acs-prod's.
+- Keep the anonymous free analysis ungated at the entry point.
