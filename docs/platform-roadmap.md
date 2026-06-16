@@ -252,17 +252,25 @@ project carrying: **auth** (one login), **subscriptions/entitlements** (one bill
 and the **central coach + individual data** (stats, notes, saved analyses). That
 backbone is **`acs-prod`** (already has `subscriptions`, `profiles`, `team_stat_*`).
 
-### ⚠️ The blocker / open decision
-The analyzer currently lives in **this** repo (Next.js → Neon, **no billing**), while
-`acs-prod` + its billing/subscriptions were built by a **different codebase**. To make
-the analyzer gated, paid, and centrally-integrated, it must join that backbone — not
-get a second billing system bolted onto this Neon repo.
+### ✅ DECISION (locked): build the gated analyzer inside v2 (`practice-planner-main`)
+`acs-prod` is built by **`ai-coaching-solutions-v2`** (local: `C:\practice-planner-main`)
+— Next.js 14 + Supabase (Postgres + Auth + RLS), no ORM. It **already has** everything
+the paid analyzer needs:
+- **Supabase Auth** (magic-link) — `lib/auth.ts` `requireUser()`
+- **Subscription gating** — `subscriptions` table (`plan_type`: free/lite/trial/paid/pro),
+  `getUserSubscriptionPlan()`, `isProSubscription()` (already gates the AI generator)
+- **Central stats** — `team_stat_reports/values/signals` with RLS, and a
+  **`source_app` column built for multiple apps** (defaults `'practice_planner'`; the
+  analyzer writes `'swing_analyzer'`). `subject_type` already supports `'player'`.
+- **OpenAI** integration (`OPENAI_API_KEY` + `OPENAI_MODEL`)
 
-**PIVOTAL UNKNOWN:** *What is the `acs-prod` application?* (separate Next.js repo? a
-no-code/AI builder like Lovable/Bolt? something else?) The answer decides whether the
-gated analyzer is **rebuilt inside the acs-prod app** or **this repo is wired to
-acs-prod's Supabase** (its auth, its `subscriptions` for entitlements, its central
-tables). Cannot scope the build cleanly until this is known.
+So the gated/paid analyzer is **built in v2**, reusing its auth + subscriptions + central
+stats. We do **NOT** wire the v1 repo (Clerk + Neon) to acs-prod — that would mean two
+identity systems for the same users.
+
+**Closed out:** the v1 Drizzle `central-stats-layer` branch (athletes/stat_records on
+Neon) is **redundant and deleted** — v2's `team_stat_*` supersedes it. The v1 repo keeps
+serving the **free, ungated funnel** until full consolidation.
 
 ### Build order for the analyzer
 1. Consolidate the analyzer onto the **acs-prod Supabase backbone** (auth + subscriptions + central data).
@@ -276,3 +284,23 @@ tables). Cannot scope the build cleanly until this is known.
 - Video is expensive (storage + processing + capture UX). Pro-only, and later.
 - Don't duplicate billing — reuse acs-prod's.
 - Keep the anonymous free analysis ungated at the entry point.
+
+### Pro analyzer tier — spec (locked)
+The paid tier of the Swing Analyzer, gated in v2 by `isProSubscription`:
+- **Unlimited usage** — no daily/monthly breakdown cap (free tiers are capped; Pro is not).
+- **Eventual video upload (promised)** — Pro is marketed with **video analysis coming**.
+  Pro subscribers get it when it ships; it's a roadmap commitment to Pro, built after the
+  gating + usage ladder are live. (Under the hood, "video" = extracted key frames.)
+- Everything the free tier gives, plus saved history and central-DB personalization
+  (reads the coach's/athlete's prior stats + notes; writes results back tagged
+  `source_app='swing_analyzer'`).
+
+Free vs Pro at a glance:
+
+| | Anonymous free | Free account | **Pro** |
+|---|---|---|---|
+| Breakdowns | a few/day (IP) | a few more/month | **unlimited** |
+| Login | none | Supabase Auth | Supabase Auth |
+| Saved history | ❌ | basic | ✅ full |
+| Central-DB personalization | ❌ | ❌ | ✅ |
+| **Video upload** | ❌ | ❌ | **✅ (promised / coming)** |
