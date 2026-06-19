@@ -347,3 +347,60 @@ check.
 
 ### Net
 No bridge, no migration, "always separate" preserved — **two analyzers, one shared engine.**
+
+---
+
+## 12. Go-To-Market Sequencing (solo-builder focus order)
+
+> The risk is spreading thin across Break90, Swing Analyzer, Practice Planner,
+> Team Analyzer, and future apps. The discipline that fixes it: **finish ONE
+> thing to done before starting the next.**
+
+### State snapshot
+- **Swing Analyzer** — ~90% (free text live; video paywall built, needs config + launch)
+- **Practice Planner** — ~50% (flagship; months to a polished, sellable bar)
+- **Team Analyzer** — not built (depends on Practice Planner's central stats)
+- **Break90** — MVP-ready (separate product, Firebase, golfers)
+- **Future apps** — later
+
+### The roles (why this isn't "either/or")
+The Swing Analyzer and Practice Planner play different roles and form one machine:
+**analyzer acquires → Practice Planner retains.**
+
+| | Swing Analyzer | Practice Planner |
+|---|----------------|------------------|
+| Role | Acquisition (the hook) | Retention / revenue (the core) |
+| Value | Instant, no onboarding | Deep, needs setup + commitment |
+| Virality | High (TikTok, shareable proof) | None |
+| Stickiness | Low (occasional) | High (every practice) |
+| Done-ness | ~90% | ~50% |
+
+### The order
+1. **Phase 1 — Launch the Swing Analyzer (first).** It's nearly done, viral, and
+   revenue-capable. Finish config (Stripe, migration, env), polish, launch on TikTok.
+   Collect emails + first revenue + validation. **Do not touch Practice Planner during
+   this.** Rationale: ship what's almost shipped; get momentum, an audience, and proof
+   the AI is good — which funds and de-risks everything after.
+2. **Phase 2 — Finish Practice Planner** to a polished MVP (the coach-world flagship).
+   Launch it **to the warm email list** the analyzer built. Position it as the coach's
+   next step: "the AI that broke down your swing now plans your practices."
+3. **Phase 3 — Team Analyzer + future apps.** Team Analyzer needs Practice Planner's
+   central stats to exist first — premature until PP has traction.
+4. **Break90 — its own lane, low attention.** Separate product for golfers; soft-launch
+   whenever, but it is NOT part of the coach-world sequence and must not split focus.
+
+### Introduce the world correctly
+- **One front door.** Lead with the single polished thing (the analyzer) under
+  "AI Coaching Solutions — built by a coach." "Coming soon" teasers are fine; the live
+  experience people get must be finished.
+- **Sequence, never parallelize.** One product to done before the next. This is the
+  whole game for a solo builder.
+- **Capture every lead.** The analyzer's job is emails + attention → the launchpad for
+  Practice Planner.
+- **Practice Planner is the upgrade story**, not a separate cold launch — same brand,
+  same AI, the coach's deeper tool.
+
+### One sentence
+Launch the Swing Analyzer first (funnel, nearly done) → build audience + revenue →
+finish Practice Planner as the flagship and sell to that warm list → and refuse to work
+on more than one at a time.
