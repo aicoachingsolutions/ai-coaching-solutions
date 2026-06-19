@@ -304,3 +304,46 @@ Free vs Pro at a glance:
 | Saved history | ❌ | basic | ✅ full |
 | Central-DB personalization | ❌ | ❌ | ✅ |
 | **Video upload** | ❌ | ❌ | **✅ (promised / coming)** |
+
+---
+
+## 11. Break90 (Firebase) & the Two-Analyzer Architecture
+
+### Decisions (locked)
+- **Break90 stays on Firebase.** It's a deeply-built, working app, and always a
+  **separate product with a separate purchase.** No migration to Supabase — moving a
+  working app for tidiness isn't worth it, and the separation is intentional. (Migrating
+  would only have made sense while it was empty; it isn't.)
+- **No Firebase↔Supabase bridge.** Break90 (Firebase Auth + Firestore + its own Stripe)
+  and the coaching apps (Supabase Auth + `subscriptions`) don't share identity or billing.
+  Instead of bridging two stacks, **each product gets its own analyzer gated by its own
+  billing.**
+
+### Two analyzers, one engine
+| Product | Analyzer | Auth | Pro gate |
+|---------|----------|------|----------|
+| Coaching apps | Supabase analyzer (`swing-analyzer` repo) | Supabase Auth | `subscriptions` table |
+| **Break90** | its own **golf** analyzer | Break90 Firebase Auth | Break90's existing Stripe→Firestore Pro check |
+
+### Break90 analyzer gating — use what Break90 already knows
+Break90 already tracks Pro (Stripe → Firestore). So **embed the golf analyzer as a Break90
+Pro feature** and gate it with Break90's **existing `isPro` check** — the user is already
+logged in, so no email-gating is needed.
+- *Fallback (only if the analyzer lives outside the Break90 login):* email-gate + look up
+  Stripe by email for an active Break90 subscription. Email alone is weak proof — pair it
+  with a **magic-link verification** so someone can't just type a Pro user's email.
+
+### Don't fork the brain — share the engine
+Both analyzers must share **one** coaching engine so quality never drifts. The engine
+(`runBreakdown` / `runVideoBreakdown`) has **zero database dependency** in its core (OpenAI
++ sport frameworks + prompt); gating is separate, so it ports cleanly to the Firebase side.
+Reuse options, easiest → cleanest:
+1. **Copy** the engine into Break90 — fast, but drifts over time.
+2. **Shared API** both front-ends call — each does its own gating.
+3. **Shared package** (`@acs/coaching-engine`) imported by both — cleanest, no drift.
+
+Break90's analyzer just calls the engine with `sport: "golf"` and gates with its own Stripe
+check.
+
+### Net
+No bridge, no migration, "always separate" preserved — **two analyzers, one shared engine.**
