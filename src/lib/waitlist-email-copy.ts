@@ -11,8 +11,9 @@ export type WaitlistSource =
   | "fb-tiktok-coaching-lines"
   | string;
 
+/** Hub site owns www (app. is Practice Planner). */
 const PDF_DOWNLOAD_URL =
-  "https://app.aicoachingsolutions.net/downloads/the-lines-coaches-never-forget.pdf";
+  "https://www.aicoachingsolutions.net/downloads/the-lines-coaches-never-forget.pdf";
 
 type WaitlistEmailContent = {
   toolLabel: string;
@@ -109,7 +110,7 @@ const COPY_BY_SOURCE: Record<string, WaitlistEmailContent> = {
       "101 things worth saying at practice — collected from 2,280 coaches, players, and parents.",
       "",
       "Want a coaching breakdown in under 60 seconds? Try the Free Swing Analyzer:",
-      "https://app.aicoachingsolutions.net/free-breakdown",
+      "https://www.aicoachingsolutions.net/free-breakdown",
       "",
       "Coach V · AI Coaching Solutions",
       "Building Better Coaches",
