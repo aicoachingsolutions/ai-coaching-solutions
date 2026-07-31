@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
+import { track } from "@vercel/analytics";
 
 type SubmitState = "idle" | "sending" | "success" | "error";
 
@@ -11,7 +12,30 @@ type EmailSignupFormProps = {
   successMessage?: string;
   /** stacked = full-width email above button (MVP pages under product logo) */
   layout?: "inline" | "stacked";
+  /** When set, success state offers this PDF and auto-starts download */
+  downloadUrl?: string;
+  downloadLabel?: string;
+  inputId?: string;
 };
+
+function triggerDownload(url: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "";
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function getUtmSource(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return new URLSearchParams(window.location.search).get("utm_source") || "";
+  } catch {
+    return "";
+  }
+}
 
 export function EmailSignupForm({
   source = "homepage",
@@ -19,7 +43,12 @@ export function EmailSignupForm({
   buttonLabel = "Get Coaching Notes",
   successMessage = "Thanks. Check your inbox for a confirmation email.",
   layout = "inline",
+  downloadUrl,
+  downloadLabel = "Download your PDF",
+  inputId,
 }: EmailSignupFormProps) {
+  const generatedId = useId();
+  const emailInputId = inputId ?? `email-${generatedId}`;
   const [email, setEmail] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
@@ -55,6 +84,21 @@ export function EmailSignupForm({
       setState("success");
       setMessage(successMessage);
       setEmail("");
+
+      const utmSource = getUtmSource();
+      track("Lead Magnet Signup", {
+        source,
+        ...(utmSource ? { utm_source: utmSource } : {}),
+      });
+
+      if (downloadUrl) {
+        triggerDownload(downloadUrl);
+        track("Lead Magnet Download", {
+          source,
+          trigger: "auto",
+          ...(utmSource ? { utm_source: utmSource } : {}),
+        });
+      }
     } catch {
       setState("error");
       setMessage("Could not send right now. Please try again.");
@@ -62,6 +106,35 @@ export function EmailSignupForm({
   }
 
   const isStacked = layout === "stacked";
+
+  if (state === "success" && downloadUrl) {
+    return (
+      <div className="flex w-full flex-col gap-3">
+        <p className={`text-sm font-medium ${isStacked ? "text-[#ffd60a]" : "text-emerald-700"}`}>
+          {message || "Your PDF is ready."}
+        </p>
+        <a
+          href={downloadUrl}
+          download
+          onClick={() => {
+            const utmSource = getUtmSource();
+            track("Lead Magnet Download", {
+              source,
+              trigger: "click",
+              ...(utmSource ? { utm_source: utmSource } : {}),
+            });
+          }}
+          className={
+            isStacked
+              ? "inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566]"
+              : "inline-flex w-full items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto"
+          }
+        >
+          {downloadLabel}
+        </a>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -73,11 +146,11 @@ export function EmailSignupForm({
             : "flex w-full flex-col gap-3 sm:flex-row sm:items-center"
         }
       >
-        <label className="sr-only" htmlFor="email">
+        <label className="sr-only" htmlFor={emailInputId}>
           Email
         </label>
         <input
-          id="email"
+          id={emailInputId}
           type="email"
           inputMode="email"
           autoComplete="email"

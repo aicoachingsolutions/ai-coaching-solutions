@@ -8,7 +8,11 @@ export type WaitlistSource =
   | "mvp-break90"
   | "app-home-early-access"
   | "tools-page"
+  | "fb-tiktok-coaching-lines"
   | string;
+
+const PDF_DOWNLOAD_URL =
+  "https://app.aicoachingsolutions.net/downloads/the-lines-coaches-never-forget.pdf";
 
 type WaitlistEmailContent = {
   toolLabel: string;
@@ -90,6 +94,25 @@ const COPY_BY_SOURCE: Record<string, WaitlistEmailContent> = {
       "Free Swing Analyzer is live now on the app site.",
       "",
       "AI Coaching Solutions",
+    ],
+  },
+  "fb-tiktok-coaching-lines": {
+    toolLabel: "PDF lead: The Lines Coaches Never Forget",
+    internalSubject: "New PDF lead: The Lines Coaches Never Forget",
+    confirmationSubject: "Your free PDF — The Lines Coaches Never Forget",
+    confirmationLines: [
+      "Thanks for grabbing The Lines Coaches Never Forget.",
+      "",
+      "Download your free PDF here:",
+      PDF_DOWNLOAD_URL,
+      "",
+      "101 things worth saying at practice — collected from 2,280 coaches, players, and parents.",
+      "",
+      "Want a coaching breakdown in under 60 seconds? Try the Free Swing Analyzer:",
+      "https://app.aicoachingsolutions.net/free-breakdown",
+      "",
+      "Coach V · AI Coaching Solutions",
+      "Building Better Coaches",
     ],
   },
 };
