@@ -100,21 +100,8 @@ const COPY_BY_SOURCE: Record<string, WaitlistEmailContent> = {
   "fb-tiktok-coaching-lines": {
     toolLabel: "PDF lead: The Lines Coaches Never Forget",
     internalSubject: "New PDF lead: The Lines Coaches Never Forget",
-    confirmationSubject: "Your free PDF — The Lines Coaches Never Forget",
-    confirmationLines: [
-      "Thanks for grabbing The Lines Coaches Never Forget.",
-      "",
-      "Download your free PDF here:",
-      PDF_DOWNLOAD_URL,
-      "",
-      "101 things worth saying at practice — collected from 2,280 coaches, players, and parents.",
-      "",
-      "Want a coaching breakdown in under 60 seconds? Try the Free Swing Analyzer:",
-      "https://www.aicoachingsolutions.net/free-breakdown",
-      "",
-      "Coach V · AI Coaching Solutions",
-      "Building Better Coaches",
-    ],
+    confirmationSubject: "Your 101 lines are here",
+    confirmationLines: [], // built specially below
   },
 };
 
@@ -138,18 +125,46 @@ export function getWaitlistEmailContent(source: WaitlistSource): WaitlistEmailCo
 export function buildWaitlistConfirmationText(
   source: WaitlistSource,
   email: string,
-  firstName?: string
+  firstName?: string,
+  extras?: { coachingAudience?: string; sport?: string }
 ): { subject: string; text: string; internalSubject: string; internalText: string } {
   const content = getWaitlistEmailContent(source);
-  const greeting = firstName ? `Hi ${firstName},` : "Hello,";
 
-  const confirmationText = [greeting, "", ...content.confirmationLines].join("\n");
+  let confirmationText: string;
+  if (source === "fb-tiktok-coaching-lines") {
+    const thanks = firstName
+      ? `Thanks for grabbing this, ${firstName}.`
+      : "Thanks for grabbing this.";
+    confirmationText = [
+      thanks,
+      "",
+      "Here's your download:",
+      PDF_DOWNLOAD_URL,
+      "",
+      "101 lines, collected from 2,280 coaches, players and parents who answered one question: what's a line your old coach said that you still catch yourself saying?",
+      "",
+      "None of them are mine. They're sorted by the moment you'd actually reach for them — when a kid makes a mistake, when the effort drops, when it gets hard. Use the ones that sound like you and ignore the rest.",
+      "",
+      "One thing before you go. Hit reply and tell me the line you still catch yourself saying — the one somebody said to you once that never left. I read every reply, and I'm collecting them for the next one.",
+      "",
+      "Coach V",
+      "AI Coaching Solutions — Building Better Coaches",
+    ].join("\n");
+  } else {
+    const greeting = firstName ? `Hi ${firstName},` : "Hello,";
+    confirmationText = [greeting, "", ...content.confirmationLines].join("\n");
+  }
 
   const internalText = [
     `Tool / program: ${content.toolLabel}`,
     `Source key: ${source}`,
     `Email: ${email}`,
-  ].join("\n");
+    firstName ? `First name: ${firstName}` : "",
+    extras?.coachingAudience ? `What do you coach?: ${extras.coachingAudience}` : "",
+    extras?.sport ? `Sport: ${extras.sport}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return {
     subject: content.confirmationSubject,

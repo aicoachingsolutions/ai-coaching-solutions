@@ -12,6 +12,8 @@ export async function POST(req: Request) {
     const firstName = String(body?.firstName ?? "").trim();
     const lastName = String(body?.lastName ?? "").trim();
     const message = String(body?.message ?? "").trim();
+    const coachingAudience = String(body?.coachingAudience ?? "").trim();
+    const sport = String(body?.sport ?? "").trim();
     const fullName = `${firstName} ${lastName}`.trim();
     const { host, port, secure, user, pass, from, to, missing } = getSmtpConfig();
 
@@ -80,11 +82,10 @@ export async function POST(req: Request) {
     }
 
     // waitlist + legacy signup
-    const waitlistCopy = buildWaitlistConfirmationText(
-      source,
-      email,
-      firstName || undefined
-    );
+    const waitlistCopy = buildWaitlistConfirmationText(source, email, firstName || undefined, {
+      coachingAudience: coachingAudience || undefined,
+      sport: sport || undefined,
+    });
 
     await transporter.sendMail({
       from,

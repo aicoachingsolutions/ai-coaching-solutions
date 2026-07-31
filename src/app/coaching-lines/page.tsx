@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import { track } from "@vercel/analytics";
-import { EmailSignupForm } from "@/components/email-signup-form";
+import { CoachingLinesSignupForm } from "@/components/coaching-lines-signup-form";
 
-const PDF_PATH = "/downloads/the-lines-coaches-never-forget.pdf";
 const SOURCE = "fb-tiktok-coaching-lines";
 
 const MOMENTS = [
@@ -34,7 +33,6 @@ export default function CoachingLinesPage() {
 
   return (
     <div>
-      {/* Hero — one composition */}
       <section className="relative overflow-hidden border-b border-[rgba(148,163,184,0.18)] bg-[#0b1f3a]">
         <div
           className="pointer-events-none absolute inset-0 opacity-40"
@@ -46,7 +44,7 @@ export default function CoachingLinesPage() {
         />
         <div className="relative mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20 lg:py-24">
           <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#ffd60a]">
-            Free PDF · Instant download
+            Free PDF · From Coach V
           </p>
           <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
             The Lines
@@ -62,25 +60,11 @@ export default function CoachingLinesPage() {
             id="get-pdf"
             className="mt-10 max-w-md rounded-2xl border border-white/10 bg-[#071426]/70 p-5 backdrop-blur-sm sm:p-6"
           >
-            <p className="mb-4 text-sm font-medium text-[#f8fafc]/90">
-              Enter your email. Get the PDF now.
-            </p>
-            <EmailSignupForm
-              source={SOURCE}
-              type="signup"
-              layout="stacked"
-              buttonLabel="Send me the free PDF"
-              successMessage="You're in. Download starts now — check your email for the link too."
-              downloadUrl={PDF_PATH}
-              downloadLabel="Download your PDF"
-              inputId="coaching-lines-email"
-            />
-            <p className="mt-3 text-xs text-[#94a3b8]">Free · Instant download · No spam</p>
+            <CoachingLinesSignupForm idPrefix="hero" />
           </div>
         </div>
       </section>
 
-      {/* What's inside */}
       <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16" aria-labelledby="inside-title">
         <h2 id="inside-title" className="text-2xl font-bold text-white sm:text-3xl">
           Eight moments. One hundred and one lines.
@@ -103,18 +87,9 @@ export default function CoachingLinesPage() {
           ))}
         </ol>
 
-        <div className="mt-12 max-w-md">
+        <div className="mt-12 max-w-md rounded-2xl border border-white/10 bg-[#0b1f3a]/60 p-5 sm:p-6">
           <p className="mb-4 text-sm font-medium text-[#f8fafc]/90">Still need your copy?</p>
-          <EmailSignupForm
-            source={SOURCE}
-            type="signup"
-            layout="stacked"
-            buttonLabel="Send me the free PDF"
-            successMessage="You're in. Download starts now — check your email for the link too."
-            downloadUrl={PDF_PATH}
-            downloadLabel="Download your PDF"
-            inputId="coaching-lines-email-bottom"
-          />
+          <CoachingLinesSignupForm idPrefix="bottom" />
         </div>
       </section>
     </div>
