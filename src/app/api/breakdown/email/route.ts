@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { getSmtpConfig } from "@/lib/smtp-config";
 
 type BreakdownResult = {
   mechanics: string;
@@ -49,20 +50,9 @@ export async function POST(req: Request) {
       return Response.json({ error: "Breakdown result is incomplete" }, { status: 400 });
     }
 
-    const host = process.env.EMAIL_SERVER_HOST ?? process.env.SMTP_HOST;
-    const rawPort = process.env.EMAIL_SERVER_PORT ?? process.env.SMTP_PORT;
-    const port = Number(rawPort ?? 465);
-    const secure =
-      (process.env.EMAIL_SERVER_SECURE ?? process.env.SMTP_SECURE) === "true";
-    const user = process.env.EMAIL_SERVER_USER ?? process.env.SMTP_USER;
-    const pass = (process.env.EMAIL_SERVER_PASSWORD ?? process.env.SMTP_PASS ?? "").replace(
-      /\s+/g,
-      ""
-    );
-    const from = process.env.EMAIL_FROM ?? user;
-    const to = process.env.EMAIL_TO ?? user;
+    const { host, port, secure, user, pass, from, to, missing } = getSmtpConfig();
 
-    if (!host || Number.isNaN(port) || !user || !pass || !from || !to) {
+    if (missing.length > 0) {
       return Response.json({ error: "Email service is not configured" }, { status: 500 });
     }
 
