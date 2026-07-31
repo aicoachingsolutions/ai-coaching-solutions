@@ -15,6 +15,8 @@ type EmailSignupFormProps = {
   /** When set, success state offers this PDF and auto-starts download */
   downloadUrl?: string;
   downloadLabel?: string;
+  /** Shown when email fails but PDF download is still unlocked */
+  downloadFallbackMessage?: string;
   inputId?: string;
 };
 
@@ -45,6 +47,7 @@ export function EmailSignupForm({
   layout = "inline",
   downloadUrl,
   downloadLabel = "Download your PDF",
+  downloadFallbackMessage = "Your PDF is ready. We couldn't email the link right now — use the button below.",
   inputId,
 }: EmailSignupFormProps) {
   const generatedId = useId();
@@ -52,6 +55,28 @@ export function EmailSignupForm({
   const [email, setEmail] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
+
+  function finishWithDownload(opts: { emailed: boolean; note: string }) {
+    setState("success");
+    setMessage(opts.note);
+    setEmail("");
+
+    const utmSource = getUtmSource();
+    track("Lead Magnet Signup", {
+      source,
+      emailed: opts.emailed ? "yes" : "no",
+      ...(utmSource ? { utm_source: utmSource } : {}),
+    });
+
+    if (downloadUrl) {
+      triggerDownload(downloadUrl);
+      track("Lead Magnet Download", {
+        source,
+        trigger: "auto",
+        ...(utmSource ? { utm_source: utmSource } : {}),
+      });
+    }
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,35 +98,39 @@ export function EmailSignupForm({
         body: JSON.stringify({ email: trimmed, source, type }),
       });
 
-      const data = (await res.json()) as { success?: boolean; error?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+      };
 
       if (!res.ok || !data.success) {
+        // Lead magnets: still unlock the PDF so ads aren't a dead end when SMTP is down.
+        if (downloadUrl) {
+          finishWithDownload({ emailed: false, note: downloadFallbackMessage });
+          return;
+        }
         setState("error");
-        setMessage(data.error || "Could not send right now. Please try again.");
+        setMessage(
+          data.error || "We couldn't send email right now. Please try again in a few minutes."
+        );
+        return;
+      }
+
+      if (downloadUrl) {
+        finishWithDownload({ emailed: true, note: successMessage });
         return;
       }
 
       setState("success");
       setMessage(successMessage);
       setEmail("");
-
-      const utmSource = getUtmSource();
-      track("Lead Magnet Signup", {
-        source,
-        ...(utmSource ? { utm_source: utmSource } : {}),
-      });
-
-      if (downloadUrl) {
-        triggerDownload(downloadUrl);
-        track("Lead Magnet Download", {
-          source,
-          trigger: "auto",
-          ...(utmSource ? { utm_source: utmSource } : {}),
-        });
-      }
     } catch {
+      if (downloadUrl) {
+        finishWithDownload({ emailed: false, note: downloadFallbackMessage });
+        return;
+      }
       setState("error");
-      setMessage("Could not send right now. Please try again.");
+      setMessage("We couldn't send email right now. Please try again in a few minutes.");
     }
   }
 

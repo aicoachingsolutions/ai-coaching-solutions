@@ -27,9 +27,10 @@ export async function POST(req: Request) {
       return Response.json(
         {
           success: false,
-          error: `Email service is not configured. Missing: ${missing.join(", ")}`,
+          error: "Email is temporarily unavailable. Please try again in a few minutes.",
+          code: "email_not_configured",
         },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
@@ -103,9 +104,17 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const detail = err instanceof Error ? err.message : String(err);
     console.error("[api/contact] send failed:", detail);
+
+    const authFailed = /invalid login|badcredentials|535|authentication failed/i.test(detail);
     return Response.json(
-      { success: false, error: "Could not send right now. Please try again." },
-      { status: 500 }
+      {
+        success: false,
+        error: authFailed
+          ? "Email delivery is temporarily unavailable. Please try again later."
+          : "We couldn't send email right now. Please try again in a few minutes.",
+        code: authFailed ? "email_auth_failed" : "email_send_failed",
+      },
+      { status: 503 }
     );
   }
 }
