@@ -32,8 +32,9 @@ const tools: Tool[] = [
     badgeExtra: "New",
     featured: true,
     comingSoon: false,
-    logo: null,
-    logoAlt: "",
+    logo: "/images/the-lines-coaches-never-forget-cover.png",
+    logoAlt: "The Lines Coaches Never Forget",
+    logoClassName: "max-h-[110px] max-w-[90px]",
     title: "The Lines Coaches Never Forget",
     sport: "All coaches",
     description:

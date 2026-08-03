@@ -22,6 +22,21 @@ export const metadata: Metadata = {
     description:
       "101 things worth saying at practice — from 2,280 coaches, players, and parents. Free PDF.",
     type: "website",
+    images: [
+      {
+        url: "/images/the-lines-coaches-never-forget-cover.png",
+        width: 540,
+        height: 720,
+        alt: "The Lines Coaches Never Forget",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Lines Coaches Never Forget",
+    description:
+      "101 things worth saying at practice — from 2,280 coaches, players, and parents. Free PDF.",
+    images: ["/images/the-lines-coaches-never-forget-cover.png"],
   },
 };
 
