@@ -135,7 +135,7 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
               ...(utmSource ? { utm_source: utmSource } : {}),
             });
           }}
-          className="inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566]"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-base font-semibold text-[#071426] transition hover:bg-[#ffe566]"
         >
           Download the 101 Lines
         </a>
@@ -163,7 +163,7 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
       <button
         type="submit"
         disabled={state === "sending"}
-        className="inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-base font-semibold text-[#071426] transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {state === "sending" ? "Sending..." : "Send Me the 101 Lines"}
       </button>
