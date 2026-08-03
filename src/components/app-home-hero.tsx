@@ -32,7 +32,7 @@ export function AppHomeHero() {
 
       <div className={`relative ${marketingContainer} py-12 sm:py-16`}>
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,14rem)_1fr] lg:gap-12">
-          <div className="mx-auto w-full max-w-[14rem] lg:mx-0">
+          <div className="order-2 mx-auto w-full max-w-[14rem] lg:order-1 lg:mx-0">
             <Image
               src={COVER_SRC}
               alt="The Lines Coaches Never Forget — free PDF cover"
@@ -43,7 +43,7 @@ export function AppHomeHero() {
             />
           </div>
 
-          <div>
+          <div className="order-1 lg:order-2">
             <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#ffd60a]">
               AI Coaching Solutions · Coach V
             </p>

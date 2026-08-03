@@ -46,8 +46,9 @@ export default function CoachingLinesPage() {
           }}
         />
         <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,17rem)_1fr] lg:gap-14">
-            <div className="mx-auto w-full max-w-[17rem] lg:mx-0">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,17rem)_1fr] lg:gap-14">
+            {/* Cover left on desktop; after form on mobile */}
+            <div className="order-2 mx-auto w-full max-w-[17rem] lg:order-1 lg:mx-0">
               <Image
                 src={COVER_SRC}
                 alt="The Lines Coaches Never Forget — free PDF cover"
@@ -58,7 +59,7 @@ export default function CoachingLinesPage() {
               />
             </div>
 
-            <div>
+            <div className="order-1 lg:order-2">
               <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#ffd60a]">
                 Free PDF · From Coach V
               </p>
@@ -87,8 +88,8 @@ export default function CoachingLinesPage() {
         className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16"
         aria-labelledby="inside-title"
       >
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,18rem)_1fr] lg:gap-14">
-          <div className="mx-auto w-full max-w-[18rem] lg:mx-0 lg:sticky lg:top-8">
+        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,18rem)_1fr] lg:gap-14">
+          <div className="order-2 mx-auto w-full max-w-[18rem] lg:order-1 lg:mx-0 lg:sticky lg:top-8">
             <Image
               src={SAMPLE_SRC}
               alt="Sample page from The Lines Coaches Never Forget — At practice"
@@ -101,7 +102,7 @@ export default function CoachingLinesPage() {
             </p>
           </div>
 
-          <div>
+          <div className="order-1 lg:order-2">
             <h2 id="inside-title" className="text-2xl font-bold text-white sm:text-3xl">
               Eight moments. One hundred and one lines.
             </h2>
