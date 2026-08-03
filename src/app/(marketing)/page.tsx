@@ -28,9 +28,28 @@ type Tool = {
 
 const tools: Tool[] = [
   {
+    badge: "FREE PDF",
+    badgeExtra: "New",
+    featured: true,
+    comingSoon: false,
+    logo: null,
+    logoAlt: "",
+    title: "The Lines Coaches Never Forget",
+    sport: "All coaches",
+    description:
+      "101 things worth saying at practice — collected from 2,280 coaches, players, and parents. Free download with one email.",
+    bullets: [
+      "Sorted by real coaching moments",
+      "Instant PDF download",
+      "From Coach V",
+    ],
+    href: "/coaching-lines",
+    ctaLabel: "Get the free PDF",
+  },
+  {
     badge: "60 days Pro — MVP",
     badgeExtra: "Live now",
-    featured: true,
+    featured: false,
     comingSoon: false,
     external: true,
     logo: "/images/break90-logo.png",
@@ -106,13 +125,13 @@ export default function HomePage() {
               Coaching Tools Built for Your Program
             </h2>
             <p className="mt-3 text-[#e2e8f0]">
-              Break90 Golf founding MVP is live now — 60 days of Pro free, up to 120 days with
-              milestones. Free Swing Analyzer is free to use anytime. Practice Planner for coaches
-              is coming soon.
+              Start with the free coaching PDF — 101 lines from 2,280 coaches, players, and parents.
+              Free Swing Analyzer is live anytime. Break90 Golf founding MVP is open. Practice Planner
+              for coaches is coming soon.
             </p>
           </header>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
             {tools.map((tool) => (
               <article
                 key={tool.title}
@@ -187,8 +206,12 @@ export default function HomePage() {
                   <a href={tool.href} className={`${btnPrimary} mt-6 w-full`}>
                     {tool.ctaLabel}
                   </a>
-                ) : (
+                ) : tool.comingSoon ? (
                   <Link href={tool.href} className={`${btnComingSoon} mt-6 w-full`}>
+                    {tool.ctaLabel}
+                  </Link>
+                ) : (
+                  <Link href={tool.href} className={`${btnPrimary} mt-6 w-full`}>
                     {tool.ctaLabel}
                   </Link>
                 )}
