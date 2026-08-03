@@ -6,17 +6,6 @@ import { track } from "@vercel/analytics";
 const PDF_PATH = "/downloads/the-lines-coaches-never-forget.pdf";
 const SOURCE = "fb-tiktok-coaching-lines";
 
-export const COACHING_AUDIENCE_OPTIONS = [
-  "Youth (12 and under)",
-  "Middle school",
-  "High school",
-  "Club / travel",
-  "College",
-  "I coach my own kid's team",
-  "I'm a parent, not a coach",
-  "Not coaching right now",
-] as const;
-
 type SubmitState = "idle" | "sending" | "success" | "error";
 
 function triggerDownload(url: string) {
@@ -38,21 +27,14 @@ function getUtmSource(): string {
   }
 }
 
-const fieldClass =
-  "w-full rounded-xl border border-white/20 bg-[#071426] px-4 py-3 text-base text-white placeholder:text-white/40 focus:border-[#ffd60a]/50 focus:outline-none focus:ring-2 focus:ring-[#ffd60a]/25";
-
-const labelClass = "mb-1.5 block text-sm font-medium text-[#e2e8f0]";
-
 type Props = {
   idPrefix?: string;
 };
 
 export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
   const uid = useId();
-  const [firstName, setFirstName] = useState("");
+  const emailId = `${idPrefix}-email-${uid}`;
   const [email, setEmail] = useState("");
-  const [coachingAudience, setCoachingAudience] = useState("");
-  const [sport, setSport] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
   const [emailed, setEmailed] = useState(true);
@@ -61,16 +43,12 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
     setState("success");
     setEmailed(didEmail);
     setMessage("");
-    setFirstName("");
     setEmail("");
-    setCoachingAudience("");
-    setSport("");
 
     const utmSource = getUtmSource();
     track("Lead Magnet Signup", {
       source: SOURCE,
       emailed: didEmail ? "yes" : "no",
-      ...(coachingAudience ? { coaching_audience: coachingAudience } : {}),
       ...(utmSource ? { utm_source: utmSource } : {}),
     });
 
@@ -85,21 +63,10 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const trimmedName = firstName.trim();
     const trimmedEmail = email.trim();
-    if (!trimmedName) {
-      setState("error");
-      setMessage("Enter your first name.");
-      return;
-    }
     if (!trimmedEmail || !trimmedEmail.includes("@")) {
       setState("error");
       setMessage("Enter a valid email address.");
-      return;
-    }
-    if (!coachingAudience) {
-      setState("error");
-      setMessage("Select what you coach.");
       return;
     }
 
@@ -112,11 +79,8 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: trimmedEmail,
-          firstName: trimmedName,
           source: SOURCE,
           type: "signup",
-          coachingAudience,
-          sport: sport.trim(),
         }),
       });
 
@@ -149,8 +113,8 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
               </>
             ) : (
               <>
-                Your download is ready below. We couldn&apos;t email the link right now — if you want
-                the follow-up, try again in a few minutes or check that your address is right.
+                Your download is ready below. We couldn&apos;t email the link right now — use the
+                button and you&apos;re set.
               </>
             )}
           </p>
@@ -180,78 +144,26 @@ export function CoachingLinesSignupForm({ idPrefix = "lines" }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex w-full flex-col gap-4">
-      <div>
-        <label className={labelClass} htmlFor={`${idPrefix}-first-name-${uid}`}>
-          First name
-        </label>
-        <input
-          id={`${idPrefix}-first-name-${uid}`}
-          type="text"
-          autoComplete="given-name"
-          required
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className={fieldClass}
-          placeholder="First name"
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={`${idPrefix}-email-${uid}`}>
-          Email
-        </label>
-        <input
-          id={`${idPrefix}-email-${uid}`}
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={fieldClass}
-          placeholder="you@school.org"
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={`${idPrefix}-audience-${uid}`}>
-          What do you coach?
-        </label>
-        <select
-          id={`${idPrefix}-audience-${uid}`}
-          required
-          value={coachingAudience}
-          onChange={(e) => setCoachingAudience(e.target.value)}
-          className={`${fieldClass} appearance-auto`}
-        >
-          <option value="">Select one…</option>
-          {COACHING_AUDIENCE_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={`${idPrefix}-sport-${uid}`}>
-          Sport <span className="font-normal text-[#94a3b8]">(optional)</span>
-        </label>
-        <input
-          id={`${idPrefix}-sport-${uid}`}
-          type="text"
-          value={sport}
-          onChange={(e) => setSport(e.target.value)}
-          className={fieldClass}
-          placeholder='e.g. JV softball, also volleyball in fall'
-        />
-      </div>
+    <form onSubmit={onSubmit} className="flex w-full flex-col gap-3">
+      <label className="sr-only" htmlFor={emailId}>
+        Email
+      </label>
+      <input
+        id={emailId}
+        type="email"
+        inputMode="email"
+        autoComplete="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full rounded-xl border border-white/20 bg-[#071426] px-4 py-3.5 text-base text-white placeholder:text-white/40 focus:border-[#ffd60a]/50 focus:outline-none focus:ring-2 focus:ring-[#ffd60a]/25"
+        placeholder="Enter your email"
+      />
 
       <button
         type="submit"
         disabled={state === "sending"}
-        className="mt-1 inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex w-full items-center justify-center rounded-xl border border-[#ffd60a] bg-[#ffd60a] px-6 py-3.5 text-sm font-semibold text-[#071426] transition hover:bg-[#ffe566] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {state === "sending" ? "Sending..." : "Send Me the 101 Lines"}
       </button>
